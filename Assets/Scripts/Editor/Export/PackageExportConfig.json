@@ -1,0 +1,10 @@
+{"uiFramework": [
+    "Assets/UIFramework",
+    "Assets/Plugins/ThirdParty/DOTween_1_1_605",
+    "Assets/Plugins/ThirdParty/CSV",
+    "Assets/Scripts/AssetManager/ResourcesManager.cs",
+    "Assets/Scripts/Extension/ObjectExtension.cs",
+    "Assets/Scripts/Common/SingleMonoBehaviour.cs",
+    "Assets/Scripts/Editor/File/EditorFileManager.cs",
+    "Assets/Scripts/File/FileManager.cs"
+  ]}

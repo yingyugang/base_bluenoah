@@ -1,0 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace {0}
+{
+	public class {1} : BasePanelCtrl
+	{
+		{2} m{2};
+		
+		protected override void Awake ()
+		{
+			base.Awake ();
+			m{2} = ({2})this.mBasePanelView;
+		}
+	}
+}
