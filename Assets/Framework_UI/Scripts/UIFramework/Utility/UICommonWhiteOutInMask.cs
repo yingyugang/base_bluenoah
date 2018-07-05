@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
 using UnityEngine.UI;
+using BlueNoah.Utility;
 
-public class UICommonWhiteOutInMask : SingleMonoBehaviour<UICommonWhiteOutInMask> {
+public class UICommonWhiteOutInMask : SimpleSingleMonoBehaviour<UICommonWhiteOutInMask> {
 
 	public AnimationCurve whiteOutCurve;
 	public Image img_flash;
@@ -14,15 +15,17 @@ public class UICommonWhiteOutInMask : SingleMonoBehaviour<UICommonWhiteOutInMask
         img_flash = GetComponent<Image> ();
 	}
 
-	public void DoFlash(float duration,UnityAction onComplete = null){
+	public void DoFlash(float duration,UnityAction onMiddle = null,UnityAction onComplete = null){
 		if(img_flash==null)
-            img_flash = gameObject.GetOrAddComponent<Image> ();
+			img_flash = gameObject.GetOrAddComponent<Image> ();
 		img_flash.enabled = true;
 		img_flash.DOFade (1, duration/2).SetEase (whiteOutCurve).OnComplete(()=>{
-			if(onComplete!=null)
-				onComplete();
+			if(onMiddle!=null)
+				onMiddle();
 			img_flash.DOFade (0, duration/2).SetEase (whiteOutCurve).OnComplete(()=>{
 				img_flash.enabled = false;
+				if(onComplete!=null)
+					onComplete();
 			});
 		});
 	}

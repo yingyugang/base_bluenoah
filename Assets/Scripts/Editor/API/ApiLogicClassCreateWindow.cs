@@ -1,10 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using System.Text;
-using System.Text.RegularExpressions;
-
 /**************************************************************
 * Create the API class by template.                         
 * 1.input the api link.
@@ -14,6 +9,11 @@ using System.Text.RegularExpressions;
 * the class name will be the most same as api link . 
 * e.g api = player/test , the class name will be PlayerTest.
 **************************************************************/
+using UnityEngine;
+using UnityEditor;
+using System.Text;
+using BlueNoah.IO;
+
 namespace BlueNoah.Editor
 {
     public class APIWindow : EditorWindow

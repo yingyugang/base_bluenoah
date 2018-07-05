@@ -18,7 +18,7 @@ namespace BlueNoah.UI
 		private void Update()
 		{
             if(Input.GetKeyDown(KeyCode.H)){
-                UIManager.Instance.OpenPanel<TestPanelCtrl>();
+                UIManager.Instance.uiPanelManager.OpenPanel<TestPanelCtrl>();
             }
 		}
 	}

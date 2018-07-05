@@ -1,197 +1,204 @@
-using System.Collections;
-using System.Collections.Generic;
-using BlueNoah.UI;
-using UnityEngine;
-using UnityEngine.Events;
-
 /**********************************************
  *1.Init the layers;
  *2.Init the page configs;
  *3.Add the page controller to the layers;
  *4.Add the dialogs;
+ *5.Use session to send datas in all page and dialog.
+ *6.Use Init(param) the send data when new page opened.
  *********************************************/
-//TODO
-public class UIManager : SingleMonoBehaviour<UIManager>
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+using BlueNoah.Utility;
+
+namespace BlueNoah.UI
 {
-	const int CANVAS_WIDTH = 1920;
+    public delegate GameObject UnitEventHandler(string path);
 
-	const int CANVAS_HEIGHT = 1080;
+    public class UIManager : SimpleSingleMonoBehaviour<UIManager>
+    {
+        public const int CANVAS_WIDTH = 1920;
 
-	const float WHITE_FLASH_DURATION = 2f;
+        public const int CANVAS_HEIGHT = 1080;
 
-	private Dictionary<UILayerNames, Transform> mUILayers = new Dictionary<UILayerNames, Transform> ();
+        const string UI_SETTING = "Settings/UISettings";
 
-	private Dictionary<System.Type,GameObject> mPanelPrefabs = new Dictionary<System.Type, GameObject> ();
+        private Dictionary<UILayerNames, Transform> mUILayers = new Dictionary<UILayerNames, Transform>();
 
-	private List<System.Type> mPageQueue = new List<System.Type> ();
+        public UIDialogManager uiDialogManager;
 
-	private GameObject mCurrentPage;
+        public UIPanelManager uiPanelManager;
 
-	private System.Type mCurrentPageType;
+        [HideInInspector]
+        public UISettings uiSettings;
 
-	private bool mIsOpening;
+        private Dictionary<string, System.Object> mSession;
 
-	public UIDialogManager uiDialogManager;
 
-	public UIPanelManager uiPanelManager;
+        public enum UILayerNames
+        {
+            UILayer_Bottom,
+            UILayer_Common,
+            UILayer_Popup,
+            UILayer_Mask
+        }
 
-	const string CONFIG_FILE = "Panels/PanelConfig";
+        protected override void Awake()
+        {
+            base.Awake();
+            Init();
+        }
 
-	public enum UILayerNames
-	{
-		UILayer_Bottom,
-		UILayer_Common,
-		UILayer_Popup,
-		UILayer_Mask
-	}
+        void Init()
+        {
+            InitSettings();
+            InitSession();
+            InitManagers();
+            InitLayers();
+        }
 
-	protected override void Awake ()
-	{
-		base.Awake ();
-		uiDialogManager = new UIDialogManager ();
-		uiPanelManager = new UIPanelManager ();
-		InitLayers ();
-		LoadPanelConfig ();
-	}
+        void InitSettings()
+        {
+            uiSettings = Resources.Load<UISettings>(UI_SETTING);
+        }
 
-	public void OpenPanel<T> (Hashtable param = null, UnityAction<GameObject> onShow = null) where T : BasePanelCtrl
-	{
-		if(mIsOpening){
-			return;
-		}
-		if(mCurrentPageType == typeof(T)){
-			return;
-		}
-		mIsOpening = true;
-		if(mCurrentPage!=null){
-			CanvasGroup cg = mCurrentPage.GetOrAddComponent<CanvasGroup> ();
-			cg.blocksRaycasts = false;
-		}
-		UICommonWhiteOutInMask.Instance.DoFlash (WHITE_FLASH_DURATION,()=>{
-			GameObject go = ShowPanel<T>().gameObject;
-			go.GetComponent<BasePanelCtrl>().InitData(param);
-			go.SetActive(true);
-			mPageQueue.Add (typeof(T));
-			mIsOpening = false;
-			if(onShow!=null)
-				onShow(go);
-		});
-	}
+        void InitSession()
+        {
+            mSession = new Dictionary<string, System.Object>();
+        }
 
-	public void Back ()
-	{
-		if(mPageQueue.Count>1){
-			mPageQueue.RemoveAt (mPageQueue.Count-1);
-			System.Type type = mPageQueue[mPageQueue.Count-1];
-			if (mCurrentPage != null)
-				Destroy (mCurrentPage);
-			GameObject go = ShowPanel (type);
-			go.SetActive(true);
-		}
-	}
+        void InitManagers()
+        {
+            uiDialogManager = new UIDialogManager(this);
+            uiPanelManager = new UIPanelManager(this);
+        }
 
-	private void InitLayers ()
-	{
-		Debug.Log ("InitLayers");
-		AddLayer (UILayerNames.UILayer_Bottom);
-		AddLayer (UILayerNames.UILayer_Common);
-		AddLayer (UILayerNames.UILayer_Popup);
-		AddLayer (UILayerNames.UILayer_Mask);
-	}
+        void CheckInputBack()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!uiDialogManager.OnBack())
+                {
+                    uiPanelManager.OnBack();
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                uiDialogManager.OnReturn();
+            }
+        }
 
-	private void AddLayer (UILayerNames layerName, bool mouseEventable = true)
-	{
-		Transform layerTrans = AddLayer (layerName.ToString (), mouseEventable);
-		mUILayers.Add (layerName, layerTrans);
-	}
+        private void InitLayers()
+        {
+            AddLayer(UILayerNames.UILayer_Bottom);
+            AddLayer(UILayerNames.UILayer_Common);
+            AddLayer(UILayerNames.UILayer_Popup);
+            AddLayer(UILayerNames.UILayer_Mask);
+        }
 
-	private Transform AddLayer (string layerName, bool mouseEventable = true)
-	{
-		GameObject rectLayer;
-        rectLayer = new GameObject (layerName);
-		rectLayer.layer = LayerMask.NameToLayer ("UI");
-		RectTransform rect = rectLayer.AddComponent<RectTransform> ();
-		rectLayer.transform.SetParent (transform);
-		rectLayer.transform.localPosition = Vector3.zero;
-		rectLayer.transform.localScale = Vector3.one;
-		CanvasGroup gc = rectLayer.AddComponent<CanvasGroup> ();
-		gc.blocksRaycasts = mouseEventable;
-		gc.interactable = mouseEventable;
-		rect.sizeDelta = new Vector2 (CANVAS_WIDTH,CANVAS_HEIGHT);
-		return rectLayer.transform;
-	}
+        private void AddLayer(UILayerNames layerName, bool mouseEventable = true)
+        {
+            Transform layerTrans = AddLayer(layerName.ToString(), mouseEventable);
+            mUILayers.Add(layerName, layerTrans);
+        }
 
-	//TODO
-	private void LoadPanelConfig ()
-	{
-		TextAsset config = Resources.Load<TextAsset> (CONFIG_FILE );
-		if (config != null) {
-			PanelConfig panelConfig = JsonUtility.FromJson<PanelConfig> (config.text);
-			for (int i = 0; i < panelConfig.items.Count; i++) {
-				PanelConfigItem item = panelConfig.items [i];
-				GameObject panelPrefab = ResourcesManager.LoadPanelPrefab (item.prefabPath);
-				System.Type type = System.Type.GetType (item.ctrlClassName);
-				mPanelPrefabs.Add (type, panelPrefab);
-			}
-		}
-	}
+        private Transform AddLayer(string layerName, bool mouseEventable = true)
+        {
+            GameObject rectLayer = CreateLayer(layerName);
+            ApendCanvasGroup(rectLayer, mouseEventable);
+            return rectLayer.transform;
+        }
 
-	private T ShowPanel<T> () where T : BasePanelCtrl
-	{
-		if (mPanelPrefabs.ContainsKey (typeof(T))) {
-			if (mCurrentPage != null)
-				Destroy (mCurrentPage);
-			GameObject go = ShowPanel (typeof(T));
-			return go.GetOrAddComponent<T> ();
-		}
-		return null;
-	}
+        private GameObject CreateLayer(string layerName)
+        {
+            GameObject rectLayer = new GameObject(layerName);
+            rectLayer.layer = LayerMask.NameToLayer("UI");
+            ApendRectTransform(rectLayer);
+            return rectLayer;
+        }
 
-	private GameObject ShowPanel (System.Type type) 
-	{
-		if (mPanelPrefabs.ContainsKey (type)) {
-			GameObject prefab = mPanelPrefabs [type];
-			prefab.SetActive (false);
-			GameObject go = Instantiate (prefab);
-			Transform trans = mUILayers [UILayerNames.UILayer_Common];
-			go.transform.SetParent (trans);
-			go.transform.localScale = Vector3.one;
-			go.transform.localPosition = Vector3.zero;
-			go.SetActive (true);
-			mCurrentPage = go;
-			mCurrentPageType = type;
-			RectTransform rect = go.GetComponent<RectTransform> ();
-			rect.sizeDelta = new Vector2 (CANVAS_WIDTH,CANVAS_HEIGHT);
-			return go;
-		}
-		return null;
-	}
+        private void ApendRectTransform(GameObject rectLayer)
+        {
+            RectTransform rect = rectLayer.GetOrAddComponent<RectTransform>();
+            rectLayer.transform.SetParent(transform);
+            rectLayer.transform.localPosition = Vector3.zero;
+            rectLayer.transform.localScale = Vector3.one;
+            rect.sizeDelta = new Vector2(CANVAS_WIDTH, CANVAS_HEIGHT);
+        }
 
-	void Update ()
-	{
-		if (Input.GetKeyDown (KeyCode.G)) {
-			OpenPanel<MyPagePanelCtrl>();
-		}
-		if (Input.GetKeyDown (KeyCode.H)) {
-			Back ();
-		}
-		if (Input.GetKeyDown (KeyCode.J)) {
-			//OpenPanel<StagePanelCtrl>();
-		}
-	}
-}
+        private void ApendCanvasGroup(GameObject go, bool mouseEventable)
+        {
+            CanvasGroup gc = go.AddComponent<CanvasGroup>();
+            gc.blocksRaycasts = mouseEventable;
+            gc.interactable = mouseEventable;
+        }
 
-[System.Serializable]
-public class PanelConfig
-{
-	public List<PanelConfigItem> items;
-}
+        public void AddToLayer(GameObject go, UILayerNames targetLayerName)
+        {
+            Transform trans = mUILayers[targetLayerName];
+            go.transform.SetParent(trans);
+            go.transform.localScale = Vector3.one;
+            go.transform.localPosition = Vector3.zero;
+        }
 
-[System.Serializable]
-public class PanelConfigItem
-{
-	public int index;
-	public string ctrlClassName;
-	public string viewClassName;
-	public string prefabPath;
+        public void ShowMaskOnLayer(UILayerNames targetLayerName)
+        {
+            Transform layerTrans = this.mUILayers[targetLayerName];
+            Image img_mask = layerTrans.GetOrAddComponent<Image>();
+            img_mask.color = new Color(0, 0, 0, 0);
+            img_mask.enabled = true;
+            img_mask.DOFade(0.4f, 0.3f).SetEase(Ease.InSine);
+        }
+
+        public void HideMaskOnLayer(UILayerNames targetLayerName)
+        {
+            Transform layerTrans = this.mUILayers[targetLayerName];
+            Image img_mask = layerTrans.GetOrAddComponent<Image>();
+            img_mask.DOFade(0, 0.3f).SetEase(Ease.InSine).OnComplete(() => {
+                img_mask.enabled = false;
+            });
+        }
+
+        public System.Object GetSession(string param)
+        {
+            if (mSession.ContainsKey(param))
+            {
+                return mSession[param];
+            }
+            return null;
+        }
+
+        public void SetSession(string param, System.Object obj)
+        {
+            if (mSession.ContainsKey(param))
+            {
+                mSession[param] = obj;
+            }
+            else
+            {
+                mSession.Add(param, obj);
+            }
+        }
+
+        void Update()
+        {
+            CheckInputBack();
+        }
+    }
+
+    [System.Serializable]
+    public class PanelConfig
+    {
+        public List<PanelConfigItem> items;
+    }
+
+    [System.Serializable]
+    public class PanelConfigItem
+    {
+        public int index;
+        public string ctrlClassName;
+        public string viewClassName;
+        public string prefabPath;
+    }
 }

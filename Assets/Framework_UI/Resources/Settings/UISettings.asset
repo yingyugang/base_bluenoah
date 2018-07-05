@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef6bfc6c9941465ebff69eb4f526e7f, type: 3}
+  m_Name: UISettings
+  m_EditorClassIdentifier: 
+  PANEL_CONFIG_FILE: {fileID: 4900000, guid: 0c2bb2092376349d88aa947c5e86db2c, type: 3}
+  DIALOG_CONFIG_FILE: {fileID: 4900000, guid: 586babffe23f141abbf88b6a79dada91, type: 3}

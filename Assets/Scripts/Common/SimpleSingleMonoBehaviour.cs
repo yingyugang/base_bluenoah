@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SingleMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
+public class SimpleSingleMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
 
     private static T t;
