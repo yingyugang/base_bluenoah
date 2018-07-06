@@ -13,6 +13,7 @@ public class UIEditorSettings : ScriptableObject
 	public TextAsset SCRIPT_TEMPLATE_PANEL_VIEW;
 	public Object PANEL_CLASS_PATH;
 	public GameObject DEFAULT_PREFAB_TEMPLATE;
+    public List<GameObject> PREFAB_TEMPLATES;
 	public Texture WINDOW_ICON_PATH;
 	public string PANEL_CLASS_NAMESPACE = "BlueNoah.UI";
 	public string CTRL_CLASS_SUFFIX = "Ctrl";

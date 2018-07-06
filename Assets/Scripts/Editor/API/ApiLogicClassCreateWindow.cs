@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 /**************************************************************
 * Create the API class by template.                         
 * 1.input the api link.
@@ -9,10 +7,14 @@ using System.Collections.Generic;
 * the class name will be the most same as api link . 
 * e.g api = player/test , the class name will be PlayerTest.
 **************************************************************/
+
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Text;
 using BlueNoah.IO;
+using BlueNoah.Editor.IO;
 
 namespace BlueNoah.Editor
 {
@@ -112,7 +114,7 @@ namespace BlueNoah.Editor
             }
             else
             {
-                path = path.Remove(path.LastIndexOf(APIEditorConstant.API_LOGIC_NAME));
+                path = path.Remove(path.LastIndexOf(APIEditorConstant.API_LOGIC_NAME,System.StringComparison.CurrentCulture));
                 return path;
             }
         }
@@ -138,7 +140,7 @@ namespace BlueNoah.Editor
             string path = EditorFileManager.FindAsset(APIEditorConstant.API_CONSTANT_FILE_NAME, "cs");
             string apiConstantText = AssetDatabase.LoadAssetAtPath<TextAsset>(path).text;
             path = Application.dataPath + path.Remove(0, "Assets".Length);
-            int index = apiConstantText.IndexOf("{", apiConstantText.IndexOf(APIEditorConstant.API_CONSTANT_FILE_NAME)) + 1;
+            int index = apiConstantText.IndexOf("{", apiConstantText.IndexOf(APIEditorConstant.API_CONSTANT_FILE_NAME,System.StringComparison.CurrentCulture),System.StringComparison.CurrentCulture) + 1;
             string apiName = api.Replace("/", "_");
             apiConstantText = apiConstantText.Insert(index, string.Format("\r\npublic const string {0} = \"{1}\";", apiName, api));//
             FileManager.WriteString(path, apiConstantText);

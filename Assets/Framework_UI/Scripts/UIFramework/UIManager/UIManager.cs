@@ -1,11 +1,11 @@
-/**********************************************
- *1.Init the layers;
- *2.Init the page configs;
- *3.Add the page controller to the layers;
- *4.Add the dialogs;
- *5.Use session to send datas in all page and dialog.
- *6.Use Init(param) the send data when new page opened.
- *********************************************/
+/*********************************************************
+ * 1.Init the layers;                                    *
+ * 2.Init the page configs;                              *
+ * 3.Add the page controller to the layers;              *
+ * 4.Add the dialogs;                                    *
+ * 5.Use session to send datas in all page and dialog.   *
+ * 6.Use Init(param) the send data when new page opened. *
+ *********************************************************/
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;

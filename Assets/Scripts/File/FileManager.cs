@@ -946,7 +946,7 @@ namespace BlueNoah.IO
         #endregion
 
 
-        public static string AssetDataPathToResourcesPath(String path)
+        public static string AssetDataPathToResourcesPath(string path)
         {
             if (path.IndexOf("/Resources/", StringComparison.CurrentCulture) != -1)
             {
@@ -955,6 +955,41 @@ namespace BlueNoah.IO
                 return resourcesPath;
             }
             return path;
+        }
+
+        public static string GetFileNameFromPath(string path){
+            if (string.IsNullOrEmpty(path))
+                return null;
+            string fileName = path;
+            if(path.LastIndexOf("/",StringComparison.CurrentCulture)!=-1){
+                int index = path.LastIndexOf("/", StringComparison.CurrentCulture) + 1;
+                fileName = path.Substring(index);
+            }
+            return fileName;
+        }
+
+        public static string GetFileMain(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return null;
+            if (fileName.LastIndexOf(".", StringComparison.CurrentCulture) != -1)
+            {
+                int index = fileName.LastIndexOf(".", StringComparison.CurrentCulture);
+                fileName = fileName.Substring(0,index);
+            }
+            return fileName;
+        }
+
+        public static string GetFilePattern(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return null;
+            if (fileName.LastIndexOf(".", StringComparison.CurrentCulture) != -1)
+            {
+                int index = fileName.LastIndexOf(".", StringComparison.CurrentCulture) + 1;
+                fileName = fileName.Substring(index);
+            }
+            return fileName;
         }
 
     }

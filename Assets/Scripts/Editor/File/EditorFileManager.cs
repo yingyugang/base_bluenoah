@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System;
+using BlueNoah.IO;
 
-namespace BlueNoah.Editor
+namespace BlueNoah.Editor.IO
 {
     public class EditorFileManager
     {
-
         //be better to use the MonoScript.FromMonoBehaviour.
         public static string FindAsset(string fileName, string filePattern)
         {
@@ -23,6 +23,22 @@ namespace BlueNoah.Editor
                 }
             }
             return null;
+        }
+
+        public static List<string> FindAssets(string fileName, string filePattern)
+        {
+            string[] guids = AssetDatabase.FindAssets(fileName);
+            List<string> paths = new List<string>();
+            foreach (string guid in guids)
+            {
+                string filePath = AssetDatabase.GUIDToAssetPath(guid);
+                if (filePath.IndexOf(string.Format("{0}.{1}", fileName, filePattern), StringComparison.CurrentCulture) != -1)
+                {
+                    paths.Add(filePath);
+                }
+            }
+            Debug.Log("paths.Count:" + paths.Count);
+            return paths;
         }
 
         public static string ResourcesPathToFilePath(string resourcePath)
@@ -121,6 +137,15 @@ namespace BlueNoah.Editor
             MonoScript script = MonoScript.FromMonoBehaviour(monoBehaviour);
             GameObject.DestroyImmediate(go);
             return script;
+        }
+
+        public static string SearchSettingFile(string path)
+        {
+            string fileName = FileManager.GetFileNameFromPath(path);
+            string fileMain = FileManager.GetFileMain(fileName);
+            string filePattern = FileManager.GetFilePattern(fileName);
+            string assetFilePath = FindAsset(fileMain, filePattern);
+            return assetFilePath;
         }
 
         static Type GetType(string typeStr)
