@@ -1,20 +1,28 @@
-﻿using BlueNoah.IO;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using BlueNoah.Editor.IO;
+using System.Collections.Generic;
 
 namespace BlueNoah.Editor
 {
     public class PackageExport
     {
-        const string CONFIG_PATH = "Assets/Scripts/Editor/Export/PackageExportConfig.json";
+        const string CONFIG_PATH = "Assets/Export/Editor/UIExportSettings.asset";
 
         [MenuItem("Tools/ExportPackage/UIFramework")]
         public static void ExportUIFramework()
-        { 
-            string context = FileManager.ReadString(EditorFileManager.AssetDatabasePathToFilePath(CONFIG_PATH));
-            PackageExportConfig config = JsonUtility.FromJson<PackageExportConfig>(context);
-            AssetDatabase.ExportPackage(config.uiFramework, "Assets/UIFramework.unitypackage", ExportPackageOptions.Recurse);
+        {
+            ExportSettings exportSettings = AssetDatabase.LoadAssetAtPath<ExportSettings>(CONFIG_PATH);//  FileManager.ReadString(EditorFileManager.AssetDatabasePathToFilePath(CONFIG_PATH));
+            List<string> configStr = new List<string>();
+            for (int i = 0; i < exportSettings.includeObjects.Count; i++)
+            {
+                Object obj = exportSettings.includeObjects[i];
+                if (obj != null){
+                    string path = AssetDatabase.GetAssetPath(obj);
+                    configStr.Add(path);
+                    Debug.Log(path);
+                }
+            }
+            AssetDatabase.ExportPackage(configStr.ToArray(), "Assets/UIFramework.unitypackage", ExportPackageOptions.Recurse);
             EditorUtility.DisplayDialog("Export", "Complete!", "OK");
             AssetDatabase.Refresh();
         }

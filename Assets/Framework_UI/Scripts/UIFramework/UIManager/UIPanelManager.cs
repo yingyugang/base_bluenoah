@@ -129,6 +129,7 @@ namespace BlueNoah.UI
         private GameObject CreatePanel(System.Type type)
         {
             GameObject prefab = GetPrefab(type.ToString());
+            Debug.Log(string.Format("CreatePanel {0}",type.ToString()));
             //to let the components call the awake after Init datas.
             prefab.SetActive(false);
             GameObject go = GameObject.Instantiate(prefab);

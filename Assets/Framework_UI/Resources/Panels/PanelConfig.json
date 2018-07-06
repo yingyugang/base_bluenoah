@@ -2,9 +2,21 @@
     "items": [
         {
             "index": 0,
-            "ctrlClassName": "BlueNoah.UI.HomeTestCtrl",
-            "viewClassName": "BlueNoah.UI.HomeTestView",
-            "prefabPath": "Assets/Framework_UI/Resources/Panels/HomeTest.prefab"
+            "ctrlClassName": "BlueNoah.UI.Sample1Ctrl",
+            "viewClassName": "BlueNoah.UI.Sample1View",
+            "prefabPath": "Assets/Framework_UI/Resources/Panels/Sample1.prefab"
+        },
+        {
+            "index": 1,
+            "ctrlClassName": "BlueNoah.UI.Sample2Ctrl",
+            "viewClassName": "BlueNoah.UI.Sample2View",
+            "prefabPath": "Assets/Framework_UI/Resources/Panels/Sample2.prefab"
+        },
+        {
+            "index": 0,
+            "ctrlClassName": "BlueNoah.UI.Sample3Ctrl",
+            "viewClassName": "BlueNoah.UI.Sample3View",
+            "prefabPath": "Assets/Framework_UI/Resources/Panels/Sample3.prefab"
         }
     ]
 }

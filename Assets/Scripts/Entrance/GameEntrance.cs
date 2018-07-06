@@ -10,7 +10,7 @@ namespace BlueNoah
 		private void Awake()
 		{
             Init();
-            UIManager.Instance.uiPanelManager.OpenPanel<HomeTestCtrl>();
+            //UIManager.Instance.uiPanelManager.OpenPanel<HomeTestCtrl>();
 		}
 
         void Init()

@@ -147,7 +147,10 @@ namespace BlueNoah.Editor
         {
             if (string.IsNullOrEmpty(panelName))
             {
-                EditorUtility.DisplayDialog("CreatePanel", "Panel name is empty.", "OK");
+                EditorUtility.DisplayDialog("CreatePanel", "Create fail , panel name is empty.", "OK");
+            }
+            else if(mSelectTemplate == null){
+                EditorUtility.DisplayDialog("CreatePanel", "Create fail , template is empty.", "OK");
             }
             else if (EditorUtility.DisplayDialog("CreatePanel", string.Format("Is create {0} ?", panelName), "OK", "Canel"))
             {
@@ -158,9 +161,9 @@ namespace BlueNoah.Editor
                 {
                     FileManager.CreateDirectoryName(panelScriptPath);
                 }
+                string prefabPath = CreatePrefab(panelName);
                 CreateViewClass(viewClassName, panelScriptPath);
                 CreateCtrlClass(ctrlClassName, viewClassName, panelScriptPath);
-                string prefabPath = CreatePrefab(panelName);
                 SaveNewPanelConfig(panelName, prefabPath);
                 AssetDatabase.Refresh();
             }

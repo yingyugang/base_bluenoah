@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BlueNoah.UI
 {
 	[ExecuteInEditMode]
-	public class HomeTestView : BasePanelView
+	public class Sample1View : BasePanelView
 	{
-		HomeTestView mHomeTestView;
+		Sample1View mSample1View;
+
+        public Button btn_battle;
+
+        public CanvasGroup container_arrow;
 		
 		void Awake ()
 		{
