@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace {0}
 {
+    [DisallowMultipleComponent]
+    [AddComponentMenu("{3}/Ctrl/{1}")]
 	public class {1} : BasePanelCtrl
 	{
 		{2} m{2};
@@ -13,5 +15,10 @@ namespace {0}
 			base.Awake ();
 			m{2} = ({2})this.mBasePanelView;
 		}
+
+        public override void Transmit(Hashtable parameters)
+        {
+            base.Transmit(parameters);
+        }
 	}
 }

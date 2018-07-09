@@ -1,17 +1,9 @@
-/*************************************************************
- * Config the panel class by script.                         *
- * 1.Create the View class.                                  *
- * 2.Create the Ctrl class.                                  *
- * 3.Create the prefab gameObject.                           *
- * 4.Save the config json file.		                         *				 
- *************************************************************/
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
 using System.IO;
 using BlueNoah.UI;
-using BlueNoah.Utility;
 using BlueNoah.IO;
 using BlueNoah.Editor.IO;
 
@@ -22,7 +14,7 @@ namespace BlueNoah.Editor
         static List<Type> m_views;
         static UIPanelConfigWindow mPanelConfigWindow;
         PanelConfig mPanelConfig;
-        GameObject mSelectTemplate;
+        GameObject mCurrentTemplate;
         List<PanelConfigWindowItem> mPanelConfigWindowItems;
         bool mIsDisable = false;
         string mCreatePanelName = "";
@@ -30,7 +22,7 @@ namespace BlueNoah.Editor
         [MenuItem(UIEditorConstant.UI_PANEL_CONFIG_WINDOW_MENUITEM)]
         static void OnOpen()
         {
-            mPanelConfigWindow = EditorWindow.GetWindow<UIPanelConfigWindow>();
+            mPanelConfigWindow = GetWindow<UIPanelConfigWindow>();
             mPanelConfigWindow.Show();
             mPanelConfigWindow.Focus();
         }
@@ -46,225 +38,247 @@ namespace BlueNoah.Editor
         {
             if (mPanelConfigWindowItems == null)
                 LoadConfig();
-            GUIContantTitle();
-            GUIConfigItems();
-            GUITemplates();
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Panel Name : ", GUILayout.Width(160));
-            mCreatePanelName = GUILayout.TextField(mCreatePanelName, GUILayout.MinWidth(130), GUILayout.MaxWidth(200));
-            if (GUILayout.Button("Create", GUILayout.Width(100)))
-            {
-                CreatePanel(mCreatePanelName);
-            }
-            EditorGUILayout.EndHorizontal();
+            UIPanelConfigWindowGUI.DrawTemplatePattern(mUIEditorSettings.PREFAB_TEMPLATES, mCurrentTemplate, SelectTemplate);
 
-            DisplaySettings();
+            UIPanelConfigWindowGUI.DrawPanelPattern(mPanelConfigWindowItems, RemovePanel, ref mCreatePanelName, CreatePanel);
 
+            UIPanelConfigWindowGUI.DrawConfigPattern(mConfigText, mUIEditorSettings, mUISettings);
         }
 
-        private void GUIContantTitle()
-        {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Panel list:");
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void GUIConfigItems()
-        {
-            for (int i = 0; i < mPanelConfigWindowItems.Count; i++)
-            {
-                PanelConfigWindowItem item = mPanelConfigWindowItems[i];
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(i.ToString());
-                GUIConfigItem(item);
-                if (GUILayout.Button("Remove"))
-                {
-                    RemovePanel(mPanelConfigWindowItems[i]);
-                    i--;
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-        }
-
-        private void GUIConfigItem(PanelConfigWindowItem item)
-        {
-            EditorGUI.BeginDisabledGroup(mIsDisable);
-            EditorGUILayout.ObjectField(item.ctrlScript, typeof(MonoScript), false);
-            EditorGUILayout.ObjectField(item.viewScript, typeof(MonoScript), false);
-            if (item.viewScript != null && item.panelPrefab != null)
-                item.panelPrefab.GetOrAddComponent(item.viewScript.GetClass());
-            EditorGUILayout.ObjectField(item.panelPrefab, typeof(GameObject), false);
-            EditorGUI.EndDisabledGroup();
-        }
-
-        private void GUITemplates()
-        {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Template Name : ", GUILayout.Width(160));
-            EditorGUILayout.EndHorizontal();
-            List<GameObject> templates = this.mUIEditorSettings.PREFAB_TEMPLATES;
-            for (int i = 0; i < templates.Count; i++)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.ObjectField(templates[i], typeof(GameObject), false);
-                EditorGUI.EndDisabledGroup();
-                if (GUILayout.Button("Select", GUILayout.Width(70)))
-                {
-                    mSelectTemplate = templates[i];
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Selected Template : ");
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.ObjectField(mSelectTemplate, typeof(GameObject), false);
-            EditorGUI.EndDisabledGroup();
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void LoadConfig()
+        void LoadConfig()
         {
             mPanelConfigWindowItems = new List<PanelConfigWindowItem>();
-            string path = AssetDatabase.GetAssetPath(mUISettings.PANEL_CONFIG_FILE);
-            path = EditorFileManager.AssetDatabasePathToFilePath(path);
             mConfigText = mUISettings.PANEL_CONFIG_FILE;
+            mPanelConfig = LoadConfigFile(mUISettings.PANEL_CONFIG_FILE);
+            AddConfigItems(mPanelConfig.items);
+        }
+
+        PanelConfig LoadConfigFile(TextAsset config)
+        {
+            string path = GetConfigFilePath(config);
             string configTxt = FileManager.ReadString(path);
-            mPanelConfig = JsonUtility.FromJson<PanelConfig>(configTxt);
-            for (int i = 0; i < mPanelConfig.items.Count; i++)
+            PanelConfig panelConfig = JsonUtility.FromJson<PanelConfig>(configTxt);
+            return panelConfig;
+        }
+
+        string GetConfigFilePath(TextAsset config)
+        {
+            string path = AssetDatabase.GetAssetPath(config);
+            return EditorFileManager.AssetDatabasePathToFilePath(path);
+        }
+
+        void AddConfigItems(List<PanelConfigItem> configItems){
+            for (int i = 0; i < configItems.Count; i++)
             {
-                PanelConfigWindowItem item = new PanelConfigWindowItem();
-                item.id = i;
-                item.ctrlScript = EditorFileManager.FindMono(mPanelConfig.items[i].ctrlClassName);
-                item.viewScript = EditorFileManager.FindMono(mPanelConfig.items[i].viewClassName);
-                item.panelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(mPanelConfig.items[i].prefabPath);
-                mPanelConfigWindowItems.Add(item);
+                AddConfigItem(configItems[i]);
             }
+        }
+
+        void AddConfigItem(PanelConfigItem configItem)
+        {
+            PanelConfigWindowItem item = CreateConfigItem(configItem);
+            mPanelConfigWindowItems.Add(item);
+        }
+
+        PanelConfigWindowItem CreateConfigItem(PanelConfigItem configItem)
+        {
+            PanelConfigWindowItem item = new PanelConfigWindowItem();
+            item.id = configItem.index;
+            item.ctrlScript = EditorFileManager.FindMono(configItem.ctrlClassName);
+            item.viewScript = EditorFileManager.FindMono(configItem.viewClassName);
+            item.panelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(configItem.prefabPath);
+            return item;
         }
 
         void CreatePanel(string panelName)
         {
+            if (CheckCreateable(panelName))
+            {
+                if (EditorUtility.DisplayDialog("CreatePanel", string.Format("Is create {0} ?", panelName), "OK", "Canel"))
+                {
+                    OnCreatePanelConfirm(panelName);
+                }
+            }
+        }
+
+        void OnCreatePanelConfirm(string panelName){
+            string prefabPath = CreatePrefab(panelName);
+            CreateViewClass(panelName);
+            CreateCtrlClass(panelName);
+            SaveNewPanelConfig(panelName, prefabPath);
+        }
+
+        void CreateScriptPath(string panelScriptPath){
+            if (!FileManager.DirectoryExists(panelScriptPath))
+            {
+                FileManager.CreateDirectoryName(panelScriptPath);
+            }
+        }
+
+        string GetScriptPath(string panelName)
+        {
+            string path = UIEditorConstant.GetPanelPath(panelName, AssetDatabase.GetAssetPath(mUIEditorSettings.PANEL_CLASS_PATH));
+            CreateScriptPath(path);
+            return path;
+        }
+
+        string GetViewClassName(string panelName){
+            return UIEditorConstant.GetViewClassName(panelName, mUIEditorSettings.VIEW_CLASS_SUFFIX);
+        }
+
+        string GetCtrlClassName(string panelName){
+            return UIEditorConstant.GetCtrlClassName(panelName, mUIEditorSettings.CTRL_CLASS_SUFFIX);
+        }
+
+        bool CheckCreateable(string panelName)
+        {
             if (string.IsNullOrEmpty(panelName))
             {
                 EditorUtility.DisplayDialog("CreatePanel", "Create fail , panel name is empty.", "OK");
+                return false;
             }
-            else if(mSelectTemplate == null){
+            else if (mCurrentTemplate == null)
+            {
                 EditorUtility.DisplayDialog("CreatePanel", "Create fail , template is empty.", "OK");
+                return false;
             }
-            else if (EditorUtility.DisplayDialog("CreatePanel", string.Format("Is create {0} ?", panelName), "OK", "Canel"))
-            {
-                string ctrlClassName = UIEditorConstant.GetCtrlClassName(panelName, mUIEditorSettings.CTRL_CLASS_SUFFIX);
-                string viewClassName = UIEditorConstant.GetViewClassName(panelName, mUIEditorSettings.VIEW_CLASS_SUFFIX);
-                string panelScriptPath = UIEditorConstant.GetPanelPath(panelName, AssetDatabase.GetAssetPath(mUIEditorSettings.PANEL_CLASS_PATH));
-                if (!FileManager.DirectoryExists(panelScriptPath))
-                {
-                    FileManager.CreateDirectoryName(panelScriptPath);
-                }
-                string prefabPath = CreatePrefab(panelName);
-                CreateViewClass(viewClassName, panelScriptPath);
-                CreateCtrlClass(ctrlClassName, viewClassName, panelScriptPath);
-                SaveNewPanelConfig(panelName, prefabPath);
-                AssetDatabase.Refresh();
-            }
+            return true;
         }
 
-        static string GetClassTemplate(string templateName)
+        void SelectTemplate(GameObject template)
         {
-            string path = EditorFileManager.FindAsset(templateName, "txt");
-            if (path == null)
-            {
-                return null;
-            }
-            else
-            {
-                return AssetDatabase.LoadAssetAtPath<TextAsset>(path).text;
-            }
+            this.mCurrentTemplate = template;
         }
 
-        GameObject GetPrefabTemplate()
-        {
-            return mUIEditorSettings.DEFAULT_PREFAB_TEMPLATE;
-        }
-
-        PanelConfig ToConfig()
+        PanelConfig ConfigWindowItemsToConfig()
         {
             PanelConfig panelConfig = new PanelConfig();
-            panelConfig.items = new List<PanelConfigItem>();
-            for (int i = 0; i < mPanelConfigWindowItems.Count; i++)
-            {
-                PanelConfigWindowItem item = mPanelConfigWindowItems[i];
-                string ctrlScript = "";
-                if (item.ctrlScript != null)
-                    ctrlScript = item.ctrlScript.GetClass().ToString();
-                string viewScript = "";
-                if (item.ctrlScript != null)
-                    viewScript = item.viewScript.GetClass().ToString();
-                string prefabPath = "";
-                if (item.panelPrefab != null)
-                    prefabPath = AssetDatabase.GetAssetPath(item.panelPrefab);
-                PanelConfigItem configItem = new PanelConfigItem();
-                configItem.index = i;
-                configItem.ctrlClassName = ctrlScript;
-                configItem.viewClassName = viewScript;
-                configItem.prefabPath = prefabPath;
-                panelConfig.items.Add(configItem);
-            }
+            panelConfig.items = CreatePanelConfigItems(mPanelConfigWindowItems);
             return panelConfig;
         }
 
-        void Save()
-        {
-            string config = JsonUtility.ToJson(ToConfig(), true);
-            string path = AssetDatabase.GetAssetPath(mUISettings.PANEL_CONFIG_FILE);
-            path = EditorFileManager.AssetDatabasePathToFilePath(path);
-            FileManager.WriteString(path, config);
+        List<PanelConfigItem> CreatePanelConfigItems(List<PanelConfigWindowItem> panelConfigWindowItems){
+            List<PanelConfigItem> panelConfigItems = new List<PanelConfigItem>();
+            for (int i = 0; i < panelConfigWindowItems.Count; i++)
+            {
+                PanelConfigItem configItem = CreatePanelConfigItem(panelConfigWindowItems[i]);
+                //TODO not need ?
+                configItem.index = i;
+                panelConfigItems.Add(configItem);
+            }
+            return panelConfigItems;
         }
 
-        void CreateViewClass(string viewClassName, string panelScriptPath)
+        PanelConfigItem CreatePanelConfigItem(PanelConfigWindowItem item){
+            string ctrlScript = "";
+            if (item.ctrlScript != null)
+                ctrlScript = item.ctrlScript.GetClass().ToString();
+            string viewScript = "";
+            if (item.ctrlScript != null)
+                viewScript = item.viewScript.GetClass().ToString();
+            string prefabPath = "";
+            if (item.panelPrefab != null)
+                prefabPath = AssetDatabase.GetAssetPath(item.panelPrefab);
+            PanelConfigItem configItem = new PanelConfigItem();
+            configItem.ctrlClassName = ctrlScript;
+            configItem.viewClassName = viewScript;
+            configItem.prefabPath = prefabPath;
+            return configItem;
+        }
+
+        void CreateViewClass(string panelName)
         {
+            string viewClassName = GetViewClassName(panelName);
+            string panelScriptPath = GetScriptPath(panelName);
+            CreateViewClass(viewClassName,panelScriptPath);
+        }
+
+        void CreateViewClass(string viewClassName,string panelScriptPath){
             string templateText = mUIEditorSettings.SCRIPT_TEMPLATE_PANEL_VIEW.text;
+            string resultText = FormatViewClass(templateText,viewClassName);
+            SaveViewClass(viewClassName,panelScriptPath,resultText);
+        }
+
+        string FormatViewClass(string templateText,string viewClassName){
             string resultText = templateText.Replace("{0}", mUIEditorSettings.PANEL_CLASS_NAMESPACE);
             resultText = resultText.Replace("{1}", viewClassName.Trim());
-            string filePath = System.IO.Path.Combine(panelScriptPath, viewClassName + ".cs");
-            FileManager.WriteString(filePath, resultText);
+            return resultText.Replace("{2}", StringUtility.NameSpaceToPathFormat(mUIEditorSettings.PANEL_CLASS_NAMESPACE));
         }
 
-        void CreateCtrlClass(string ctrlClassName, string viewClassName, string panelScriptPath)
+        void SaveViewClass(string viewClassName, string panelScriptPath,string context){
+            string filePath = Path.Combine(panelScriptPath, viewClassName + ".cs");
+            FileManager.WriteString(filePath, context);
+        }
+
+        void CreateCtrlClass(string panelName)
         {
-            string templateText = mUIEditorSettings.SCRIPT_TEMPLATE_PANEL_CTRL.text;// GetClassTemplate (UIEditorConstant.TEMPLATE_PANEL_CTRL);
+            string ctrlClassName = GetCtrlClassName(panelName);
+            string viewClassName = GetViewClassName(panelName);
+            string panelScriptPath = GetScriptPath(panelName);
+            CreateCtrlClass(viewClassName,ctrlClassName,panelScriptPath);
+        }
+
+        void CreateCtrlClass(string viewClassName,string ctrlClassName,string panelScriptPath){
+            string templateText = mUIEditorSettings.SCRIPT_TEMPLATE_PANEL_CTRL.text;
+            string resultText = FormatCtrlClass(viewClassName,ctrlClassName,templateText);
+            SaveCtrlClass(ctrlClassName,panelScriptPath,resultText);
+        }
+
+        string FormatCtrlClass(string viewClassName, string ctrlClassName,string templateText){
             string resultText = templateText.Replace("{0}", mUIEditorSettings.PANEL_CLASS_NAMESPACE);
             resultText = resultText.Replace("{1}", ctrlClassName.Trim());
             resultText = resultText.Replace("{2}", viewClassName.Trim());
-            string filePath = System.IO.Path.Combine(panelScriptPath, ctrlClassName + ".cs");
+            return resultText.Replace("{3}", StringUtility.NameSpaceToPathFormat(mUIEditorSettings.PANEL_CLASS_NAMESPACE));
+        }
+
+        void SaveCtrlClass(string ctrlClassName,string panelScriptPath,string resultText){
+            string filePath = Path.Combine(panelScriptPath, ctrlClassName + ".cs");
             FileManager.WriteString(filePath, resultText);
         }
 
         string CreatePrefab(string panelName)
         {
-            //GameObject prefab = GetPrefabTemplate ();
-            string prefabPath = AssetDatabase.GetAssetPath(mUIEditorSettings.PANEL_PREFAB_FOLDER) + "/" + panelName + ".prefab";
-            PrefabUtility.CreatePrefab(prefabPath, mSelectTemplate);
+            string prefabPath = GetPrefabPath(panelName);
+            CreatePrefab(prefabPath, mCurrentTemplate);
+            PlaceIntoScene(prefabPath);
+            return prefabPath;
+        }
+
+        void CreatePrefab(string prefabPath ,GameObject template){
+            PrefabUtility.CreatePrefab(prefabPath, template);
             AssetDatabase.SaveAssets();
+        }
+
+        string GetPrefabPath(string panelName){
+            return AssetDatabase.GetAssetPath(mUIEditorSettings.PANEL_PREFAB_FOLDER) + "/" + panelName + ".prefab";
+        }
+
+        void PlaceIntoScene(string prefabPath){
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-            GameObject gameObject = GameObject.Instantiate(prefab, Selection.activeTransform);
+            GameObject gameObject = Instantiate(prefab, Selection.activeTransform);
             gameObject.name = prefab.name;
             UICreateUtility.PlaceUIElementRoot(gameObject);
             PrefabUtility.ConnectGameObjectToPrefab(gameObject, prefab);
-            //TODO the prefabpath the best is relatively path.
-            //e.g. absolute path is Assets/Panels/MyPagePanel/MypagePanel.prefab 
-            //the relatively path will be MyPagePanel/MypagePanel.
-            return prefabPath;
         }
 
         void SaveNewPanelConfig(string panelName, string prefabPath)
         {
-            PanelConfig panelConfig = ToConfig();
+            PanelConfig panelConfig = ConfigWindowItemsToConfig();
+            PanelConfigItem panelConfigItem = CreateNewPanelConfig(panelName,prefabPath);
+            panelConfig.items.Add(panelConfigItem);
+            SavePanelConfig(panelConfig);
+            AssetDatabase.Refresh();
+        }
+
+        PanelConfigItem CreateNewPanelConfig(string panelName, string prefabPath){
             PanelConfigItem panelConfigItem = new PanelConfigItem();
             panelConfigItem.ctrlClassName = UIEditorConstant.GetFullCtrlClassName(mUIEditorSettings.PANEL_CLASS_NAMESPACE, panelName, mUIEditorSettings.CTRL_CLASS_SUFFIX);
             panelConfigItem.viewClassName = UIEditorConstant.GetFullViewClassName(mUIEditorSettings.PANEL_CLASS_NAMESPACE, panelName, mUIEditorSettings.VIEW_CLASS_SUFFIX);
             panelConfigItem.prefabPath = prefabPath;
-            panelConfig.items.Add(panelConfigItem);
+            return panelConfigItem;
+        }
+
+        void SavePanelConfig(PanelConfig panelConfig){
             string path = AssetDatabase.GetAssetPath(mUISettings.PANEL_CONFIG_FILE);
             path = EditorFileManager.AssetDatabasePathToFilePath(path);
             FileManager.WriteString(path, JsonUtility.ToJson(panelConfig, true));
@@ -275,24 +289,43 @@ namespace BlueNoah.Editor
         {
             if (EditorUtility.DisplayDialog("RemovePanel", "Is remove this panel ?", "OK", "Canel"))
             {
-                mPanelConfigWindowItems.Remove(item);
-                Save();
-                AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(item.panelPrefab));
-                string scriptPath = AssetDatabase.GetAssetPath(item.ctrlScript);
-                scriptPath = EditorFileManager.AssetDatabasePathToFilePath(scriptPath);
-                AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(item.ctrlScript));
-                AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(item.viewScript));
-                scriptPath = scriptPath.Substring(0, scriptPath.LastIndexOf("/", StringComparison.CurrentCulture));
-                string[] paths = Directory.GetFiles(scriptPath, "*.*", SearchOption.AllDirectories);
-                foreach (string path in paths)
-                {
-                    Debug.Log(path);
-                }
-                if (paths.Length == 0)
-                {
-                    FileManager.DeleteDirectory(scriptPath);
-                }
-                AssetDatabase.Refresh();
+                OnRemovePanelConfirm(item);
+            }
+        }
+
+        void OnRemovePanelConfirm(PanelConfigWindowItem item){
+            RemovePanelConfigItem(item);
+            string scriptPath = GetScriptPath(item.ctrlScript);
+            RemovePanelFiles(item);
+            RemoveEmptyFolder(scriptPath);
+            AssetDatabase.Refresh();
+        }
+
+        string GetScriptPath(MonoScript monoScript){
+            string scriptPath = AssetDatabase.GetAssetPath(monoScript);
+            return EditorFileManager.AssetDatabasePathToFilePath(scriptPath);
+        }
+
+        void RemovePanelConfigItem(PanelConfigWindowItem item){
+            mPanelConfigWindowItems.Remove(item);
+            SavePanelConfig(ConfigWindowItemsToConfig());
+        }
+
+        void RemovePanelFiles(PanelConfigWindowItem item){
+            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(item.panelPrefab));
+            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(item.ctrlScript));
+            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(item.viewScript));
+        }
+
+        string GetScriptFolder(string scriptPath){
+            return scriptPath.Substring(0, scriptPath.LastIndexOf("/", StringComparison.CurrentCulture));
+        }
+
+        void RemoveEmptyFolder(string scriptPath){
+            scriptPath = GetScriptFolder(scriptPath);
+            if (Directory.GetFiles(scriptPath, "*.*", SearchOption.AllDirectories).Length == 0)
+            {
+                FileManager.DeleteDirectory(scriptPath);
             }
         }
 
@@ -301,18 +334,13 @@ namespace BlueNoah.Editor
             Selection.activeObject = mUISettings.PANEL_CONFIG_FILE;
         }
 
-        class PanelConfigWindowItem
-        {
-            public int id;
-            public MonoScript viewScript;
-            public MonoScript ctrlScript;
-            public GameObject panelPrefab;
-        }
+    }
 
-        class TemplateItem
-        {
-            public bool isSelect;
-            public GameObject template;
-        }
+    public class PanelConfigWindowItem
+    {
+        public int id;
+        public MonoScript viewScript;
+        public MonoScript ctrlScript;
+        public GameObject panelPrefab;
     }
 }

@@ -1,4 +1,4 @@
-﻿using BlueNoah.Assets;
+﻿using BlueNoah.IO;
 using UnityEngine;
 
 namespace BlueNoah.UI
@@ -7,8 +7,8 @@ namespace BlueNoah.UI
     {
 		private void Awake()
 		{
-            UIPanelManager.LoadPrefab += AssetsManager.LoadPanelPrefab;
-            UIDialogManager.LoadPrefab += AssetsManager.LoadDialogPrefab;
+            UIPanelManager.LoadPrefab += ResourcesLoader.LoadPanelPrefab;
+            UIDialogManager.LoadPrefab += ResourcesLoader.LoadDialogPrefab;
 		}
 
 		void Start()
@@ -18,8 +18,8 @@ namespace BlueNoah.UI
 
         private void OnDestroy()
         {
-            UIPanelManager.LoadPrefab -= AssetsManager.LoadPanelPrefab;
-            UIDialogManager.LoadPrefab -= AssetsManager.LoadDialogPrefab;
+            UIPanelManager.LoadPrefab -= ResourcesLoader.LoadPanelPrefab;
+            UIDialogManager.LoadPrefab -= ResourcesLoader.LoadDialogPrefab;
         }
     }
 }

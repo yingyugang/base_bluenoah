@@ -86,7 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224837598918898008}
   m_Layer: 5
-  m_Name: HomePanel_Landscape
+  m_Name: HomePanel_Landscape_Template
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

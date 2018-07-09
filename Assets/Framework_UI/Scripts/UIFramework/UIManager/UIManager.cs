@@ -1,11 +1,3 @@
-/*********************************************************
- * 1.Init the layers;                                    *
- * 2.Init the page configs;                              *
- * 3.Add the page controller to the layers;              *
- * 4.Add the dialogs;                                    *
- * 5.Use session to send datas in all page and dialog.   *
- * 6.Use Init(param) the send data when new page opened. *
- *********************************************************/
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,17 +16,18 @@ namespace BlueNoah.UI
 
         const string UI_SETTING = "Settings/UISettings";
 
-        private Dictionary<UILayerNames, Transform> mUILayers = new Dictionary<UILayerNames, Transform>();
-
+        Dictionary<UILayerNames, Transform> mUILayers = new Dictionary<UILayerNames, Transform>();
+        //attack to uiSystem.
         public UIDialogManager uiDialogManager;
-
+        //ctrl and view.ctrl and view will not be destroy when close.
         public UIPanelManager uiPanelManager;
+        //store model datas.model will be not destroy when close.
+        public UIModelManager uIModelManager;
 
         [HideInInspector]
         public UISettings uiSettings;
 
-        private Dictionary<string, System.Object> mSession;
-
+        Dictionary<string, System.Object> mSession;
 
         public enum UILayerNames
         {
@@ -70,12 +63,18 @@ namespace BlueNoah.UI
 
         void InitManagers()
         {
+            uIModelManager = new UIModelManager();
             uiDialogManager = new UIDialogManager(this);
             uiPanelManager = new UIPanelManager(this);
         }
 
         void CheckInputBack()
         {
+            CheckInputEscape();
+            CheckInputReturn();
+        }
+
+        void CheckInputEscape(){
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (!uiDialogManager.OnBack())
@@ -83,13 +82,16 @@ namespace BlueNoah.UI
                     uiPanelManager.OnBack();
                 }
             }
+        }
+
+        void CheckInputReturn(){
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 uiDialogManager.OnReturn();
             }
         }
 
-        private void InitLayers()
+        void InitLayers()
         {
             AddLayer(UILayerNames.UILayer_Bottom);
             AddLayer(UILayerNames.UILayer_Common);
@@ -97,37 +99,40 @@ namespace BlueNoah.UI
             AddLayer(UILayerNames.UILayer_Mask);
         }
 
-        private void AddLayer(UILayerNames layerName, bool mouseEventable = true)
+        void AddLayer(UILayerNames layerName, bool mouseEventable = true)
         {
             Transform layerTrans = AddLayer(layerName.ToString(), mouseEventable);
             mUILayers.Add(layerName, layerTrans);
         }
 
-        private Transform AddLayer(string layerName, bool mouseEventable = true)
+        Transform AddLayer(string layerName, bool mouseEventable = true)
         {
             GameObject rectLayer = CreateLayer(layerName);
             ApendCanvasGroup(rectLayer, mouseEventable);
             return rectLayer.transform;
         }
 
-        private GameObject CreateLayer(string layerName)
+        GameObject CreateLayer(string layerName)
         {
             GameObject rectLayer = new GameObject(layerName);
-            rectLayer.layer = LayerMask.NameToLayer("UI");
+            SetNameOfLayer(rectLayer,"UI");
             ApendRectTransform(rectLayer);
             return rectLayer;
         }
 
-        private void ApendRectTransform(GameObject rectLayer)
+        void SetNameOfLayer(GameObject rectLayer,string layerName){
+            rectLayer.layer = LayerMask.NameToLayer(layerName);
+        }
+
+        void ApendRectTransform(GameObject rectLayer)
         {
             RectTransform rect = rectLayer.GetOrAddComponent<RectTransform>();
             rectLayer.transform.SetParent(transform);
-            rectLayer.transform.localPosition = Vector3.zero;
-            rectLayer.transform.localScale = Vector3.one;
+            rectLayer.transform.ResetLocal();
             rect.sizeDelta = new Vector2(CANVAS_WIDTH, CANVAS_HEIGHT);
         }
 
-        private void ApendCanvasGroup(GameObject go, bool mouseEventable)
+        void ApendCanvasGroup(GameObject go, bool mouseEventable)
         {
             CanvasGroup gc = go.AddComponent<CanvasGroup>();
             gc.blocksRaycasts = mouseEventable;
@@ -138,25 +143,38 @@ namespace BlueNoah.UI
         {
             Transform trans = mUILayers[targetLayerName];
             go.transform.SetParent(trans);
-            go.transform.localScale = Vector3.one;
-            go.transform.localPosition = Vector3.zero;
+            go.transform.ResetLocal();
         }
 
         public void ShowMaskOnLayer(UILayerNames targetLayerName)
         {
             Transform layerTrans = this.mUILayers[targetLayerName];
             Image img_mask = layerTrans.GetOrAddComponent<Image>();
+            ResetMasK(img_mask);
+
+        }
+
+        void ResetMasK(Image img_mask){
             img_mask.color = new Color(0, 0, 0, 0);
             img_mask.enabled = true;
-            img_mask.DOFade(0.4f, 0.3f).SetEase(Ease.InSine);
+            MaskEaseIn(img_mask);
+        }
+
+        void MaskEaseIn(Image image){
+            image.DOFade(0.4f, 0.3f).SetEase(Ease.InSine);
         }
 
         public void HideMaskOnLayer(UILayerNames targetLayerName)
         {
             Transform layerTrans = this.mUILayers[targetLayerName];
             Image img_mask = layerTrans.GetOrAddComponent<Image>();
-            img_mask.DOFade(0, 0.3f).SetEase(Ease.InSine).OnComplete(() => {
-                img_mask.enabled = false;
+            MaseEaseOut(img_mask);
+        }
+
+        void MaseEaseOut(Image image){
+            image.DOFade(0, 0.3f).SetEase(Ease.InSine).OnComplete(() =>
+            {
+                image.enabled = false;
             });
         }
 

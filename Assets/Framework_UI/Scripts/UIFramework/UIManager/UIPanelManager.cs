@@ -1,6 +1,3 @@
-/**********************************************
- *
- *********************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,19 +10,19 @@ namespace BlueNoah.UI
     {
         public UIManager uiManager;
 
-        private const float WHITE_FLASH_DURATION = 2f;
+        const float WHITE_FLASH_DURATION = 2f;
 
-        private Dictionary<string, PanelConfigItem> mConfigItemDic = new Dictionary<string, PanelConfigItem>();
+        Dictionary<string, PanelConfigItem> mConfigItemDic = new Dictionary<string, PanelConfigItem>();
 
-        private Dictionary<string, GameObject> mPanelPrefabs = new Dictionary<string, GameObject>();
+        Dictionary<string, GameObject> mPanelPrefabs = new Dictionary<string, GameObject>();
 
-        private List<System.Type> mPageQueue = new List<System.Type>();
+        List<System.Type> mPageQueue = new List<System.Type>();
 
-        private GameObject mCurrentPanel;
+        GameObject mCurrentPanel;
 
-        private System.Type mCurrentPanelType;
+        System.Type mCurrentPanelType;
 
-        private bool mIsOpening;
+        bool mIsOpening;
 
         public static event UnitEventHandler LoadPrefab;
 
@@ -35,25 +32,27 @@ namespace BlueNoah.UI
             LoadConfig(uiManager.uiSettings.PANEL_CONFIG_FILE);
         }
 
-        private void LoadConfig(TextAsset config)
+        void LoadConfig(TextAsset config)
         {
             if (config != null)
             {
-                PanelConfig panelConfig = JsonUtility.FromJson<PanelConfig>(config.text);
-                LoadConfigToDic(panelConfig);
+                LoadConfigToDic(JsonUtility.FromJson<PanelConfig>(config.text));
             }
         }
 
-        private void LoadConfigToDic(PanelConfig panelConfig)
+        void LoadConfigToDic(PanelConfig panelConfig)
         {
             for (int i = 0; i < panelConfig.items.Count; i++)
             {
-                PanelConfigItem item = panelConfig.items[i];
-                mConfigItemDic.Add(item.ctrlClassName, item);
+                AddConfigItem(panelConfig.items[i]);
             }
         }
 
-        private GameObject GetPrefab(string classType)
+        void AddConfigItem(PanelConfigItem item){
+            mConfigItemDic.Add(item.ctrlClassName, item);
+        }
+
+        GameObject GetPrefab(string classType)
         {
             GameObject panelPrefab = null;
             if (mConfigItemDic.ContainsKey(classType))
@@ -70,7 +69,7 @@ namespace BlueNoah.UI
             return panelPrefab;
         }
 
-        private GameObject GetNewPrefab(string classType)
+        GameObject GetNewPrefab(string classType)
         {
             PanelConfigItem item = mConfigItemDic[classType];
             GameObject panelPrefab = null;
@@ -83,38 +82,37 @@ namespace BlueNoah.UI
             return panelPrefab;
         }
 
-        private bool CheckOpenable()
+        bool CheckOpenable(System.Type type)
         {
+            if (mCurrentPanelType == type)
+            {
+                return false;
+            }
             return !mIsOpening;
         }
 
-        private void EnableOpen()
+        void EnableOpen()
         {
             mIsOpening = false;
         }
 
-        private void DisableOpen()
+        void DisableOpen()
         {
             mIsOpening = true;
         }
 
         public void OpenPanel<T>(Hashtable param = null, UnityAction<GameObject> onShow = null) where T : BasePanelCtrl
         {
-            if (!CheckOpenable())
+            if (CheckOpenable(typeof(T)))
             {
-                return;
+                OpenPageWithFlash(typeof(T), true, param, onShow);
             }
-            if (mCurrentPanelType == typeof(T))
-            {
-                return;
-            }
-            OpenPageWithFlash(typeof(T), true, param, onShow);
         }
 
-        private GameObject ShowPanel(System.Type type, bool isNew, Hashtable param, UnityAction<GameObject> onShow)
+        GameObject ShowPanel(System.Type type, bool isNew, Hashtable param, UnityAction<GameObject> onShow)
         {
             GameObject go = CreatePanel(type);
-            uiManager.AddToLayer(go, BlueNoah.UI.UIManager.UILayerNames.UILayer_Common);
+            uiManager.AddToLayer(go, UIManager.UILayerNames.UILayer_Common);
             SetNewCurrentPage(go, type);
             SetDeltaSize(go);
             ApendController(go, type, param);
@@ -126,54 +124,53 @@ namespace BlueNoah.UI
             return go;
         }
 
-        private GameObject CreatePanel(System.Type type)
+        GameObject CreatePanel(System.Type type)
         {
             GameObject prefab = GetPrefab(type.ToString());
-            Debug.Log(string.Format("CreatePanel {0}",type.ToString()));
+            Debug.Log(string.Format("CreatePanel {0}",type));
             //to let the components call the awake after Init datas.
             prefab.SetActive(false);
-            GameObject go = GameObject.Instantiate(prefab);
+            GameObject go = Object.Instantiate(prefab);
             return go;
         }
 
-        private void SetNewCurrentPage(GameObject go, System.Type type)
+        void SetNewCurrentPage(GameObject go, System.Type type)
         {
             if (mCurrentPanel != null)
             {
-                GameObject.Destroy(mCurrentPanel);
+                Object.Destroy(mCurrentPanel);
             }
             mCurrentPanel = go;
             mCurrentPanelType = type;
         }
 
-        private void SetDeltaSize(GameObject go)
+        void SetDeltaSize(GameObject go)
         {
             RectTransform rect = go.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(UIManager.CANVAS_WIDTH, UIManager.CANVAS_HEIGHT);
         }
 
-        private void ApendController(GameObject go, System.Type type, Hashtable param)
+        void ApendController(GameObject go, System.Type type, Hashtable param)
         {
             go.GetOrAddComponent(type);
             go.GetComponent<BasePanelCtrl>().uiPanelManager = this;
-            go.GetComponent<BasePanelCtrl>().InitData(param);
+            go.GetComponent<BasePanelCtrl>().Transmit(param);
         }
 
         public void OnBack()
         {
-            //disable when the page changing.
-            if (!CheckOpenable())
-                return;
             if (mPageQueue.Count > 1)
             {
-                //remove current page from queue.
-                mPageQueue.RemoveAt(mPageQueue.Count - 1);
                 System.Type type = mPageQueue[mPageQueue.Count - 1];
                 OpenPageWithFlash(type, false);
+                if (CheckOpenable(type)){
+                    //remove current page from queue.
+                    mPageQueue.RemoveAt(mPageQueue.Count - 1);
+                }
             }
         }
 
-        private void OpenPageWithFlash(System.Type type, bool isNew = true, Hashtable param = null, UnityAction<GameObject> onShow = null)
+        void OpenPageWithFlash(System.Type type, bool isNew = true, Hashtable param = null, UnityAction<GameObject> onShow = null)
         {
             DisableCurrentPanel();
             DisableOpen();

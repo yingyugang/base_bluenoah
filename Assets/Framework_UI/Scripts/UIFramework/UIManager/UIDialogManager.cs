@@ -28,13 +28,13 @@ namespace BlueNoah.UI
             LoadConfig (uiManager.uiSettings.DIALOG_CONFIG_FILE);
         }
 
-        private void LoadConfig (TextAsset config)
+        void LoadConfig (TextAsset config)
         {
             if (config != null) {
                 DialogConfig dialogConfig = JsonUtility.FromJson<DialogConfig> (config.text);
                 for (int i = 0; i < dialogConfig.items.Count; i++) {
                     DialogConfigItem configItem = dialogConfig.items [i];
-                    mDialogInfos.Add (configItem.dialogName.Trim (), configItem);
+                    mDialogInfos.Add (configItem.className.Trim (), configItem);
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace BlueNoah.UI
             if (isShowMask) {
                 ShowMask ();
             }
-            t.InitData (param);
+            t.Transmit (param);
             return t;
         }
 
@@ -91,7 +91,7 @@ namespace BlueNoah.UI
             if(!ValidatePrefab<T>(prefab)){
                 return null;
             }
-            GameObject go = GameObject.Instantiate (prefab);
+            GameObject go = UnityEngine.Object.Instantiate (prefab);
             uiManager.AddToLayer (go, UIManager.UILayerNames.UILayer_Popup);
             T t = go.GetComponent<T> ();
             t.uiDialogManager = this;
@@ -126,7 +126,7 @@ namespace BlueNoah.UI
         {
             mActivedDialogs.Remove (baseDialog);
             if (baseDialog != null) {
-                GameObject.Destroy (baseDialog.gameObject);
+                UnityEngine.Object.Destroy (baseDialog.gameObject);
             }
             HideMask ();
         }
@@ -152,17 +152,17 @@ namespace BlueNoah.UI
         }
     }
 
-    [System.Serializable]
+    [Serializable]
     public class DialogConfig
     {
         public List<DialogConfigItem> items;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class DialogConfigItem
     {
         public int index;
-        public string dialogName;
+        public string className;
         public string prefabPath;
     }
 }

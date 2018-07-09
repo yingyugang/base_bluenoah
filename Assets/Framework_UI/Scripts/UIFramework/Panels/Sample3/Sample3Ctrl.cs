@@ -16,5 +16,10 @@ namespace BlueNoah.UI
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Sample1");
             });
 		}
+
+        public override void Transmit(Hashtable parameters)
+        {
+            base.Transmit(parameters);
+        }
 	}
 }

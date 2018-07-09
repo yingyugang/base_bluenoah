@@ -5,6 +5,23 @@ namespace BlueNoah.Utility
 {
     public static class ComponentExtension
     {
+        public static RectTransform RectTransform(this GameObject obj)
+        {
+            return obj.transform as RectTransform;
+        }
+
+        public static RectTransform RectTransform(this MonoBehaviour obj)
+        {
+            return obj.transform as RectTransform;
+        }
+
+        public static void ResetLocal(this Transform trans)
+        {
+            trans.localScale = Vector3.one;
+            trans.localEulerAngles = Vector3.zero;
+            trans.localPosition = Vector3.zero;
+        }
+
         public static T GetOrAddComponent<T>(this GameObject go) where T : Component
         {
             T t = go.GetComponent<T>();
@@ -35,13 +52,12 @@ namespace BlueNoah.Utility
             return t;
         }
 
-        public static void Find<T>(this Transform transform, string path, ref T comp, bool isForce = false) where T : Component
+        public static T Find<T>(this Transform transform, string path) where T : Component
         {
-            if (comp == null || isForce)
-            {
-                Debug.Log(path);
-                comp = transform.Find(path).GetComponent<T>();
-            }
+            Transform childTrans = transform.Find(path);
+            if (childTrans == null)
+                return null;
+            return childTrans.GetComponent<T>();
         }
 
         public static void GetPath(this Transform transform, Component comp, ref string resultPath)

@@ -13,7 +13,7 @@
             "prefabPath": "Assets/Framework_UI/Resources/Panels/Sample2.prefab"
         },
         {
-            "index": 0,
+            "index": 2,
             "ctrlClassName": "BlueNoah.UI.Sample3Ctrl",
             "viewClassName": "BlueNoah.UI.Sample3View",
             "prefabPath": "Assets/Framework_UI/Resources/Panels/Sample3.prefab"

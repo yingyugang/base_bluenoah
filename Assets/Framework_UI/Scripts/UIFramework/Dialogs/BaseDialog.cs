@@ -9,26 +9,38 @@ namespace BlueNoah.UI
 {
 	public class BaseDialog : MonoBehaviour
 	{
+        public GameObject containerTitleBar;
+
 		public UnityAction onClose;
 
-		public Button btn_close;
+		public Button btnClose;
 
-		public Text txt_title;
+		public Text txtTitle;
 
 		public UIDialogManager uiDialogManager;
 
+        public UnityAction onReturn;
+
+        public UnityAction onBack;
+
 		protected virtual void Awake ()
 		{
-			if (btn_close != null) {
-				btn_close.onClick.AddListener (() => {
+			if (btnClose != null) {
+				btnClose.onClick.AddListener (() => {
 					Close();
 				});
 			}
 		}
 
-		public virtual void InitData(Hashtable param){
+		public virtual void Transmit(Hashtable param){
 		
 		}
+
+        public virtual void SetSize(Vector2 size)
+        {
+            RectTransform rect = GetComponent<RectTransform>();
+            rect.sizeDelta = size;
+        }
 
 		public void Close ()
 		{
@@ -48,27 +60,30 @@ namespace BlueNoah.UI
 				mIsBackable = value;
 			}
 		}
-
+        // return able when ESC click.
 		protected virtual bool CheckReturnable(){
 			return false;
 		}
-
+        // back able when Return click.
 		protected virtual bool CheckBackable(){
-			return IsButtonActive (btn_close) && mIsBackable;
+			return IsButtonActive (btnClose) && mIsBackable;
 		}
-
 		//will be called by pc's back button.
 		//will be called by android's back button.
 		public bool OnBack(){
 			if(CheckBackable()){
+                if (onBack != null)
+                    onBack();
 				Close ();
 				return true;
 			}
 			return false;
 		}
 
-		public virtual bool OnReturn(){
+		public bool OnReturn(){
 			if(CheckReturnable()){
+                if (onReturn != null)
+                    onReturn();
 				Close ();
 				return true;
 			}

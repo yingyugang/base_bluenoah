@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace BlueNoah.UI
+namespace {0}
 {
+    [DisallowMultipleComponent]
+    [AddComponentMenu("{2}/Dialog/{1}")]
 	[ExecuteInEditMode]
-	public class Sample1View : BasePanelView
+	public class {1} : BaseDialog
 	{
-		Sample1View mSample1View;
-
-        public Button btn_battle;
-
-        public CanvasGroup container_arrow;
+		{1} m{1};
 		
 		void Awake ()
 		{

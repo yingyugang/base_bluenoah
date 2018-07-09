@@ -1,4 +1,4 @@
-﻿using BlueNoah.Assets;
+﻿using BlueNoah.IO;
 using BlueNoah.UI;
 using UnityEngine;
 
@@ -6,11 +6,10 @@ namespace BlueNoah
 {
     public class Sample1Scene : MonoBehaviour
     {
-
 		private void Awake()
 		{
-            UIPanelManager.LoadPrefab += AssetsManager.LoadPanelPrefab;
-            UIDialogManager.LoadPrefab += AssetsManager.LoadDialogPrefab;
+            UIPanelManager.LoadPrefab += ResourcesLoader.LoadPanelPrefab;
+            UIDialogManager.LoadPrefab += ResourcesLoader.LoadDialogPrefab;
 		}
 
 		void Start()
@@ -20,8 +19,8 @@ namespace BlueNoah
 
 		private void OnDestroy()
 		{
-            UIPanelManager.LoadPrefab -= AssetsManager.LoadPanelPrefab;
-            UIDialogManager.LoadPrefab -= AssetsManager.LoadDialogPrefab;
+            UIPanelManager.LoadPrefab -= ResourcesLoader.LoadPanelPrefab;
+            UIDialogManager.LoadPrefab -= ResourcesLoader.LoadDialogPrefab;
 		}
 	}
 }

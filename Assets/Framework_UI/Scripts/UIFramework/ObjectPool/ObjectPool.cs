@@ -4,11 +4,10 @@ using System.Collections.Generic;
 namespace BlueNoah.UI
 {
     [DisallowMultipleComponent]
-    [AddComponentMenu("")]
+    [AddComponentMenu("BlueNoah/UI/PoolObject")]
     public class PoolObject : MonoBehaviour
     {
         public string poolName;
-        //defines whether the object is waiting in pool or is in use
         public bool isPooled;
     }
 
@@ -45,7 +44,7 @@ namespace BlueNoah.UI
             this.rootObj.transform.SetParent(rootPoolObj.transform, false);
 
             // In case the origin one is Destroyed, we should keep at least one
-            GameObject go = GameObject.Instantiate(poolObjectPrefab);
+            GameObject go = Object.Instantiate(poolObjectPrefab);
             PoolObject po = go.GetComponent<PoolObject>();
             if (po == null)
             {
@@ -74,7 +73,7 @@ namespace BlueNoah.UI
         {
             for (int index = 0; index < initialCount; index++)
             {
-                PoolObject po = GameObject.Instantiate(availableObjStack.Peek());
+                PoolObject po = Object.Instantiate(availableObjStack.Peek());
                 AddObjectToPool(po);
             }
         }

@@ -27,4 +27,9 @@ public class StringUtility {
         return str;
     }
 
+    public static string NameSpaceToPathFormat(string nameSpace)
+    {
+        return nameSpace.Replace(".", "/");
+    }
+
 }

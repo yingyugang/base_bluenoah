@@ -10,7 +10,7 @@ namespace BlueNoah.UI
 
 		#if UNITY_EDITOR
 		[SerializeField]
-		protected bool load;
+        protected bool loadUI;
 		[SerializeField]
 		protected bool loadPath;
 		#endif
@@ -19,8 +19,8 @@ namespace BlueNoah.UI
 		protected virtual void Update ()
 		{
 			#if UNITY_EDITOR
-			if (load) {
-				load = false;
+			if (loadUI) {
+				loadUI = false;
 				LoadUIs ();
 			}
 			if (loadPath) {
@@ -30,14 +30,12 @@ namespace BlueNoah.UI
 			#endif
 		}
 
-		//不用也没关系
 		//no matter wether used
 		public virtual void LoadUIs ()
 		{
 
 		}
 
-		//不用也没关系
 		//no matter wether used
 		public virtual void LoadPaths ()
 		{

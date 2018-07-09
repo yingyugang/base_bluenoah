@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using BlueNoah.UI;
+using BlueNoah.Editor.IO;
 
 namespace BlueNoah.Editor
 {
@@ -11,14 +12,14 @@ namespace BlueNoah.Editor
 
 		List<DialogConfigWindowItem> mDialogConfigWindowItems;
 
-		bool mIsDisable = false;
+        bool mIsDisable = true;
 
 		string mDialogName;
 
 		[MenuItem (UIEditorConstant.UI_DIALOG_CONFIG_WINDOW_MENUITEM)]
 		static void OnOpen ()
 		{
-			mUIDialogConfigWindow = EditorWindow.GetWindow<UIDialogConfigWindow> ();
+			mUIDialogConfigWindow = GetWindow<UIDialogConfigWindow> ();
 			mUIDialogConfigWindow.Show ();
 			mUIDialogConfigWindow.Focus ();
 		}
@@ -39,7 +40,7 @@ namespace BlueNoah.Editor
 			for (int i = 0; i < mDialogConfig.items.Count; i++) {
 				DialogConfigWindowItem item = new DialogConfigWindowItem ();
 				item.index = i;
-				item.dialogName = mDialogConfig.items [i].dialogName;
+                item.classScript = EditorFileManager.FindMono(mDialogConfig.items[i].className);
 				item.dialogPrefab = AssetDatabase.LoadAssetAtPath<GameObject> (mDialogConfig.items [i].prefabPath);
 				mDialogConfigWindowItems.Add (item);
 			}
@@ -68,7 +69,7 @@ namespace BlueNoah.Editor
 				EditorGUILayout.BeginHorizontal ();
 				GUILayout.Label (i.ToString ());
 				EditorGUI.BeginDisabledGroup (mIsDisable);
-				EditorGUILayout.TextField (item.dialogName);
+                EditorGUILayout.ObjectField(item.classScript,typeof(MonoScript),false);
 				EditorGUILayout.ObjectField (item.dialogPrefab, typeof(GameObject), false);
 				EditorGUI.EndDisabledGroup ();
 				EditorGUI.BeginDisabledGroup (true);
@@ -101,10 +102,20 @@ namespace BlueNoah.Editor
 		
 		}
 
+        //void CreateViewClass(string viewClassName, string panelScriptPath)
+        //{
+        //    string templateText = mUIEditorSettings.SCRIPT_TEMPLATE_PANEL_VIEW.text;
+        //    string resultText = templateText.Replace("{0}", mUIEditorSettings.PANEL_CLASS_NAMESPACE);
+        //    resultText = resultText.Replace("{1}", viewClassName.Trim());
+        //    resultText = resultText.Replace("{2}", NameSpaceToPathFormat(mUIEditorSettings.PANEL_CLASS_NAMESPACE));
+        //    string filePath = Path.Combine(panelScriptPath, viewClassName + ".cs");
+        //    FileManager.WriteString(filePath, resultText);
+        //}
+
 		class DialogConfigWindowItem
 		{
 			public int index;
-			public string dialogName;
+			public MonoScript classScript;
 			public GameObject dialogPrefab;
 		}
 

@@ -18,9 +18,9 @@ namespace BlueNoah.UI
 			mBasePanelView = GetComponent<BasePanelView> ();
 		}
 
-		//this function will be run after awake.
-		//TODO better run before awake.
-		public virtual void InitData (Hashtable parameters)
+		//this function will be run before awake.
+        //use to send data from outside to this ctrl.
+        public virtual void Transmit (Hashtable parameters)
 		{
 			
 		}

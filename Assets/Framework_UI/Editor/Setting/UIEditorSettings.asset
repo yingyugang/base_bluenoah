@@ -13,8 +13,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PANEL_PREFAB_FOLDER: {fileID: 102900000, guid: 9173538f2eac143929cafbf67d620c22,
     type: 3}
-  DIALOG_PREFAB_FOLDER_PATH: {fileID: 102900000, guid: 435abb54f92104d5a9ee2fff8f5fd7e5,
-    type: 3}
   SCRIPT_TEMPLATE_PATH: {fileID: 102900000, guid: 47187f401935f47b9ae4929e6606fc67,
     type: 3}
   SCRIPT_TEMPLATE_PANEL_CTRL: {fileID: 4900000, guid: 42b0e7058d3224c3d96b798e6740a4e5,
@@ -22,8 +20,6 @@ MonoBehaviour:
   SCRIPT_TEMPLATE_PANEL_VIEW: {fileID: 4900000, guid: cb6c5f9ec686e4e448409374f1bc52df,
     type: 3}
   PANEL_CLASS_PATH: {fileID: 102900000, guid: 9e6a4071edd4a443ca232ad0be1b1d1a, type: 3}
-  DEFAULT_PREFAB_TEMPLATE: {fileID: 1061573425166662, guid: 22fcf9ead681445c0b085da5cb5f8d21,
-    type: 2}
   PREFAB_TEMPLATES:
   - {fileID: 1061573425166662, guid: 22fcf9ead681445c0b085da5cb5f8d21, type: 2}
   - {fileID: 1186209588008050, guid: b5fb62fb9ae9744c8a5485f3926f7959, type: 2}
@@ -32,3 +28,9 @@ MonoBehaviour:
   PANEL_CLASS_NAMESPACE: BlueNoah.UI
   CTRL_CLASS_SUFFIX: Ctrl
   VIEW_CLASS_SUFFIX: View
+  DIALOG_PREFAB_FOLDER_PATH: {fileID: 102900000, guid: 435abb54f92104d5a9ee2fff8f5fd7e5,
+    type: 3}
+  PREFAB_DIALOG_TEMPLATES:
+  - {fileID: 1651580203466164, guid: f6bf9ae461c0642cba25a82e51570432, type: 2}
+  SCRIPT_TEMPLATE_DIALOG: {fileID: 4900000, guid: 10e7c37fc72d74b9d93185912ef09267,
+    type: 3}

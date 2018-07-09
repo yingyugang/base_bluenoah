@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace {0}
 {
+    [DisallowMultipleComponent]
+    [AddComponentMenu("{2}/View/{1}")]
 	[ExecuteInEditMode]
 	public class {1} : BasePanelView
 	{

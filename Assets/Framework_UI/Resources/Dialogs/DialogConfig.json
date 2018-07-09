@@ -1,1 +1,14 @@
-{"items":[{"index":0,"dialogName":"BaseCommonDialog","prefabPath":"Assets/Resources/Dialogs/BaseCommonDialog.prefab"},{"index":1,"dialogName":"BaseConfirmDialog","prefabPath":"Assets/Resources/Dialogs/BaseConfirmDialog.prefab"}]}
+{
+  "items": [
+    {
+      "index": 0,
+      "className": "BlueNoah.UI.CommonDialog",
+      "prefabPath": "Assets/Framework_UI/Resources/Dialogs/BaseCommonDialog.prefab"
+    },
+    {
+      "index": 1,
+      "className": "BlueNoah.UI.ConfirmDialog",
+      "prefabPath": "Assets/Framework_UI/Resources/Dialogs/BaseConfirmDialog.prefab"
+    }
+  ]
+}
