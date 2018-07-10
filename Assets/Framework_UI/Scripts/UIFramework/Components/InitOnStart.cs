@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace BlueNoah.UI
 {
-    [RequireComponent(typeof(UnityEngine.UI.LoopScrollRect))]
+    [RequireComponent(typeof(LoopScrollRect))]
     [DisallowMultipleComponent]
     public class InitOnStart : MonoBehaviour
     {

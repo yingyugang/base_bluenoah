@@ -60,11 +60,11 @@ namespace BlueNoah.UI
 				mIsBackable = value;
 			}
 		}
-        // return able when ESC click.
+        // return able when Return click.
 		protected virtual bool CheckReturnable(){
 			return false;
 		}
-        // back able when Return click.
+        // back able when ESC click.
 		protected virtual bool CheckBackable(){
 			return IsButtonActive (btnClose) && mIsBackable;
 		}

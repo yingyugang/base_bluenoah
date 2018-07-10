@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.UI;
 
-namespace UnityEngine.UI
+namespace BlueNoah.UI
 {
-    public static class SGDefaultControls
+    public static class DefaultControls
     {
         #region code from DefaultControls.cs
         public struct Resources

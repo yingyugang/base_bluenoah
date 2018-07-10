@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace UnityEngine.UI
+namespace BlueNoah.UI
 {
     public abstract class LoopScrollDataSource
     {

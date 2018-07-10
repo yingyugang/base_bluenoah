@@ -87,7 +87,7 @@ namespace BlueNoah.UI
         }
 
         T CreateDialog<T>(string dialogName) where T : BaseDialog{
-            GameObject prefab = GetPrefab (dialogName);
+            GameObject prefab = GetPrefab (typeof(T).ToString());
             if(!ValidatePrefab<T>(prefab)){
                 return null;
             }
@@ -99,8 +99,9 @@ namespace BlueNoah.UI
         }
 
         bool ValidatePrefab<T>(GameObject prefab){
-            if (prefab == null) {
-                Debug.LogError (string.Format ("{0}'s prefab is not existing!", prefab.name));
+            if (prefab == null)
+            {
+                Debug.LogError(string.Format("prefab is not existing!"));
                 return false;
             }
             if (prefab.GetComponent<T> () == null) {

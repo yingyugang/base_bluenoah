@@ -3,8 +3,9 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System;
 using System.Collections;
+using UnityEngine.UI;
 
-namespace UnityEngine.UI
+namespace BlueNoah.UI
 {
     [AddComponentMenu("")]
     [DisallowMultipleComponent]

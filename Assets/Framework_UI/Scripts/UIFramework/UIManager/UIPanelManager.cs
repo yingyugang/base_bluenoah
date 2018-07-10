@@ -14,9 +14,9 @@ namespace BlueNoah.UI
 
         Dictionary<string, PanelConfigItem> mConfigItemDic = new Dictionary<string, PanelConfigItem>();
 
-        Dictionary<string, GameObject> mPanelPrefabs = new Dictionary<string, GameObject>();
+        Dictionary<string, GameObject> mPanelPrefabDic = new Dictionary<string, GameObject>();
 
-        List<System.Type> mPageQueue = new List<System.Type>();
+        List<System.Type> mPageList = new List<System.Type>();
 
         GameObject mCurrentPanel;
 
@@ -52,32 +52,47 @@ namespace BlueNoah.UI
             mConfigItemDic.Add(item.ctrlClassName, item);
         }
 
+        bool ConfigExisting(string classType){
+            return mConfigItemDic.ContainsKey(classType);
+        }
+
+        bool IsPrefabCached(string classType){
+            return mPanelPrefabDic.ContainsKey(classType);
+        }
+
+        void CachePrefab(string classType,GameObject prefab){
+            if (!string.IsNullOrEmpty(classType) &&  prefab != null)
+                mPanelPrefabDic.Add(classType, prefab);
+        }
+
         GameObject GetPrefab(string classType)
         {
             GameObject panelPrefab = null;
-            if (mConfigItemDic.ContainsKey(classType))
+            if (ConfigExisting(classType))
             {
-                if (mPanelPrefabs.ContainsKey(classType))
-                {
-                    panelPrefab = mPanelPrefabs[classType];
-                }
-                else
-                {
-                    panelPrefab = GetNewPrefab(classType);
-                }
+                panelPrefab = GetOrCreatePrefab(classType);
             }
             return panelPrefab;
         }
 
+        GameObject GetOrCreatePrefab(string classType){
+            if (IsPrefabCached(classType))
+            {
+                return mPanelPrefabDic[classType];
+            }
+            else
+            {
+                return GetNewPrefab(classType);
+            }
+        }
+
         GameObject GetNewPrefab(string classType)
         {
-            PanelConfigItem item = mConfigItemDic[classType];
             GameObject panelPrefab = null;
             if (LoadPrefab != null)
             {
-                panelPrefab = LoadPrefab(item.prefabPath);
-                if (panelPrefab != null)
-                    mPanelPrefabs.Add(classType, panelPrefab);
+                panelPrefab = LoadPrefab(mConfigItemDic[classType].prefabPath);
+                CachePrefab(classType,panelPrefab);
             }
             return panelPrefab;
         }
@@ -112,36 +127,58 @@ namespace BlueNoah.UI
         GameObject ShowPanel(System.Type type, bool isNew, Hashtable param, UnityAction<GameObject> onShow)
         {
             GameObject go = CreatePanel(type);
-            uiManager.AddToLayer(go, UIManager.UILayerNames.UILayer_Common);
-            SetNewCurrentPage(go, type);
-            SetDeltaSize(go);
-            ApendController(go, type, param);
-            go.SetActive(true);
-            if (isNew)
-                mPageQueue.Add(type);
-            if (onShow != null)
-                onShow(go);
+            ResetPanel(type, go);
+            InitController(go, type, param);
+            AddToHistory(type, isNew);
+            OnShowPanel(go,onShow);
             return go;
         }
 
         GameObject CreatePanel(System.Type type)
         {
             GameObject prefab = GetPrefab(type.ToString());
-            Debug.Log(string.Format("CreatePanel {0}",type));
             //to let the components call the awake after Init datas.
             prefab.SetActive(false);
             GameObject go = Object.Instantiate(prefab);
             return go;
         }
 
+        void ResetPanel(System.Type type,GameObject go){
+            PutToLayer(go);
+            SetNewCurrentPage(go, type);
+            SetDeltaSize(go);
+        }
+
+        void AddToHistory(System.Type type,bool isNew){
+            if (isNew)
+                mPageList.Add(type);
+        }
+
+        void OnShowPanel(GameObject go,UnityAction<GameObject> onShow){
+            if (onShow != null)
+                onShow(go);
+        }
+
+        void ActivePanel(GameObject go){
+            go.SetActive(true);
+        }
+
+        void PutToLayer(GameObject go){
+            uiManager.AddToLayer(go, UIManager.UILayerNames.UILayer_Common);
+        }
+
         void SetNewCurrentPage(GameObject go, System.Type type)
         {
+            DestroyCurrentPanel();
+            mCurrentPanel = go;
+            mCurrentPanelType = type;
+        }
+
+        void DestroyCurrentPanel(){
             if (mCurrentPanel != null)
             {
                 Object.Destroy(mCurrentPanel);
             }
-            mCurrentPanel = go;
-            mCurrentPanelType = type;
         }
 
         void SetDeltaSize(GameObject go)
@@ -150,22 +187,23 @@ namespace BlueNoah.UI
             rect.sizeDelta = new Vector2(UIManager.CANVAS_WIDTH, UIManager.CANVAS_HEIGHT);
         }
 
-        void ApendController(GameObject go, System.Type type, Hashtable param)
+        void InitController(GameObject go, System.Type type, Hashtable param)
         {
             go.GetOrAddComponent(type);
             go.GetComponent<BasePanelCtrl>().uiPanelManager = this;
             go.GetComponent<BasePanelCtrl>().Transmit(param);
+            ActivePanel(go);
         }
 
         public void OnBack()
         {
-            if (mPageQueue.Count > 1)
+            if (mPageList.Count > 1)
             {
-                System.Type type = mPageQueue[mPageQueue.Count - 1];
+                System.Type type = mPageList[mPageList.Count - 1];
                 OpenPageWithFlash(type, false);
                 if (CheckOpenable(type)){
                     //remove current page from queue.
-                    mPageQueue.RemoveAt(mPageQueue.Count - 1);
+                    mPageList.RemoveAt(mPageList.Count - 1);
                 }
             }
         }

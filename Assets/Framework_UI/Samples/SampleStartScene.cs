@@ -6,11 +6,15 @@ namespace BlueNoah.UI
     public class SampleStartScene : MonoBehaviour
     {
 
-        private void Start()
+        void Awake()
         {
 #if UNITY_EDITOR
             CheckSampleScenes();
 #endif
+        }
+
+        void Start()
+        {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Sample1");
         }
 
@@ -29,8 +33,9 @@ namespace BlueNoah.UI
             string sample1 = "Assets/Framework_UI/Scenes/Sample1.unity";
             string sample2 = "Assets/Framework_UI/Scenes/Sample2.unity";
             string sample3 = "Assets/Framework_UI/Scenes/SampleStartScene.unity";
-            if(!editorSceneSet.Contains(sample1)){
-                Debug.Log(string.Format("{0} add to editor settings.",sample1));
+            if (!editorSceneSet.Contains(sample1))
+            {
+                Debug.Log(string.Format("{0} add to editor settings.", sample1));
                 editorSceneList.Add(new UnityEditor.EditorBuildSettingsScene(sample1, true));
             }
             if (!editorSceneSet.Contains(sample2))

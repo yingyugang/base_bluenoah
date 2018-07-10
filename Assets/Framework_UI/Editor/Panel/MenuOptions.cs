@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityEditor.UI
+namespace BlueNoah.UI
 {
-    static internal class SGMenuOptions
+    static internal class MenuOptions
     {
         #region code from MenuOptions.cs
         private const string kUILayerName = "UI";
@@ -17,21 +17,21 @@ namespace UnityEditor.UI
         private const string kDropdownArrowPath = "UI/Skin/DropdownArrow.psd";
         private const string kMaskPath = "UI/Skin/UIMask.psd";
 
-        static private DefaultControls.Resources s_StandardResources;
+        static private DefaultControls.Resources mStandardResources;
 
         static private DefaultControls.Resources GetStandardResources()
         {
-            if (s_StandardResources.standard == null)
+            if (mStandardResources.standard == null)
             {
-                s_StandardResources.standard = AssetDatabase.GetBuiltinExtraResource<Sprite>(kStandardSpritePath);
-                s_StandardResources.background = AssetDatabase.GetBuiltinExtraResource<Sprite>(kBackgroundSpritePath);
-                s_StandardResources.inputField = AssetDatabase.GetBuiltinExtraResource<Sprite>(kInputFieldBackgroundPath);
-                s_StandardResources.knob = AssetDatabase.GetBuiltinExtraResource<Sprite>(kKnobPath);
-                s_StandardResources.checkmark = AssetDatabase.GetBuiltinExtraResource<Sprite>(kCheckmarkPath);
-                s_StandardResources.dropdown = AssetDatabase.GetBuiltinExtraResource<Sprite>(kDropdownArrowPath);
-                s_StandardResources.mask = AssetDatabase.GetBuiltinExtraResource<Sprite>(kMaskPath);
+                mStandardResources.standard = AssetDatabase.GetBuiltinExtraResource<Sprite>(kStandardSpritePath);
+                mStandardResources.background = AssetDatabase.GetBuiltinExtraResource<Sprite>(kBackgroundSpritePath);
+                mStandardResources.inputField = AssetDatabase.GetBuiltinExtraResource<Sprite>(kInputFieldBackgroundPath);
+                mStandardResources.knob = AssetDatabase.GetBuiltinExtraResource<Sprite>(kKnobPath);
+                mStandardResources.checkmark = AssetDatabase.GetBuiltinExtraResource<Sprite>(kCheckmarkPath);
+                mStandardResources.dropdown = AssetDatabase.GetBuiltinExtraResource<Sprite>(kDropdownArrowPath);
+                mStandardResources.mask = AssetDatabase.GetBuiltinExtraResource<Sprite>(kMaskPath);
             }
-            return s_StandardResources;
+            return mStandardResources;
         }
 
         private static void SetPositionVisibleinSceneView(RectTransform canvasRTransform, RectTransform itemTransform)
@@ -130,21 +130,21 @@ namespace UnityEditor.UI
                 return canvas.gameObject;
 
             // No canvas in the scene at all? Then create a new one.
-            return SGMenuOptions.CreateNewUI();
+            return MenuOptions.CreateNewUI();
         }
         #endregion
         
         [MenuItem("GameObject/UI/Loop Horizontal Scroll Rect", false, 2151)]
         static public void AddLoopHorizontalScrollRect(MenuCommand menuCommand)
         {
-            GameObject go = SGDefaultControls.CreateLoopHorizontalScrollRect(GetStandardResources());
+            GameObject go = DefaultControls.CreateLoopHorizontalScrollRect(GetStandardResources());
             PlaceUIElementRoot(go, menuCommand);
         }
 
         [MenuItem("GameObject/UI/Loop Vertical Scroll Rect", false, 2152)]
         static public void AddLoopVerticalScrollRect(MenuCommand menuCommand)
         {
-            GameObject go = SGDefaultControls.CreateLoopVerticalScrollRect(GetStandardResources());
+            GameObject go = DefaultControls.CreateLoopVerticalScrollRect(GetStandardResources());
             PlaceUIElementRoot(go, menuCommand);
         }
     }

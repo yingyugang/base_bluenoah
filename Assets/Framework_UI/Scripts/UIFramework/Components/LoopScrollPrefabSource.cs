@@ -2,7 +2,7 @@
 using System.Collections;
 using BlueNoah.UI;
 
-namespace UnityEngine.UI
+namespace BlueNoah.UI
 {
     [System.Serializable]
     public class LoopScrollPrefabSource 

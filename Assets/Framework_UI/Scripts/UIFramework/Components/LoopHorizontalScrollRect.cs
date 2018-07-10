@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-namespace UnityEngine.UI
+namespace BlueNoah.UI
 {
     [AddComponentMenu("UI/Loop Horizontal Scroll Rect", 50)]
     [DisallowMultipleComponent]
