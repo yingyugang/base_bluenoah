@@ -3,26 +3,27 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace BlueNoah.AssetBundle.Build
+namespace BlueNoah.Editor.AssetBundle.Management
 {
-    public class AssetBundleSettingWindowGUI
+    public class AssetBundleBuildWindowGUI : AssetBundleWindowGUI
     {
         AssetBundleWindowEvents mAssetBundleWindowEvents;
 
         Vector2 mScrollPos;
 
-        public AssetBundleSettingWindowGUI(AssetBundleWindowEvents assetBundleWindowEvents)
+        public AssetBundleBuildWindowGUI(AssetBundleWindowEvents assetBundleWindowEvents)
         {
             mAssetBundleWindowEvents = assetBundleWindowEvents;
         }
 
-        public void DrawAssetBundlePattern(List<ABBuildEntity> allAssetBundleEntitys){
-            mScrollPos = EditorGUILayout.BeginScrollView(mScrollPos, GUILayout.Height(400));    
+        public void DrawAssetBundlePattern(List<AssetBundleWindowItem> allAssetBundleEntitys)
+        {
+            mScrollPos = EditorGUILayout.BeginScrollView(mScrollPos, GUILayout.Height(400));
             DrawAssetBundleList(allAssetBundleEntitys);
             EditorGUILayout.EndScrollView();
         }
 
-        void DrawAssetBundleList(List<ABBuildEntity> allAssetBundleEntitys)
+        void DrawAssetBundleList(List<AssetBundleWindowItem> allAssetBundleEntitys)
         {
             for (int i = 0; i < allAssetBundleEntitys.Count; i++)
             {
@@ -30,7 +31,7 @@ namespace BlueNoah.AssetBundle.Build
             }
         }
 
-        void DrawAssetbundleItem(ABBuildEntity abBuildEntity)
+        void DrawAssetbundleItem(AssetBundleWindowItem abBuildEntity)
         {
             EditorGUILayout.BeginHorizontal();
             DrawAssetbundleItemSelect(abBuildEntity);
@@ -39,35 +40,41 @@ namespace BlueNoah.AssetBundle.Build
             EditorGUILayout.EndHorizontal();
         }
 
-        void DrawAssetbundleItemSelect(ABBuildEntity abBuildEntity){
+        void DrawAssetbundleItemSelect(AssetBundleWindowItem abBuildEntity)
+        {
             GUI.color = abBuildEntity.isSelected ? Color.green : Color.white;
             abBuildEntity.isSelected = GUILayout.Toggle(abBuildEntity.isSelected, "", GUILayout.Width(30));
         }
 
-        void DrawAssetbundleItemData(ABBuildEntity abBuildEntity){
-            GUILayout.Label(abBuildEntity.abName, GUILayout.Width(180));
-            GUILayout.TextField(abBuildEntity.abHash, GUILayout.Width(300));
-            GUI.color = CheckColor(abBuildEntity.realLength);
+        void DrawAssetbundleItemData(AssetBundleWindowItem abBuildEntity)
+        {
+            GUILayout.Label(abBuildEntity.assetBundleConfigItem.name, GUILayout.Width(180));
+            GUILayout.TextField(abBuildEntity.assetBundleConfigItem.hash, GUILayout.Width(300));
+            GUI.color = CheckColor(abBuildEntity.assetBundleConfigItem.length);
             GUILayout.Label(abBuildEntity.displayLength, GUILayout.Width(90));
             GUI.color = Color.white;
         }
 
-        void DrawSelectAssetButton(ABBuildEntity abBuildEntity){
+        void DrawSelectAssetButton(AssetBundleWindowItem abBuildEntity)
+        {
             if (GUILayout.Button("SelectDP", GUILayout.Width(100)))
             {
-                mAssetBundleWindowEvents.onSelectAssets(abBuildEntity.abName);
+                mAssetBundleWindowEvents.onSelectAssets(abBuildEntity.assetBundleConfigItem.name);
             }
         }
 
-        Color CheckColor(long fileLength){
+        Color CheckColor(long fileLength)
+        {
             return fileLength > 1024 * 1024 ? Color.red : CheckMiddleColor(fileLength);
         }
 
-        Color CheckMiddleColor(long fileLength){
+        Color CheckMiddleColor(long fileLength)
+        {
             return fileLength > 1024 ? Color.yellow : Color.white;
         }
 
-        public void DrawHashCodeFile(string serverHash){
+        public void DrawHashCodeFile(string serverHash)
+        {
             GUILayout.Space(20);
             EditorGUILayout.BeginHorizontal();
             GUILayout.TextField(serverHash, GUILayout.Width(400));
@@ -78,7 +85,8 @@ namespace BlueNoah.AssetBundle.Build
             EditorGUILayout.EndHorizontal();
         }
 
-        public void DrawBottomButtonsPattern(){
+        public void DrawBottomButtonsPattern()
+        {
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("BuildAll", GUILayout.Width(100)))
             {
