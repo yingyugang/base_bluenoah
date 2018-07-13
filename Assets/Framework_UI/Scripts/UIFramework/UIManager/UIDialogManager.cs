@@ -1,6 +1,3 @@
-/**********************************************
- *
- *********************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,144 +9,162 @@ namespace BlueNoah.UI
     //one dialog class may correspond servel prefabs, so need use the dialog name to unique the all the dialogs.
     public class UIDialogManager
     {
-        public UIManager uiManager;
+        UIManager mUIManager;
 
-        Dictionary<string,DialogConfigItem> mDialogInfos = new Dictionary<string,DialogConfigItem> ();
+        Dictionary<string, DialogConfigItem> mDialogInfos = new Dictionary<string, DialogConfigItem>();
 
-        List<BaseDialog> mActivedDialogs = new List<BaseDialog> ();
+        List<BaseDialog> mActivedDialogs = new List<BaseDialog>();
 
         public delegate GameObject UnitEventHandler(string path);
 
         public static event UnitEventHandler LoadPrefab;
 
-        public UIDialogManager (UIManager uiManager)
+        public UIDialogManager(UIManager uiManager)
         {
-            this.uiManager = uiManager;
-            LoadConfig (uiManager.uiSettings.DIALOG_CONFIG_FILE);
+            mUIManager = uiManager;
+            LoadConfig(mUIManager.uiSettings.DIALOG_CONFIG_FILE);
         }
 
-        void LoadConfig (TextAsset config)
+        void LoadConfig(TextAsset config)
         {
-            if (config != null) {
-                DialogConfig dialogConfig = JsonUtility.FromJson<DialogConfig> (config.text);
-                for (int i = 0; i < dialogConfig.items.Count; i++) {
-                    DialogConfigItem configItem = dialogConfig.items [i];
-                    mDialogInfos.Add (configItem.className.Trim (), configItem);
-                }
+            if (config != null)
+            {
+                DialogConfig dialogConfig = JsonUtility.FromJson<DialogConfig>(config.text);
+                LoadConfigItems(dialogConfig.items);
             }
         }
 
-        GameObject GetPrefab (string dialogName)
+        void LoadConfigItems(List<DialogConfigItem> items)
         {
-            if (string.IsNullOrEmpty (dialogName)) {
-                return null;
+            for (int i = 0; i < items.Count; i++)
+            {
+                LoadConfigInfo(items[i]);
             }
-            if (mDialogInfos.ContainsKey (dialogName)) {
-                string prefabPath = mDialogInfos [dialogName].prefabPath;
-                GameObject prefab = null;
-                if(LoadPrefab!=null){
-                    prefab = LoadPrefab (prefabPath);
-                }
-                return prefab;
+        }
+
+        void LoadConfigInfo(DialogConfigItem configItem)
+        {
+            mDialogInfos.Add(configItem.className.Trim(), configItem);
+        }
+
+        GameObject GetNewPrefab(string dialogName)
+        {
+#if UNITY_EDITOR
+            if (LoadPrefab == null)
+            {
+                Debug.LogError("can't load prefab , please set the LoadPrefab to UIDialogManager!");
+            }
+#endif
+            if (mDialogInfos.ContainsKey(dialogName) && LoadPrefab != null)
+            {
+                return LoadPrefab(mDialogInfos[dialogName].prefabPath);
             }
             return null;
         }
 
-        public bool OnBack ()
+        public bool OnBack()
         {
-            if (mActivedDialogs != null && mActivedDialogs.Count > 0) {
-                BaseDialog baseDialog = mActivedDialogs [mActivedDialogs.Count - 1];
-                baseDialog.OnBack ();
+            if (mActivedDialogs != null && mActivedDialogs.Count > 0)
+            {
+                mActivedDialogs[mActivedDialogs.Count - 1].OnBack();
                 return true;
             }
             return false;
         }
 
-        public bool OnReturn(){
-            if (mActivedDialogs != null && mActivedDialogs.Count > 0) {
-                BaseDialog baseDialog = mActivedDialogs [mActivedDialogs.Count - 1];
-                baseDialog.OnReturn ();
+        public bool OnReturn()
+        {
+            if (mActivedDialogs != null && mActivedDialogs.Count > 0)
+            {
+                mActivedDialogs[mActivedDialogs.Count - 1].OnReturn();
                 return true;
             }
             return false;
         }
-        //1.in front of the page(no mask , close when panel close)
-        //2.on the mask layer.(mask , can not do anything before close it)
-        public T OpenDialog<T> (string dialogName, bool isShowMask = true, Hashtable param = null) where T : BaseDialog
+
+        public T OpenDialog<T>(Hashtable param = null) where T : BaseDialog
         {
-            T t = CreateDialog<T> (dialogName);
-            mActivedDialogs.Add (t);
-            if (isShowMask) {
-                ShowMask ();
-            }
-            t.Transmit (param);
+            T t = OpenDialogWithoutMask<T>(param);
+            ShowMask();
             return t;
         }
 
-        T CreateDialog<T>(string dialogName) where T : BaseDialog{
-            GameObject prefab = GetPrefab (typeof(T).ToString());
-            if(!ValidatePrefab<T>(prefab)){
-                return null;
-            }
-            GameObject go = UnityEngine.Object.Instantiate (prefab);
-            uiManager.AddToLayer (go, UIManager.UILayerNames.UILayer_Popup);
-            T t = go.GetComponent<T> ();
+        public T OpenDialogWithoutMask<T>(Hashtable param = null) where T : BaseDialog
+        {
+            T t = CreateDialog<T>();
+            AddToHistory(t);
+            t.Transmit(param);
+            return t;
+        }
+
+        void AddToHistory(BaseDialog baseDialog)
+        {
+            mActivedDialogs.Add(baseDialog);
+        }
+
+        T CreateDialog<T>() where T : BaseDialog
+        {
+            GameObject prefab = GetNewPrefab(typeof(T).ToString());
+            GameObject go = UnityEngine.Object.Instantiate(prefab);
+            return InitDialog<T>(go);
+        }
+
+        T InitDialog<T>(GameObject go) where T : BaseDialog
+        {
+            AddToLayer(go);
+            T t = go.GetComponent<T>();
             t.uiDialogManager = this;
             return t;
         }
 
-        bool ValidatePrefab<T>(GameObject prefab){
-            if (prefab == null)
+        void AddToLayer(GameObject go)
+        {
+            mUIManager.AddToLayer(go, UIManager.UILayerNames.UILayer_Popup);
+        }
+
+        public void ShowCommonDialog(string title, string msg, UnityAction onOk, bool showClose = false)
+        {
+            CommonDialog commonDialog = OpenDialog<CommonDialog>();
+            commonDialog.Show(title, msg, onOk, showClose);
+        }
+
+        public void ShowConfirmDialog(string msg, UnityAction onOk, UnityAction onCancel, bool showClose = false)
+        {
+            ConfirmDialog confirmDialog = OpenDialog<ConfirmDialog>();
+            confirmDialog.Show(msg, onOk, onCancel, showClose);
+        }
+
+        public void CloseDialog(BaseDialog baseDialog)
+        {
+            mActivedDialogs.Remove(baseDialog);
+            if (baseDialog != null)
             {
-                Debug.LogError(string.Format("prefab is not existing!"));
-                return false;
+                UnityEngine.Object.Destroy(baseDialog.gameObject);
             }
-            if (prefab.GetComponent<T> () == null) {
-                Debug.LogError (string.Format ("{0}'s component {1} is not existing!", prefab.name, typeof(T)));
-                return false;
-            }
-            return true;
+            HideMask();
         }
 
-        public void ShowCommonDialog (string title, string msg, UnityAction onOk, bool showClose = false)
+        void ShowMask()
         {
-            CommonDialog commonDialog = OpenDialog<CommonDialog> ("BaseCommonDialog");
-            commonDialog.Show (title, msg, onOk, showClose);
+            mUIManager.ShowMaskOnLayer(UIManager.UILayerNames.UILayer_Popup);
         }
 
-        public void ShowConfirmDialog (string msg, UnityAction onOk, UnityAction onCancel, bool showClose = false)
+        void HideMask()
         {
-            ConfirmDialog confirmDialog = OpenDialog<ConfirmDialog> ("BaseConfirmDialog");
-            confirmDialog.Show (msg, onOk, onCancel, showClose);
-        }
-
-        public void CloseDialog (BaseDialog baseDialog)
-        {
-            mActivedDialogs.Remove (baseDialog);
-            if (baseDialog != null) {
-                UnityEngine.Object.Destroy (baseDialog.gameObject);
-            }
-            HideMask ();
-        }
-
-        void ShowMask ()
-        {
-            uiManager.ShowMaskOnLayer (UIManager.UILayerNames.UILayer_Popup);
-        }
-
-        void HideMask ()
-        {
-            if (mActivedDialogs == null || mActivedDialogs.Count == 0) {
-                uiManager.HideMaskOnLayer (UIManager.UILayerNames.UILayer_Popup);
+            if (mActivedDialogs == null || mActivedDialogs.Count == 0)
+            {
+                mUIManager.HideMaskOnLayer(UIManager.UILayerNames.UILayer_Popup);
             }
         }
 
-        public System.Object GetSession(string param){
-            return uiManager.GetSession (param);
+        public System.Object GetSession(string param)
+        {
+            return mUIManager.GetSession(param);
         }
 
-        public void SetSession(string param,System.Object obj){
-            uiManager.SetSession (param,obj);
+        public void SetSession(string param, System.Object obj)
+        {
+            mUIManager.SetSession(param, obj);
         }
     }
 

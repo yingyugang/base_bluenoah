@@ -74,7 +74,8 @@ namespace BlueNoah.UI
             CheckInputReturn();
         }
 
-        void CheckInputEscape(){
+        void CheckInputEscape()
+        {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (!uiDialogManager.OnBack())
@@ -84,7 +85,8 @@ namespace BlueNoah.UI
             }
         }
 
-        void CheckInputReturn(){
+        void CheckInputReturn()
+        {
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 uiDialogManager.OnReturn();
@@ -115,12 +117,13 @@ namespace BlueNoah.UI
         GameObject CreateLayer(string layerName)
         {
             GameObject rectLayer = new GameObject(layerName);
-            SetNameOfLayer(rectLayer,"UI");
+            SetNameOfLayer(rectLayer, "UI");
             ApendRectTransform(rectLayer);
             return rectLayer;
         }
 
-        void SetNameOfLayer(GameObject rectLayer,string layerName){
+        void SetNameOfLayer(GameObject rectLayer, string layerName)
+        {
             rectLayer.layer = LayerMask.NameToLayer(layerName);
         }
 
@@ -151,27 +154,30 @@ namespace BlueNoah.UI
             Transform layerTrans = this.mUILayers[targetLayerName];
             Image img_mask = layerTrans.GetOrAddComponent<Image>();
             ResetMasK(img_mask);
-
         }
 
-        void ResetMasK(Image img_mask){
+        void ResetMasK(Image img_mask)
+        {
             img_mask.color = new Color(0, 0, 0, 0);
             img_mask.enabled = true;
             MaskEaseIn(img_mask);
         }
 
-        void MaskEaseIn(Image image){
+        void MaskEaseIn(Image image)
+        {
             image.DOFade(0.4f, 0.3f).SetEase(Ease.InSine);
         }
 
         public void HideMaskOnLayer(UILayerNames targetLayerName)
         {
             Transform layerTrans = this.mUILayers[targetLayerName];
-            Image img_mask = layerTrans.GetOrAddComponent<Image>();
-            MaseEaseOut(img_mask);
+            Image img_mask = layerTrans.GetComponent<Image>();
+            if(img_mask!=null && img_mask.enabled)
+                MaseEaseOut(img_mask);
         }
 
-        void MaseEaseOut(Image image){
+        void MaseEaseOut(Image image)
+        {
             image.DOFade(0, 0.3f).SetEase(Ease.InSine).OnComplete(() =>
             {
                 image.enabled = false;

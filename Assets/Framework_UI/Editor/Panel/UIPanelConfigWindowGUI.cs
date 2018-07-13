@@ -2,11 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace BlueNoah.Editor
+namespace BlueNoah.Editor.UI
 {
     public class UIPanelConfigWindowGUI : UIConfigWindowGUI
     {
-
         protected override void DrawConfigItemWithDisable(UIConfigWindowItem item)
         {
             UIPanelConfigWindowItem panelConfigWindowItem = (UIPanelConfigWindowItem)item;
@@ -19,6 +18,5 @@ namespace BlueNoah.Editor
             EditorGUILayout.ObjectField(panelConfigWindowItem.panelPrefab, typeof(GameObject), false);
             EditorGUI.EndDisabledGroup();
         }
-
     }
 }

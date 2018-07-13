@@ -30,13 +30,11 @@ namespace BlueNoah.UI
 			#endif
 		}
 
-		//no matter wether used
 		public virtual void LoadUIs ()
 		{
 
 		}
 
-		//no matter wether used
 		public virtual void LoadPaths ()
 		{
 	

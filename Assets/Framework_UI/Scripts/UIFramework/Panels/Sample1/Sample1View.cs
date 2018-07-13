@@ -11,6 +11,10 @@ namespace BlueNoah.UI
 
         public Button btnBattle;
 
+        public Button btnSound;
+
+        public Button btnSetting;
+
         public Image imgUserExp;
 
         public Text txtUserName;
@@ -37,6 +41,8 @@ namespace BlueNoah.UI
 		{
 			base.LoadUIs ();
             btnBattle = transform.Find<Button>("container_right_middle/container_right_middle_btns/btn_battle");
+            btnSound = transform.Find<Button>("container_bottom_right/container_bottom_right_btns/btn_sound");
+            btnSetting = transform.Find<Button>("container_bottom_right/container_bottom_right_btns/btn_setting");
             txtUserName = transform.Find<Text>("container_left_top/container_left_top_btns/txt_username");
             txtUserLevel = transform.Find<Text>("container_left_top/container_left_top_btns/txt_level");
             imgUserExp = transform.Find<Image>("container_left_top/container_left_top_btns/img_exp");

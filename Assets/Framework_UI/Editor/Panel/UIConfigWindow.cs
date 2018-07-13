@@ -2,9 +2,8 @@ using UnityEngine;
 using UnityEditor;
 using BlueNoah.IO;
 using BlueNoah.Editor.IO;
-using System.IO;
 
-namespace BlueNoah.Editor
+namespace BlueNoah.Editor.UI
 {
     public abstract class UIConfigWindow : EditorWindow
     {
@@ -74,9 +73,9 @@ namespace BlueNoah.Editor
 
         protected void CreateScriptPath(string panelScriptPath)
         {
-            if (!FileManager.DirectoryExists(panelScriptPath))
+            if (!FileManager.DirectoryExisting(panelScriptPath))
             {
-                FileManager.CreateDirectoryName(panelScriptPath);
+                FileManager.CreateDirectory(panelScriptPath);
             }
         }
 
@@ -159,11 +158,8 @@ namespace BlueNoah.Editor
 
         protected void RemoveEmptyFolder(string scriptPath)
         {
-            scriptPath = GetScriptFolder(scriptPath);
-            if (Directory.GetFiles(scriptPath, "*.*", SearchOption.AllDirectories).Length == 0)
-            {
-                FileManager.DeleteDirectory(scriptPath);
-            }
+            string folderPath = GetScriptFolder(scriptPath);
+            FileManager.DeleteEmptyDirectory(folderPath);
         }
 
         string GetScriptFolder(string scriptPath)

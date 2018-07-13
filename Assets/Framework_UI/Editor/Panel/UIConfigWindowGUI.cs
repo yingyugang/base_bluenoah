@@ -2,7 +2,8 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-namespace BlueNoah.Editor
+
+namespace BlueNoah.Editor.UI
 {
     public abstract class UIConfigWindowGUI
     {

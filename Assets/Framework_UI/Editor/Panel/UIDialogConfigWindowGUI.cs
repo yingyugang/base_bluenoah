@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
-namespace BlueNoah.Editor
+
+namespace BlueNoah.Editor.UI
 {
     public class UIDialogConfigWindowGUI : UIConfigWindowGUI
     {

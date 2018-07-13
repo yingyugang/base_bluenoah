@@ -6,7 +6,7 @@ using BlueNoah.UI;
 using BlueNoah.IO;
 using BlueNoah.Editor.IO;
 
-namespace BlueNoah.Editor
+namespace BlueNoah.Editor.UI
 {
     public class UIPanelConfigWindow : UIConfigWindow
     {
@@ -15,7 +15,7 @@ namespace BlueNoah.Editor
         PanelConfig mPanelConfig;
         List<UIPanelConfigWindowItem> mPanelConfigWindowItems;
 
-        [MenuItem(UIEditorConstant.UI_PANEL_CONFIG_WINDOW_MENUITEM)]
+        [MenuItem(UIEditorConstant.UI_PANEL_CONFIG_WINDOW_MENUITEM + MenuItemShortcutKeyConstant.SHORTCUT_KEY_UI_PANEL_CONFIG)]
         static void OnOpen()
         {
             mPanelConfigWindow = GetWindow<UIPanelConfigWindow>();

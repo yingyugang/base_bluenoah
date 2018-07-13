@@ -8,7 +8,7 @@ namespace BlueNoah.UI
 {
     public class UIPanelManager
     {
-        public UIManager uiManager;
+        UIManager mUIManager;
 
         const float WHITE_FLASH_DURATION = 2f;
 
@@ -28,7 +28,7 @@ namespace BlueNoah.UI
 
         public UIPanelManager(UIManager uiManager)
         {
-            this.uiManager = uiManager;
+            this.mUIManager = uiManager;
             LoadConfig(uiManager.uiSettings.PANEL_CONFIG_FILE);
         }
 
@@ -48,62 +48,58 @@ namespace BlueNoah.UI
             }
         }
 
-        void AddConfigItem(PanelConfigItem item){
+        void AddConfigItem(PanelConfigItem item)
+        {
             mConfigItemDic.Add(item.ctrlClassName, item);
         }
 
-        bool ConfigExisting(string classType){
+        bool ConfigExisting(string classType)
+        {
             return mConfigItemDic.ContainsKey(classType);
         }
 
-        bool IsPrefabCached(string classType){
+        bool IsPrefabCached(string classType)
+        {
             return mPanelPrefabDic.ContainsKey(classType);
-        }
-
-        void CachePrefab(string classType,GameObject prefab){
-            if (!string.IsNullOrEmpty(classType) &&  prefab != null)
-                mPanelPrefabDic.Add(classType, prefab);
         }
 
         GameObject GetPrefab(string classType)
         {
-            GameObject panelPrefab = null;
-            if (ConfigExisting(classType))
-            {
-                panelPrefab = GetOrCreatePrefab(classType);
-            }
-            return panelPrefab;
+            return ConfigExisting(classType) ? GetOrCreatePrefab(classType) : null;
         }
 
-        GameObject GetOrCreatePrefab(string classType){
-            if (IsPrefabCached(classType))
-            {
-                return mPanelPrefabDic[classType];
-            }
-            else
-            {
-                return GetNewPrefab(classType);
-            }
+        GameObject GetOrCreatePrefab(string classType)
+        {
+            return IsPrefabCached(classType) ? mPanelPrefabDic[classType] : GetNewPrefab(classType);
         }
 
+        //TODO to write the sample load function.
         GameObject GetNewPrefab(string classType)
         {
+            #if UNITY_EDITOR
+            if (LoadPrefab == null)
+            {
+                Debug.LogError("can't load prefab , please set the LoadPrefab to UIPanelManager!");
+            }
+            #endif
             GameObject panelPrefab = null;
             if (LoadPrefab != null)
             {
                 panelPrefab = LoadPrefab(mConfigItemDic[classType].prefabPath);
-                CachePrefab(classType,panelPrefab);
+                CachePrefab(classType, panelPrefab);
             }
             return panelPrefab;
         }
 
+        void CachePrefab(string classType, GameObject prefab)
+        {
+            if (!string.IsNullOrEmpty(classType) && prefab != null)
+                mPanelPrefabDic.Add(classType, prefab);
+        }
+
         bool CheckOpenable(System.Type type)
         {
-            if (mCurrentPanelType == type)
-            {
-                return false;
-            }
-            return !mIsOpening;
+            return mCurrentPanelType == type ? false : !mIsOpening;
         }
 
         void EnableOpen()
@@ -120,17 +116,72 @@ namespace BlueNoah.UI
         {
             if (CheckOpenable(typeof(T)))
             {
-                OpenPageWithFlash(typeof(T), true, param, onShow);
+                if (UICommonWhiteOutInMask.Instance != null)
+                    ForwardWithFlash(typeof(T), param, onShow);
+                else
+                    ShowPanel(typeof(T), param, onShow);
             }
         }
 
-        GameObject ShowPanel(System.Type type, bool isNew, Hashtable param, UnityAction<GameObject> onShow)
+        void ForwardWithFlash(System.Type type, Hashtable param = null, UnityAction<GameObject> onShow = null)
+        {
+            OnBeforeChangePage();
+            UICommonWhiteOutInMask.Instance.DoFlash(WHITE_FLASH_DURATION, () =>
+            {
+                ShowPanel(type, param, onShow);
+            }, () =>
+            {
+                EnableOpen();
+            });
+        }
+
+        void BackPage()
+        {
+            System.Type type = mPageList[mPageList.Count - 1];
+            if (CheckOpenable(type))
+            {
+                if (UICommonWhiteOutInMask.Instance != null)
+                    BackwardWithFlash(type);
+                else
+                    BackwardPanel(type);
+            }
+        }
+
+        void BackwardWithFlash(System.Type type, Hashtable param = null, UnityAction<GameObject> onShow = null)
+        {
+            OnBeforeChangePage();
+            UICommonWhiteOutInMask.Instance.DoFlash(WHITE_FLASH_DURATION, () =>
+            {
+                BackwardPanel(type, param, onShow);
+            }, () =>
+            {
+                EnableOpen();
+            });
+        }
+
+        void OnBeforeChangePage()
+        {
+            DisableCurrentPanel();
+            DisableOpen();
+        }
+
+        void BackwardPanel(System.Type type, Hashtable param = null, UnityAction<GameObject> onShow = null)
+        {
+            ShowPanel(type, param, onShow);
+        }
+
+        void ForwardPanel(System.Type type, Hashtable param = null, UnityAction<GameObject> onShow = null)
+        {
+            ShowPanel(type, param, onShow);
+            AddHistory(type);
+        }
+
+        GameObject ShowPanel(System.Type type, Hashtable param = null, UnityAction<GameObject> onShow = null)
         {
             GameObject go = CreatePanel(type);
             ResetPanel(type, go);
             InitController(go, type, param);
-            AddToHistory(type, isNew);
-            OnShowPanel(go,onShow);
+            OnShowPanel(go, onShow);
             return go;
         }
 
@@ -143,28 +194,37 @@ namespace BlueNoah.UI
             return go;
         }
 
-        void ResetPanel(System.Type type,GameObject go){
+        void ResetPanel(System.Type type, GameObject go)
+        {
             PutToLayer(go);
             SetNewCurrentPage(go, type);
             SetDeltaSize(go);
         }
 
-        void AddToHistory(System.Type type,bool isNew){
-            if (isNew)
-                mPageList.Add(type);
+        void AddHistory(System.Type type)
+        {
+            mPageList.Add(type);
         }
 
-        void OnShowPanel(GameObject go,UnityAction<GameObject> onShow){
+        void RemoveHistory()
+        {
+            mPageList.RemoveAt(mPageList.Count - 1);
+        }
+
+        void OnShowPanel(GameObject go, UnityAction<GameObject> onShow)
+        {
             if (onShow != null)
                 onShow(go);
         }
 
-        void ActivePanel(GameObject go){
+        void ActivePanel(GameObject go)
+        {
             go.SetActive(true);
         }
 
-        void PutToLayer(GameObject go){
-            uiManager.AddToLayer(go, UIManager.UILayerNames.UILayer_Common);
+        void PutToLayer(GameObject go)
+        {
+            mUIManager.AddToLayer(go, UIManager.UILayerNames.UILayer_Common);
         }
 
         void SetNewCurrentPage(GameObject go, System.Type type)
@@ -174,7 +234,8 @@ namespace BlueNoah.UI
             mCurrentPanelType = type;
         }
 
-        void DestroyCurrentPanel(){
+        void DestroyCurrentPanel()
+        {
             if (mCurrentPanel != null)
             {
                 Object.Destroy(mCurrentPanel);
@@ -199,24 +260,8 @@ namespace BlueNoah.UI
         {
             if (mPageList.Count > 1)
             {
-                System.Type type = mPageList[mPageList.Count - 1];
-                OpenPageWithFlash(type, false);
-                if (CheckOpenable(type)){
-                    //remove current page from queue.
-                    mPageList.RemoveAt(mPageList.Count - 1);
-                }
+                BackPage();
             }
-        }
-
-        void OpenPageWithFlash(System.Type type, bool isNew = true, Hashtable param = null, UnityAction<GameObject> onShow = null)
-        {
-            DisableCurrentPanel();
-            DisableOpen();
-            UICommonWhiteOutInMask.Instance.DoFlash(WHITE_FLASH_DURATION, () => {
-                ShowPanel(type, isNew, param, onShow);
-            }, () => {
-                EnableOpen();
-            });
         }
 
         void DisableCurrentPanel()
@@ -230,12 +275,12 @@ namespace BlueNoah.UI
 
         public System.Object GetSession(string param)
         {
-            return uiManager.GetSession(param);
+            return mUIManager.GetSession(param);
         }
 
         public void SetSession(string param, System.Object obj)
         {
-            uiManager.SetSession(param, obj);
+            mUIManager.SetSession(param, obj);
         }
     }
 }

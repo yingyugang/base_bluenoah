@@ -1,11 +1,13 @@
 using BlueNoah.Editor.IO;
 
-namespace BlueNoah.Editor.UI
+namespace BlueNoah.Editor
 {
     public class UIEditorConstant
     {
         public const string UI_PANEL_CONFIG_WINDOW_MENUITEM = "Tools/UI/PanelConfig";
         public const string UI_DIALOG_CONFIG_WINDOW_MENUITEM = "Tools/UI/DialogConfig";
+        public const string ASSETBUNDLE_BUILD_WINDOW_MENUITEM = "Tools/AssetBundle/AB Build Manager";
+        public const string ASSETBUNDLE_SETTING_WINDOW_MENUITEM = "Tools/AssetBundle/AB Settings";
 
         public static string GetClassPath(string subFolderName, string parentPath)
         {

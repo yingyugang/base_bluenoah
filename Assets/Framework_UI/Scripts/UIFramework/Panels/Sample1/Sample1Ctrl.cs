@@ -29,6 +29,16 @@ namespace BlueNoah.UI
                     UIManager.Instance.uiPanelManager.OpenPanel<Sample2Ctrl>();
                 });
             }
+            mSample1View.btnSound.onClick.RemoveAllListeners();
+			mSample1View.btnSound.onClick.AddListener((UnityEngine.Events.UnityAction)(()=>{
+				UIManager.Instance.uiDialogManager.OpenDialog<CommonDialog>();
+            }));
+
+            mSample1View.btnSetting.onClick.RemoveAllListeners();
+            mSample1View.btnSetting.onClick.AddListener((UnityEngine.Events.UnityAction)(() => {
+                UIManager.Instance.uiDialogManager.OpenDialogWithoutMask<CommonDialog>();
+            }));
+
             mSample1View.btnBattle.onClick.RemoveAllListeners();
             mSample1View.btnBattle.onClick.AddListener(() => {
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Sample2");

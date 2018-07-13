@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using BlueNoah.UI;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace BlueNoah.UI
+namespace BlueNoah.Editor.UI
 {
     public static class DefaultControls
     {

@@ -6,7 +6,7 @@ using BlueNoah.Editor.IO;
 using BlueNoah.IO;
 using System.IO;
 
-namespace BlueNoah.Editor
+namespace BlueNoah.Editor.UI
 {
 	public class UIDialogConfigWindow : UIConfigWindow
 	{
@@ -14,7 +14,7 @@ namespace BlueNoah.Editor
 		List<UIDialogConfigWindowItem> mDialogConfigWindowItems;
         UIDialogConfigWindowGUI mUIDialogConfigWindowGUI;
 
-		[MenuItem (UIEditorConstant.UI_DIALOG_CONFIG_WINDOW_MENUITEM)]
+        [MenuItem (UIEditorConstant.UI_DIALOG_CONFIG_WINDOW_MENUITEM + MenuItemShortcutKeyConstant.SHORTCUT_KEY_UI_DIALOG_CONFIG)]
 		static void OnOpen ()
 		{
 			mUIDialogConfigWindow = GetWindow<UIDialogConfigWindow> ();

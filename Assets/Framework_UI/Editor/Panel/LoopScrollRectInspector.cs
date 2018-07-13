@@ -2,7 +2,7 @@
 using UnityEditor;
 using BlueNoah.UI;
 
-namespace BlueNoah.Editor
+namespace BlueNoah.Editor.UI
 {
     [CustomEditor(typeof(LoopScrollRect), true)]
     public class LoopScrollRectInspector : UnityEditor.Editor

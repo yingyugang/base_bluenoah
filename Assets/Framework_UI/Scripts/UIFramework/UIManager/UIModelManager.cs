@@ -4,8 +4,6 @@ namespace BlueNoah.UI
 {
     public class UIModelManager
     {
-        public UIModelManager uiModelManager;
-
         Dictionary<string, BaseProxy> mModels = new Dictionary<string, BaseProxy>();
 
         public T Get<T>() where T : BaseProxy, new()
