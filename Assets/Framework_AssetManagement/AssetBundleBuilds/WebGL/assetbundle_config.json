@@ -1,0 +1,24 @@
+{
+    "items": [
+        {
+            "name": "framework_am/assetbundleresources/images/units.ab",
+            "hash": "ce45fd5a82733274defd80470d98a213e256c506",
+            "length": 6241
+        },
+        {
+            "name": "framework_am/assetbundleresources/materials/units.ab",
+            "hash": "eba811955a33246c5d06449afee3458984fec332",
+            "length": 14887
+        },
+        {
+            "name": "framework_am/assetbundleresources/prefabs/units.ab",
+            "hash": "11f387f2b8e5b897d19743cb371559b6af3a22fe",
+            "length": 3173
+        },
+        {
+            "name": "framework_am/assetbundleresources/sounds/bgms.ab",
+            "hash": "7a90f17327b745a882b490899e942126daa09082",
+            "length": 104251
+        }
+    ]
+}
