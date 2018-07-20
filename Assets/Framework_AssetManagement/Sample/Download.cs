@@ -9,8 +9,6 @@ namespace BlueNoah.Download
             DownloadManager.Instance.StartDownload();
 		}
 
-
-
         public void OnDownloadComplete(){
             Debug.Log("OnDownloadComplete");
         }

@@ -91,7 +91,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             LoadAssetBundleInfos();
             AssetConfig assetBundleConfig = ConvertAssetBundleWindowItemsToAssetBundleConfig();
             string assetBundleConfigStr = JsonUtility.ToJson(assetBundleConfig,true);
-            FileManager.WriteString(ASSETBUNDLE_PLATFORM_CONFIG_FILE,assetBundleConfigStr);
+            FileManager.WriteString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE,assetBundleConfigStr);
         }
 
         AssetConfig ConvertAssetBundleWindowItemsToAssetBundleConfig(){
@@ -111,7 +111,6 @@ namespace BlueNoah.Editor.AssetBundle.Management
             assetBundleConfigItem.size = assetBundleWindowItem.assetBundleLength;
             return assetBundleConfigItem;
         }
-
 
         void InitStyle()
         {
@@ -158,8 +157,8 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             Debug.Log("BuildAllAssetBundlesWithDependencies!");
             AssetDatabase.RemoveUnusedAssetBundleNames();
-            FileManager.CreateDirectoryIfNotExisting(ASSETBUNDLE_PLATFORM_PATH);
-            BuildPipeline.BuildAssetBundles(ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+            FileManager.CreateDirectoryIfNotExisting(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
+            BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
             AssetDatabase.Refresh();
         }
 
@@ -170,7 +169,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             List<AssetBundleBuild> assetbundleList = GetSelectedEntities();
             if (assetbundleList.Count > 0)
             {
-                BuildPipeline.BuildAssetBundles(ASSETBUNDLE_PLATFORM_PATH, assetbundleList.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+                BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, assetbundleList.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
             }
             AssetDatabase.Refresh();
         }
@@ -184,27 +183,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 //if(entity.isSelected)
                 setStrs.Add(entity.assetBundleName);
             }
-            string[] paths = Directory.GetFiles(ASSETBUNDLE_PLATFORM_PATH);
+            string[] paths = Directory.GetFiles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
             for (int i = 0; i < paths.Length; i++)
             {
                 string fileName = paths[i].Substring(paths[i].LastIndexOf("/", System.StringComparison.CurrentCulture) + 1);
                 if (!setStrs.Contains(fileName) && fileName != serverCSV)
                     FileManager.DeleteFile(paths[i]);
-            }
-        }
-
-        void GetHash()
-        {
-            mTotalSize = 0;
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
-            {
-                mAssetBundleItemList[i].assetBundleHash = FileManager.GetFileHash(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName);
-                if (mAssetBundleItemList[i].assetBundleHash != null && mAssetBundleItemList[i].assetBundleHash.Trim() != "")
-                {
-                    mAssetBundleItemList[i].assetBundleLength = new FileInfo(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName).Length;
-                    mAssetBundleItemList[i].displayLength = FileLengthToStr(mAssetBundleItemList[i].assetBundleLength);
-                    mTotalSize += mAssetBundleItemList[i].assetBundleLength;
-                }
             }
         }
 
@@ -236,8 +220,8 @@ namespace BlueNoah.Editor.AssetBundle.Management
             {
                 if (mAssetBundleItemList[i].isSelected)
                 {
-                    if (FileManager.Exists(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName))
-                        FileManager.CopyFile(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, tempResourceAssetPath + mAssetBundleItemList[i].assetBundleName);
+                    if (FileManager.Exists(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName))
+                        FileManager.CopyFile(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, tempResourceAssetPath + mAssetBundleItemList[i].assetBundleName);
                 }
             }
             AssetDatabase.Refresh();
@@ -250,8 +234,8 @@ namespace BlueNoah.Editor.AssetBundle.Management
             {
                 if (mAssetBundleItemList[i].isSelected)
                 {
-                    if (FileManager.Exists(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName))
-                        FileManager.CopyFile(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, localABServerPath + ASSETBUNDLE_PLATFORM_PATH.Replace(Application.dataPath, "") + mAssetBundleItemList[i].assetBundleName);
+                    if (FileManager.Exists(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName))
+                        FileManager.CopyFile(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, localABServerPath + AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH.Replace(Application.dataPath, "") + mAssetBundleItemList[i].assetBundleName);
                 }
             }
             AssetDatabase.Refresh();
@@ -264,7 +248,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             {
                 if (mAssetBundleItemList[i].isSelected)
                 {
-                    FileManager.CopyFile(ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, streamPath + mAssetBundleItemList[i].assetBundleName);
+                    FileManager.CopyFile(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, streamPath + mAssetBundleItemList[i].assetBundleName);
                 }
             }
             AssetDatabase.Refresh();
@@ -281,7 +265,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 //			if (abEntity.isSelected) {
                 if (abEntity.assetBundleHash != null && abEntity.assetBundleHash.Trim() != "")
                 {
-                    result.AppendLine(CreateLine(abEntity.assetBundleName, new FileInfo(ASSETBUNDLE_PLATFORM_PATH + abEntity.assetBundleName).Length, abEntity.assetBundleName == "csv.assetbundle" ? 1 : 0, abEntity.assetBundleHash).ToString());
+                    result.AppendLine(CreateLine(abEntity.assetBundleName, new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + abEntity.assetBundleName).Length, abEntity.assetBundleName == "csv.assetbundle" ? 1 : 0, abEntity.assetBundleHash).ToString());
                 }
                 //			}
             }

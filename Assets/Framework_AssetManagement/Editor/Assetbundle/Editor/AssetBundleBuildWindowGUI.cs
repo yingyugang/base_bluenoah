@@ -46,13 +46,13 @@ namespace BlueNoah.Editor.AssetBundle.Management
             abBuildEntity.isSelected = GUILayout.Toggle(abBuildEntity.isSelected, "", GUILayout.Width(30));
         }
 
-        void DrawAssetbundleItemData(AssetBundleWindowItem abBuildEntity)
+        void DrawAssetbundleItemData(AssetBundleWindowItem assetBundleWindowItem)
         {
-            GUILayout.Label(abBuildEntity.assetBundleName);
-            EditorGUILayout.ObjectField(abBuildEntity.assetBundle,typeof(UnityEngine.Object), false, GUILayout.Width(200));
-            GUILayout.TextField(abBuildEntity.assetBundleHash, GUILayout.Width(300));
-            GUI.color = CheckColor(abBuildEntity.assetBundleLength);
-            GUILayout.Label(abBuildEntity.displayLength, GUILayout.Width(90));
+            GUILayout.Label(assetBundleWindowItem.assetBundleName);
+            EditorGUILayout.ObjectField(assetBundleWindowItem.assetBundle,typeof(Object), false, GUILayout.Width(200));
+            GUILayout.TextField(assetBundleWindowItem.assetBundleHash, GUILayout.Width(300));
+            GUI.color = CheckColor(assetBundleWindowItem.assetBundleLength);
+            GUILayout.Label(assetBundleWindowItem.displayLength, GUILayout.Width(90));
             GUI.color = Color.white;
         }
 

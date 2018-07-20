@@ -46,6 +46,7 @@ namespace BlueNoah.Download
 
         IEnumerator _StartDownloads()
         {
+            Debug.Log("_StartDownloads Begin");
             while (mDownloadingList.Count > 0 || mPreDownloadList.Count > 0)
             {
                 if (mDownloadingAssets < M_MAX_DOWNLOAD_COUNT)
@@ -62,6 +63,7 @@ namespace BlueNoah.Download
             {
                 mOnDownloadComplete();
             }
+            Debug.Log("_StartDownloads End");
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.Refresh();
 #endif

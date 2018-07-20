@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 namespace BlueNoah.Editor.AssetBundle.Management
 {
@@ -16,7 +14,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         static void Init()
         {
-            //		EditorWindow.GetWindow<AssetBundleInfoWindow> (true, "AssetBundleInfo", true); 
+            
         }
 
         void OnGUI()

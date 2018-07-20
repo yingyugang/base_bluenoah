@@ -9,37 +9,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
 {
     public abstract class AssetBundleWindow : EditorWindow
     {
-        protected const string ASSETBUNDLE_PATH = "/Framework_AssetManagement/AssetBundleBuilds/";
-
-        protected const string CONFIG_FILE = "assetbundle_config.json";
-
+        
         protected AssetConfig mAssetBundleConfig;
 
         protected Dictionary<string, AssetBundleWindowItem> mAssetbundleItemDic;
 
         protected List<AssetBundleWindowItem> mAssetBundleItemList;
-
-        protected static string ASSETBUNDLE_PLATFORM_PATH
-        {
-            get
-            {
-                return Application.dataPath + ASSETBUNDLE_PATH + DownloadConstant.ASSET_PLATFORM + "/";
-            }
-        }
-
-        protected static string ASSETDATABASE_PLATFORM_PATH{
-            get{
-                return "Assets" + ASSETBUNDLE_PATH + DownloadConstant.ASSET_PLATFORM + "/";
-            }
-        }
-
-        protected static string ASSETBUNDLE_PLATFORM_CONFIG_FILE
-        {
-            get
-            {
-                return ASSETBUNDLE_PLATFORM_PATH + CONFIG_FILE;
-            }
-        }
 
         protected virtual void OnEnable()
         {
@@ -69,40 +44,21 @@ namespace BlueNoah.Editor.AssetBundle.Management
             {
                 InitAssetBundleWindowItemFromEditorABSetting(assetbundleNames[i]);
             }
-            InitAssetBundleWindowItemsFromABConfigFile();
         }
 
         void InitAssetBundleWindowItemFromEditorABSetting(string assetbundleName)
         {
             AssetBundleWindowItem assetBundleWindowItem = new AssetBundleWindowItem();
             assetBundleWindowItem.assetBundleName = assetbundleName;
-            string path = ASSETBUNDLE_PLATFORM_PATH + assetbundleName;
+            string path = AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName;
             if (FileManager.Exists(path))
             {
                 assetBundleWindowItem.assetBundle = LoadAssetBunleObject(assetbundleName);
-                assetBundleWindowItem.assetBundleHash = FileManager.GetFileHash(ASSETBUNDLE_PLATFORM_PATH + assetbundleName);
-                assetBundleWindowItem.assetBundleLength = new FileInfo(ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length;
+                assetBundleWindowItem.assetBundleHash = FileManager.GetFileHash(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName);
+                assetBundleWindowItem.assetBundleLength = new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length;
             }
             assetBundleWindowItem.displayLength = FileLengthToStr(assetBundleWindowItem.assetBundleLength);
             AddAssetBundleItem(assetbundleName, assetBundleWindowItem);
-        }
-
-        void InitAssetBundleWindowItemsFromABConfigFile()
-        {
-            for (int i = 0; i < mAssetBundleConfig.items.Count; i++)
-            {
-                InitAssetBundleWindowItemFromABConfigFile(mAssetBundleConfig.items[i]);
-            }
-        }
-
-        void InitAssetBundleWindowItemFromABConfigFile(AssetConfigItem configItem)
-        {
-            if (mAssetbundleItemDic.ContainsKey(configItem.assetName))
-            {
-                mAssetbundleItemDic[configItem.assetName].assetBundleName = configItem.assetName;
-                mAssetbundleItemDic[configItem.assetName].assetBundleHash = configItem.hashCode;
-                mAssetbundleItemDic[configItem.assetName].resourcesFolder = GetAssetBundleMainFolder(configItem.assetName);
-            }
         }
 
         //TODO Get AssetBundle Main Folder.
@@ -120,23 +76,23 @@ namespace BlueNoah.Editor.AssetBundle.Management
         Object LoadAssetBunleObject(string assetbundleName)
         {
 
-            string path = ASSETDATABASE_PLATFORM_PATH + assetbundleName;
+            string path = AssetBundleEditorConstant.ASSETDATABASE_PLATFORM_PATH + assetbundleName;
             return AssetDatabase.LoadAssetAtPath<Object>(path);
         }
 
         AssetConfig LoadAssetBundleConfig()
         {
-            if (!FileManager.Exists(ASSETBUNDLE_PLATFORM_CONFIG_FILE))
+            if (!FileManager.Exists(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE))
             {
                 InitConfigFile();
             }
-            string configString = FileManager.ReadString(ASSETBUNDLE_PLATFORM_CONFIG_FILE);
+            string configString = FileManager.ReadString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE);
             return JsonUtility.FromJson<AssetConfig>(configString);
         }
 
         void InitConfigFile()
         {
-            FileManager.WriteString(ASSETBUNDLE_PLATFORM_CONFIG_FILE, JsonUtility.ToJson(CreateAssetBundleConfig()));
+            FileManager.WriteString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE, JsonUtility.ToJson(CreateAssetBundleConfig()));
         }
 
         AssetConfig CreateAssetBundleConfig()

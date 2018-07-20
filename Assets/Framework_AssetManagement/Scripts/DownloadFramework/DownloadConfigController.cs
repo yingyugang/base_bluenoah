@@ -4,7 +4,6 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using BlueNoah.IO;
 using UnityEngine.Events;
-using System.IO;
 
 namespace BlueNoah.Download
 {
@@ -29,7 +28,6 @@ namespace BlueNoah.Download
         {
             List<AssetConfigItem> items = new List<AssetConfigItem>();
             for (int i = 0;i < remoteAssetConfig.items.Count;i++){
-                Debug.Log(FileManager.GetFileHash(DownloadConstant.DOWNLOAD_ASSET_PATH(remoteAssetConfig.items[i].assetName)) + " || " + remoteAssetConfig.items[i].hashCode);
                 if(FileManager.GetFileHash(DownloadConstant.DOWNLOAD_ASSET_PATH(remoteAssetConfig.items[i].assetName)) != remoteAssetConfig.items[i].hashCode){
                     items.Add(remoteAssetConfig.items[i]);
                 }

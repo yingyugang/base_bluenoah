@@ -3,14 +3,13 @@ using UnityEditor;
 using System.IO;
 using BlueNoah.IO;
 using System.Collections.Generic;
-using BlueNoah.Editor;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
     public class AssetBundleSettingWindow : AssetBundleWindow
     {
 
-        const string ASSETBUNDLE_RESOURCES_PATH = "/Framework_AM/AssetBundleResources/";
+        const string ASSETBUNDLE_RESOURCES_PATH = "/Framework_AssetManagement/AssetBundleResources/";
 
         static AssetBundleSettingWindow mAssetBundleSettingWindow;
         AssetBundleSettingWindowGUI mAssetBundleWindowGUI;
