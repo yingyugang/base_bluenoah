@@ -10,7 +10,7 @@ namespace BlueNoah.Download
 		internal Queue<DownloadingFileData> CreateConfigDownloadInfo ()
 		{
 			Queue<DownloadingFileData> downloadingFileDataQueue = new Queue<DownloadingFileData> ();    
-            downloadingFileDataQueue.Enqueue (new DownloadingFileData (DownloadConstant.REMOTE_VERSION_CONFIG_PATH, DownloadingFileTypeEnum.CSV, 0, 0, 0, null,""));
+            downloadingFileDataQueue.Enqueue (new DownloadingFileData (DownloadConstant.CONFIG_FILE, DownloadingFileTypeEnum.CSV, 0, 0, 0, null,""));
 			return downloadingFileDataQueue;
 		}
 

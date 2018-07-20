@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1963444164
+CRC: 1779836866
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -14,7 +14,7 @@ ClassTypes:
 - Class: 213
   Script: {instanceID: 0}
 Assets:
-- Assets/Framework_AM/AssetBundleResources/images/units/base_gift_textbase02.png
-- Assets/Framework_AM/AssetBundleResources/images/units/base_gift_textbase03.png
-- Assets/Framework_AM/AssetBundleResources/images/units/base_gift_textbase01.png
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase02.png
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase03.png
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase01.png
 Dependencies: []

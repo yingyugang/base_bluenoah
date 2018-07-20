@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using BlueNoah.Download;
 using BlueNoah.IO;
 using UnityEditor;
 using UnityEngine;
@@ -8,11 +9,11 @@ namespace BlueNoah.Editor.AssetBundle.Management
 {
     public abstract class AssetBundleWindow : EditorWindow
     {
-        protected const string ASSETBUNDLE_PATH = "/Framework_AM/AssetBundleBuilds/";
+        protected const string ASSETBUNDLE_PATH = "/Framework_AssetManagement/AssetBundleBuilds/";
 
         protected const string CONFIG_FILE = "assetbundle_config.json";
 
-        protected AssetBundleConfig mAssetBundleConfig;
+        protected AssetConfig mAssetBundleConfig;
 
         protected Dictionary<string, AssetBundleWindowItem> mAssetbundleItemDic;
 
@@ -22,13 +23,13 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             get
             {
-                return Application.dataPath + ASSETBUNDLE_PATH + EditorUserBuildSettings.activeBuildTarget.ToString() + "/";
+                return Application.dataPath + ASSETBUNDLE_PATH + DownloadConstant.ASSET_PLATFORM + "/";
             }
         }
 
         protected static string ASSETDATABASE_PLATFORM_PATH{
             get{
-                return "Assets" + ASSETBUNDLE_PATH + EditorUserBuildSettings.activeBuildTarget.ToString() + "/";
+                return "Assets" + ASSETBUNDLE_PATH + DownloadConstant.ASSET_PLATFORM + "/";
             }
         }
 
@@ -94,13 +95,13 @@ namespace BlueNoah.Editor.AssetBundle.Management
             }
         }
 
-        void InitAssetBundleWindowItemFromABConfigFile(AssetBundleConfigItem configItem)
+        void InitAssetBundleWindowItemFromABConfigFile(AssetConfigItem configItem)
         {
-            if (mAssetbundleItemDic.ContainsKey(configItem.name))
+            if (mAssetbundleItemDic.ContainsKey(configItem.assetName))
             {
-                mAssetbundleItemDic[configItem.name].assetBundleName = configItem.name;
-                mAssetbundleItemDic[configItem.name].assetBundleHash = configItem.hash;
-                mAssetbundleItemDic[configItem.name].resourcesFolder = GetAssetBundleMainFolder(configItem.name);
+                mAssetbundleItemDic[configItem.assetName].assetBundleName = configItem.assetName;
+                mAssetbundleItemDic[configItem.assetName].assetBundleHash = configItem.hashCode;
+                mAssetbundleItemDic[configItem.assetName].resourcesFolder = GetAssetBundleMainFolder(configItem.assetName);
             }
         }
 
@@ -123,14 +124,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return AssetDatabase.LoadAssetAtPath<Object>(path);
         }
 
-        AssetBundleConfig LoadAssetBundleConfig()
+        AssetConfig LoadAssetBundleConfig()
         {
             if (!FileManager.Exists(ASSETBUNDLE_PLATFORM_CONFIG_FILE))
             {
                 InitConfigFile();
             }
             string configString = FileManager.ReadString(ASSETBUNDLE_PLATFORM_CONFIG_FILE);
-            return JsonUtility.FromJson<AssetBundleConfig>(configString);
+            return JsonUtility.FromJson<AssetConfig>(configString);
         }
 
         void InitConfigFile()
@@ -138,10 +139,10 @@ namespace BlueNoah.Editor.AssetBundle.Management
             FileManager.WriteString(ASSETBUNDLE_PLATFORM_CONFIG_FILE, JsonUtility.ToJson(CreateAssetBundleConfig()));
         }
 
-        AssetBundleConfig CreateAssetBundleConfig()
+        AssetConfig CreateAssetBundleConfig()
         {
-            AssetBundleConfig config = new AssetBundleConfig();
-            config.items = new List<AssetBundleConfigItem>();
+            AssetConfig config = new AssetConfig();
+            config.items = new List<AssetConfigItem>();
             return config;
         }
 
@@ -174,19 +175,5 @@ namespace BlueNoah.Editor.AssetBundle.Management
         public Object resourcesFolder;
         public string displayLength;
         public bool isSelected;
-    }
-
-    [System.Serializable]
-    public class AssetBundleConfig
-    {
-        public List<AssetBundleConfigItem> items;
-    }
-
-    [System.Serializable]
-    public class AssetBundleConfigItem
-    {
-        public string name;
-        public string hash;
-        public long length;
     }
 }

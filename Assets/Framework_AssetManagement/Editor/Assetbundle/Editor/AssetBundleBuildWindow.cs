@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using BlueNoah.IO;
 using BlueNoah.Editor;
+using BlueNoah.Download;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
@@ -88,14 +89,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             Debug.Log("SaveConfig");
             LoadAssetBundleInfos();
-            AssetBundleConfig assetBundleConfig = ConvertAssetBundleWindowItemsToAssetBundleConfig();
+            AssetConfig assetBundleConfig = ConvertAssetBundleWindowItemsToAssetBundleConfig();
             string assetBundleConfigStr = JsonUtility.ToJson(assetBundleConfig,true);
             FileManager.WriteString(ASSETBUNDLE_PLATFORM_CONFIG_FILE,assetBundleConfigStr);
         }
 
-        AssetBundleConfig ConvertAssetBundleWindowItemsToAssetBundleConfig(){
-            AssetBundleConfig assetBundleConfig = new AssetBundleConfig();
-            assetBundleConfig.items = new List<AssetBundleConfigItem>();
+        AssetConfig ConvertAssetBundleWindowItemsToAssetBundleConfig(){
+            AssetConfig assetBundleConfig = new AssetConfig();
+            assetBundleConfig.items = new List<AssetConfigItem>();
             for (int i = 0; i < mAssetBundleItemList.Count; i++)
             {
                 assetBundleConfig.items.Add(ConvertAssetBundleWindowItemToAssetBundleConfigItem(mAssetBundleItemList[i]));
@@ -103,11 +104,11 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return assetBundleConfig;
         }
 
-        AssetBundleConfigItem ConvertAssetBundleWindowItemToAssetBundleConfigItem(AssetBundleWindowItem assetBundleWindowItem){
-            AssetBundleConfigItem assetBundleConfigItem = new AssetBundleConfigItem();
-            assetBundleConfigItem.name = assetBundleWindowItem.assetBundleName;
-            assetBundleConfigItem.hash = assetBundleWindowItem.assetBundleHash;
-            assetBundleConfigItem.length = assetBundleWindowItem.assetBundleLength;
+        AssetConfigItem ConvertAssetBundleWindowItemToAssetBundleConfigItem(AssetBundleWindowItem assetBundleWindowItem){
+            AssetConfigItem assetBundleConfigItem = new AssetConfigItem();
+            assetBundleConfigItem.assetName = assetBundleWindowItem.assetBundleName;
+            assetBundleConfigItem.hashCode = assetBundleWindowItem.assetBundleHash;
+            assetBundleConfigItem.size = assetBundleWindowItem.assetBundleLength;
             return assetBundleConfigItem;
         }
 

@@ -123,6 +123,11 @@ namespace BlueNoah.UI
             }
         }
 
+        public T GetCurrentCtrl<T>() where T : BasePanelCtrl
+        {
+            return mCurrentPanel.GetComponent<T>();
+        }
+
         void ForwardWithFlash(System.Type type, Hashtable param = null, UnityAction<GameObject> onShow = null)
         {
             OnBeforeChangePage();

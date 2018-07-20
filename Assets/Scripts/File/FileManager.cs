@@ -115,7 +115,6 @@ namespace BlueNoah.IO
         {
             string contents;
             StreamReader reader = null;
-
             try
             {
                 reader = new StreamReader(filePath);

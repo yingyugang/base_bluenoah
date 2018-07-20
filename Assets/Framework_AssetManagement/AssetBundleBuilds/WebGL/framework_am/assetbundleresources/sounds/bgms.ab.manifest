@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2974255257
+CRC: 1251628035
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -12,7 +12,7 @@ ClassTypes:
 - Class: 83
   Script: {instanceID: 0}
 Assets:
-- Assets/Framework_AM/AssetBundleResources/sounds/bgms/BGM03.wav
-- Assets/Framework_AM/AssetBundleResources/sounds/bgms/BGM01.wav
-- Assets/Framework_AM/AssetBundleResources/sounds/bgms/BGM02.wav
+- Assets/Framework_AssetManagement/AssetBundleResources/sounds/bgms/BGM03.wav
+- Assets/Framework_AssetManagement/AssetBundleResources/sounds/bgms/BGM01.wav
+- Assets/Framework_AssetManagement/AssetBundleResources/sounds/bgms/BGM02.wav
 Dependencies: []

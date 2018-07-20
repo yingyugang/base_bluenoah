@@ -42,7 +42,6 @@ namespace BlueNoah.Download
         internal void Download()
         {
             InitDownload();
-            DownloadRemoteAssetConfig();
         }
 
         void InitDownload()
@@ -52,7 +51,7 @@ namespace BlueNoah.Download
             downloadingFileFilter = gameObject.AddComponent<DownloadingFileFilter>();
             downloadingFileDataQueueCreator = gameObject.AddComponent<DownloadingFileDataQueueCreator>();
             //assetCSVReader = gameObject.AddComponent<AssetCSVReader>();
-            mLocalAssetConfig = JsonUtility.FromJson<AssetConfig>(FileManager.ReadString(DownloadConstant.LOCAL_VERSION_CONFIG_PATH));
+            mLocalAssetConfig = JsonUtility.FromJson<AssetConfig>(FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH));
             //if (DownloadConstant.CheckIfExistingVersionCSV())
             //{
             //    FileManager.DeleteFile(DownloadConstant.CLIENT_SERVER_VERSION_CSV);
@@ -60,49 +59,8 @@ namespace BlueNoah.Download
             //}
         }
 
-        void DownloadRemoteAssetConfig()
-        {
-            StartCoroutine(DownloadRemoteConfig());
-        }
-
-        IEnumerator DownloadRemoteConfig()
-        {
-            UnityWebRequest www = UnityWebRequest.Get(DownloadConstant.REMOTE_VERSION_CONFIG_PATH + "?" + Random.Range(0, int.MaxValue));
-            yield return www.Send();
-            if (www.isDone && string.IsNullOrEmpty(www.error))
-            {
-                string downloadText = www.downloadHandler.text;
-                mRemoteAssetConfig = JsonUtility.FromJson<AssetConfig>(downloadText);
-                List<AssetConfigItem> items =  CheckDownloadList(mLocalAssetConfig,mRemoteAssetConfig);
-            }
-            else
-            {
-                Debug.LogError("Remove asset config is not existing.");
-            }
-        }
-
-        List<AssetConfigItem> CheckDownloadList(AssetConfig localAssetConfig, AssetConfig removeAssetConfig)
-        {
-            List<AssetConfigItem> items = new List<AssetConfigItem>();
-            Dictionary<string, AssetConfigItem> itemDic = new Dictionary<string, AssetConfigItem>();
-            for (int i = 0; i < localAssetConfig.items.Count; i++)
-            {
-                itemDic.Add(localAssetConfig.items[i].assetName, localAssetConfig.items[i]);
-            }
-
-            for (int i = 0; i < removeAssetConfig.items.Count; i++)
-            {
-                if (itemDic.ContainsKey(removeAssetConfig.items[i].assetName))
-                {
-                    if(itemDic[removeAssetConfig.items[i].assetName].hashCode != removeAssetConfig.items[i].hashCode){
-                        items.Add(removeAssetConfig.items[i]);
-                    }
-                }else{
-                    items.Add(removeAssetConfig.items[i]);
-                }
-            }
-            Debug.Log(items.Count);
-            return items;
+        void StartAssetDownload(List<AssetConfigItem> items){
+            
         }
 
         void StartDownload(List<AssetConfigItem> items){
@@ -111,12 +69,12 @@ namespace BlueNoah.Download
 
         bool CheckLocalConfigExsiting()
         {
-            return FileManager.Exists(DownloadConstant.LOCAL_VERSION_CONFIG_PATH);
+            return FileManager.Exists(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
         }
 
         AssetConfig LoadRemoteConfig()
         {
-            FileManager.ReadString(DownloadConstant.LOCAL_VERSION_CONFIG_PATH);
+            FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
             return null;
         }
 
@@ -132,7 +90,7 @@ namespace BlueNoah.Download
 
             }
 
-            AssetConfig assetConfig = JsonUtility.FromJson<AssetConfig>(DownloadConstant.LOCAL_VERSION_CONFIG_PATH);
+            AssetConfig assetConfig = JsonUtility.FromJson<AssetConfig>(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
             for (int i = 0; i < assetConfig.items.Count; i++)
             {
 
@@ -140,7 +98,7 @@ namespace BlueNoah.Download
 
 
             CsvContext mCsvContext = new CsvContext();
-            IEnumerable<VersionCSVStructure> servers = mCsvContext.Read<VersionCSVStructure>(DownloadConstant.LOCAL_VERSION_CONFIG_PATH);
+            IEnumerable<VersionCSVStructure> servers = mCsvContext.Read<VersionCSVStructure>(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
             IEnumerable<VersionCSVStructure> server_resources = mCsvContext.Read<VersionCSVStructure>(DownloadConstant.CLIENT_SERVER_RESOURCE_VERSION_CSV);
             List<VersionCSVStructure> allServers = new List<VersionCSVStructure>();
             allServers.AddRange(servers);
@@ -177,8 +135,6 @@ namespace BlueNoah.Download
             downloadingExecutor.StartDownload(downloadingFileDataQueue, true, downloadingFileDataQueueCreator.totalSize);
         }
 
-
-
         void DownloadCompleteHandler()
         {
             ParseCSV();
@@ -189,7 +145,6 @@ namespace BlueNoah.Download
             DisposeObject();
             //FileManager.CopyFile(DownloadConstant.LOCAL_VERSION_CONFIG, DownloadConstant.LOCAL_VERSION_CONFIG);
             FileManager.CopyFile(DownloadConstant.CLIENT_SERVER_RESOURCE_VERSION_CSV, DownloadConstant.CLIENT_CLIENT_RESOURCE_VERSION_CSV);
-
             if (DownloadingComplete != null)
             {
                 DownloadingComplete();

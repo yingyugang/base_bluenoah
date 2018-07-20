@@ -1,16 +1,48 @@
 ﻿using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
 
 namespace BlueNoah.Download
 {
     public class DownloadManager : SimpleSingleMonoBehaviour<DownloadManager>
     {
-        public AssetConfig assetConfig;
 
-        private const string DOWNLOADING_MANAGER = "DownloadingManager";
+        DownloadConfigController mConfigDownloadManager;
+
+        DownloadAssetController mAssetDownloadManager;
+
+        UnityAction onDownloadComplete;
+
+        protected override void Awake()
+        {
+            mConfigDownloadManager = new DownloadConfigController(this);
+            mAssetDownloadManager = new DownloadAssetController(this);
+        }
+
+        const string DOWNLOADING_MANAGER = "DownloadingManager";
+
+        public void StartDownload()
+        {
+            mConfigDownloadManager.DownloadRemoteConfigAndFilterDownloadItems(OnDownloadRemoteConfigAndFilterDownloadItemsDone);
+        }
+
+        void SaveConfig()
+        {
+            mConfigDownloadManager.ConvertRemoteAssetConfigToLocalAssetConfig();
+        }
+
+        void OnDownloadRemoteConfigAndFilterDownloadItemsDone(List<AssetConfigItem> items)
+        {
+            Debug.Log("OnDownloadRemoteConfigAndFilterDownloadItemsDone:" + items.Count);
+            mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
+        }
+
+        void OnDownloadComplete()
+        {
+            SaveConfig();
+            if (onDownloadComplete != null)
+                onDownloadComplete();
+        }
 
         public void StartDownload(UnityAction downloadingComplete = null, UnityAction<float> downloadingProgress = null, UnityAction<string, string> downloadingError = null)
         {
@@ -41,29 +73,32 @@ namespace BlueNoah.Download
             downloadingGetter.Download();
         }
 
-        public void StartDownload(UnityAction downloadingComplete = null, UnityAction<float> downloadingProgress = null){
-           
-            StartCoroutine(_StartDownload(downloadingComplete,downloadingProgress));
+        public void StartAssetDownload(List<AssetConfigItem> items)
+        {
+
         }
 
-        IEnumerator _StartDownload(UnityAction downloadingComplete = null, UnityAction<float> downloadingProgress = null){
-            UnityWebRequest unityWebRequest = UnityWebRequest.Put("", "");
-            yield return null;
+        public string GetUTCTime()
+        {
+            System.Int32 unixTimestamp = (System.Int32)(System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalSeconds;
+            return unixTimestamp.ToString();
         }
 
     }
 
     [System.Serializable]
-    public class AssetConfig{
+    public class AssetConfig
+    {
         public List<AssetConfigItem> items;
     }
 
     [System.Serializable]
-    public class AssetConfigItem{
+    public class AssetConfigItem
+    {
         public int index;
         public string assetName;
-        public string assetType;
-        public int size;
+        public int assetType;
+        public long size;
         public string hashCode;
     }
 

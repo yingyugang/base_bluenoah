@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3288667168
+CRC: 3973820378
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -16,8 +16,8 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 Assets:
-- Assets/Framework_AM/AssetBundleResources/materials/units/unit1.mat
-- Assets/Framework_AM/AssetBundleResources/materials/units/unit3.mat
-- Assets/Framework_AM/AssetBundleResources/materials/units/unit2.mat
+- Assets/Framework_AssetManagement/AssetBundleResources/materials/units/unit1.mat
+- Assets/Framework_AssetManagement/AssetBundleResources/materials/units/unit3.mat
+- Assets/Framework_AssetManagement/AssetBundleResources/materials/units/unit2.mat
 Dependencies:
-- /Users/yingyugang/Base/Assets/Framework_AM/AssetBundleBuilds/WebGL/framework_am/assetbundleresources/images/units.ab
+- /Users/yingyugang/Base/Assets/Framework_AssetManagement/AssetBundleBuilds/WebGL/framework_am/assetbundleresources/images/units.ab
