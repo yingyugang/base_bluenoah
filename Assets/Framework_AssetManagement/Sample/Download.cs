@@ -1,4 +1,6 @@
 using UnityEngine;
+using BlueNoah.Assets;
+using BlueNoah.Utility;
 
 namespace BlueNoah.Download
 {
@@ -6,7 +8,10 @@ namespace BlueNoah.Download
     {
 		private void Start()
 		{
-            DownloadManager.Instance.StartDownload();
+			DownloadManager.Instance.StartDownload(()=>{
+				Debug.Log("Download Done");
+				gameObject.GetOrAddComponent<AssetBundleManager>().Reload();
+			});
 		}
 
         public void OnDownloadComplete(){

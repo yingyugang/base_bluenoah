@@ -51,7 +51,7 @@ namespace BlueNoah.Download
             downloadingFileFilter = gameObject.AddComponent<DownloadingFileFilter>();
             downloadingFileDataQueueCreator = gameObject.AddComponent<DownloadingFileDataQueueCreator>();
             //assetCSVReader = gameObject.AddComponent<AssetCSVReader>();
-            mLocalAssetConfig = JsonUtility.FromJson<AssetConfig>(FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH));
+            mLocalAssetConfig = JsonUtility.FromJson<AssetConfig>(FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_PATH_CONFIG));
             //if (DownloadConstant.CheckIfExistingVersionCSV())
             //{
             //    FileManager.DeleteFile(DownloadConstant.CLIENT_SERVER_VERSION_CSV);
@@ -69,12 +69,12 @@ namespace BlueNoah.Download
 
         bool CheckLocalConfigExsiting()
         {
-            return FileManager.Exists(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
+            return FileManager.Exists(DownloadConstant.DOWNLOAD_ASSET_PATH_CONFIG);
         }
 
         AssetConfig LoadRemoteConfig()
         {
-            FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
+            FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_PATH_CONFIG);
             return null;
         }
 
@@ -90,7 +90,7 @@ namespace BlueNoah.Download
 
             }
 
-            AssetConfig assetConfig = JsonUtility.FromJson<AssetConfig>(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
+            AssetConfig assetConfig = JsonUtility.FromJson<AssetConfig>(DownloadConstant.DOWNLOAD_ASSET_PATH_CONFIG);
             for (int i = 0; i < assetConfig.items.Count; i++)
             {
 
@@ -98,7 +98,7 @@ namespace BlueNoah.Download
 
 
             CsvContext mCsvContext = new CsvContext();
-            IEnumerable<VersionCSVStructure> servers = mCsvContext.Read<VersionCSVStructure>(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH);
+            IEnumerable<VersionCSVStructure> servers = mCsvContext.Read<VersionCSVStructure>(DownloadConstant.DOWNLOAD_ASSET_PATH_CONFIG);
             IEnumerable<VersionCSVStructure> server_resources = mCsvContext.Read<VersionCSVStructure>(DownloadConstant.CLIENT_SERVER_RESOURCE_VERSION_CSV);
             List<VersionCSVStructure> allServers = new List<VersionCSVStructure>();
             allServers.AddRange(servers);

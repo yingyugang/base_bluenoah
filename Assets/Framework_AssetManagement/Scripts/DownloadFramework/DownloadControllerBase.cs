@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 namespace BlueNoah.Download
 {
-    public abstract class DownloadBaseController
+    public abstract class DownloadControllerBase
     {
         
         protected DownloadManager mDownloadManager;

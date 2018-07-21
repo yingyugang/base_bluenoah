@@ -7,19 +7,19 @@ using UnityEngine.Events;
 
 namespace BlueNoah.Download
 {
-    public class DownloadConfigController : DownloadBaseController
+    public class DownloadControllerConfig : DownloadControllerBase
     {
 		
         AssetConfig mRemoteAssetConfig;
 
-        public DownloadConfigController(DownloadManager downloadManager)
+        public DownloadControllerConfig(DownloadManager downloadManager)
         {
             mDownloadManager = downloadManager;
         }
 
-        public void DownloadRemoteConfigAndFilterDownloadItems(UnityAction<List<AssetConfigItem>> onComplete)
+        public void DownloadRemoteConfig(UnityAction<List<AssetConfigItem>> onComplete)
         {
-			Debug.Log ("Download Config Start.");
+			Debug.Log ("Download Config.");
             mDownloadManager.StartCoroutine(_DownloadRemoteConfigAndFilterDownloadItems(onComplete));
         }
 
@@ -36,13 +36,12 @@ namespace BlueNoah.Download
 
         IEnumerator _DownloadRemoteConfigAndFilterDownloadItems(UnityAction<List<AssetConfigItem>> onComplet)
         {
-            UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_CONFIG_PATH);
+            UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH_CONFIG);
             yield return www.Send();
             if (www.isDone && string.IsNullOrEmpty(www.error))
             {
                 Debug.Log(www.url);
-                Debug.Log(www.downloadHandler.text);
-                OnDownloadConfigDone(www.downloadHandler.text, onComplet);
+                OnDownloadAssetDone(www.downloadHandler.text, onComplet);
             }
             else
             {
@@ -50,7 +49,7 @@ namespace BlueNoah.Download
             }
         }
 
-        void OnDownloadConfigDone(string downloadText, UnityAction<List<AssetConfigItem>> onComplet)
+        void OnDownloadAssetDone(string downloadText, UnityAction<List<AssetConfigItem>> onComplet)
         {
             mRemoteAssetConfig = JsonUtility.FromJson<AssetConfig>(downloadText);
             List<AssetConfigItem> items = CheckDownloadList( mRemoteAssetConfig);
@@ -58,12 +57,7 @@ namespace BlueNoah.Download
             {
                 onComplet(items);
             }
-			Debug.Log("Download Config Finish.");
-        }
-
-        public void ConvertRemoteAssetConfigToLocalAssetConfig()
-        {
-            FileManager.WriteString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH, JsonUtility.ToJson(mRemoteAssetConfig, true));
+			Debug.Log("Download assets Finish.");
         }
     }
 }

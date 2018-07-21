@@ -7,45 +7,51 @@ namespace BlueNoah.Download
     public class DownloadManager : SimpleSingleMonoBehaviour<DownloadManager>
     {
 
-        DownloadConfigController mConfigDownloadManager;
+        DownloadControllerConfig mConfigDownloadManager;
 
-        DownloadAssetController mAssetDownloadManager;
+        DownloadControllerAsset mAssetDownloadManager;
+
+		DownloadControllerManifest mDownloadControllerManifest;
 
         UnityAction onDownloadComplete;
 
         protected override void Awake()
         {
-            mConfigDownloadManager = new DownloadConfigController(this);
-            mAssetDownloadManager = new DownloadAssetController(this);
+            mConfigDownloadManager = new DownloadControllerConfig(this);
+            mAssetDownloadManager = new DownloadControllerAsset(this);
+			mDownloadControllerManifest = new DownloadControllerManifest (this);
         }
 
         const string DOWNLOADING_MANAGER = "DownloadingManager";
 
-        public void StartDownload()
+		public void StartDownload(UnityAction onDownloadComplete){
+			this.onDownloadComplete = onDownloadComplete;
+			DownloadManifest ();
+		}
+
+		public void DownloadManifest(){
+			mDownloadControllerManifest.DownloadManifest (DownloadConfig);
+		}
+
+        void DownloadConfig()
         {
-            mConfigDownloadManager.DownloadRemoteConfigAndFilterDownloadItems(OnDownloadRemoteConfigAndFilterDownloadItemsDone);
+            mConfigDownloadManager.DownloadRemoteConfig(DownloadAssets);
         }
 
-        void SaveConfig()
-        {
-            mConfigDownloadManager.ConvertRemoteAssetConfigToLocalAssetConfig();
-        }
+		void DownloadAssets(List<AssetConfigItem> items)
+		{
+			mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
+		}
 
-        void OnDownloadRemoteConfigAndFilterDownloadItemsDone(List<AssetConfigItem> items)
-        {
-            mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
-        }
+		public void Download(List<AssetConfigItem> items,UnityAction onDownloadComplete){
+			this.onDownloadComplete = onDownloadComplete;
+			mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
+		}
 
         void OnDownloadComplete()
         {
-            SaveConfig();
             if (onDownloadComplete != null)
                 onDownloadComplete();
-        }
-
-        public void StartAssetDownload(List<AssetConfigItem> items)
-        {
-
         }
 
         public string GetUTCTime()

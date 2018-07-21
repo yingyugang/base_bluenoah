@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 1888387046
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 3d1f4dc2b2223b57bfc3b6375a6c8d3b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 21f0dc8ebad690f009368069428e0a1a
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase02.png
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase03.png
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase01.png
+Dependencies: []

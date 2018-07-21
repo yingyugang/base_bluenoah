@@ -11,7 +11,7 @@ public static class AssetBundleEditorConstant
     {
         get
         {
-            return Application.dataPath + ASSETBUNDLE_PATH + DownloadConstant.ASSET_PLATFORM + "/";
+            return Application.dataPath + ASSETBUNDLE_PATH + DownloadConstant.PLATFORM + "/";
         }
     }
 
@@ -19,7 +19,7 @@ public static class AssetBundleEditorConstant
     {
         get
         {
-            return "Assets" + ASSETBUNDLE_PATH + DownloadConstant.ASSET_PLATFORM + "/";
+            return "Assets" + ASSETBUNDLE_PATH + DownloadConstant.PLATFORM + "/";
         }
     }
 

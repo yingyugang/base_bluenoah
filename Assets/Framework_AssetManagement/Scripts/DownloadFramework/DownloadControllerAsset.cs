@@ -7,7 +7,7 @@ using BlueNoah.IO;
 
 namespace BlueNoah.Download
 {
-    public class DownloadAssetController : DownloadBaseController
+    public class DownloadControllerAsset : DownloadControllerBase
     {
 
         const int M_MAX_DOWNLOAD_COUNT = 5;
@@ -24,7 +24,7 @@ namespace BlueNoah.Download
 
         bool mIsDownloading = false;
 
-        public DownloadAssetController(DownloadManager downloadManager)
+        public DownloadControllerAsset(DownloadManager downloadManager)
         {
             mDownloadManager = downloadManager;
         }
@@ -72,7 +72,6 @@ namespace BlueNoah.Download
         IEnumerator _DownloadAsset(AssetConfigItem item)
         {
             UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH(item.assetName));
-            Debug.Log(www.url);
             yield return www.Send();
             Debug.Log(www.url + " : complete.");
             if (www.isDone && string.IsNullOrEmpty(www.error))
