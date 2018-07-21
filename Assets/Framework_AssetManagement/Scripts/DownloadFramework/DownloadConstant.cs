@@ -58,13 +58,13 @@ namespace BlueNoah.Download
             {
                 return
 #if DEVELOP
-                    "http://127.0.0.1/ultrasoul/" + ASSET_PLATFORM + "/";
+					"http://127.0.0.1/DownloadSampe/" + ASSET_PLATFORM + "/";
 #elif STG
                     "https://s3-ap-northeast-1.amazonaws.com/stg-resource.koekatsu.d2cr.jp/" + ASSET_PLATFORM + "/";
 #elif PRODUCT
                     "https://s3-ap-northeast-1.amazonaws.com/resource.koekatsu.d2cr.jp/" + ASSET_PLATFORM + "/";
 #else
-                    "http://127.0.0.1/ultrasoul/BuildAssets/" + ASSET_PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSampe/" + ASSET_PLATFORM + "/";
 #endif
             }
         }

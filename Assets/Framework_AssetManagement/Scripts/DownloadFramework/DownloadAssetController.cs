@@ -83,7 +83,7 @@ namespace BlueNoah.Download
             }
             else
             {
-                Debug.LogError("Remove asset config is not existing.");
+                Debug.LogError("Remove asset failure. ReDownload. ");
                 yield return new WaitForSeconds(0.1f);
                 mDownloadManager.StartCoroutine(_DownloadAsset(item));
             }

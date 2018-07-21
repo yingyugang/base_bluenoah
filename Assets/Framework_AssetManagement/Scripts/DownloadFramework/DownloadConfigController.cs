@@ -9,10 +9,8 @@ namespace BlueNoah.Download
 {
     public class DownloadConfigController : DownloadBaseController
     {
-
+		
         AssetConfig mRemoteAssetConfig;
-
-        AssetConfig mLocalAssetConfig;
 
         public DownloadConfigController(DownloadManager downloadManager)
         {
@@ -21,6 +19,7 @@ namespace BlueNoah.Download
 
         public void DownloadRemoteConfigAndFilterDownloadItems(UnityAction<List<AssetConfigItem>> onComplete)
         {
+			Debug.Log ("Download Config Start.");
             mDownloadManager.StartCoroutine(_DownloadRemoteConfigAndFilterDownloadItems(onComplete));
         }
 
@@ -47,30 +46,24 @@ namespace BlueNoah.Download
             }
             else
             {
-                Debug.LogError("Remove asset config is not existing.");
+				Debug.LogError("Download asset config error. ||" + www.url + "||" + www.error);
             }
         }
 
         void OnDownloadConfigDone(string downloadText, UnityAction<List<AssetConfigItem>> onComplet)
         {
-            Debug.Log("OnDownloadConfigDone");
             mRemoteAssetConfig = JsonUtility.FromJson<AssetConfig>(downloadText);
-            if (FileManager.Exists(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH))
-            {
-                mLocalAssetConfig = JsonUtility.FromJson<AssetConfig>(FileManager.ReadString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH));
-            }
             List<AssetConfigItem> items = CheckDownloadList( mRemoteAssetConfig);
             if (onComplet != null)
             {
                 onComplet(items);
             }
+			Debug.Log("Download Config Finish.");
         }
 
         public void ConvertRemoteAssetConfigToLocalAssetConfig()
         {
             FileManager.WriteString(DownloadConstant.DOWNLOAD_ASSET_CONFIG_PATH, JsonUtility.ToJson(mRemoteAssetConfig, true));
         }
-
-
     }
 }
