@@ -22,8 +22,6 @@ namespace BlueNoah.Download
 
         UnityAction mOnDownloadComplete;
 
-        bool mIsDownloading = false;
-
         public DownloadControllerAsset(DownloadManager downloadManager)
         {
             mDownloadManager = downloadManager;
@@ -72,7 +70,7 @@ namespace BlueNoah.Download
         IEnumerator _DownloadAsset(AssetConfigItem item)
         {
             UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH(item.assetName));
-            yield return www.Send();
+            yield return www.SendWebRequest();
             Debug.Log(www.url + " : complete.");
             if (www.isDone && string.IsNullOrEmpty(www.error))
             {

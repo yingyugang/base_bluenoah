@@ -26,7 +26,7 @@ namespace BlueNoah.Download
 		IEnumerator _DownloadManifest(UnityAction onComplet)
         {
 			UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH_MANIFEST);
-            yield return www.Send();
+            yield return www.SendWebRequest();
             if (www.isDone && string.IsNullOrEmpty(www.error))
             {
                 Debug.Log(www.url);

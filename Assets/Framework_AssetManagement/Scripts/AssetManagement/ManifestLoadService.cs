@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using BlueNoah.Download;
 
 namespace BlueNoah.Assets
 {
-	public class ManifestLoadManager
+	public class ManifestLoadService
 	{
 		AssetBundleManifest mManifest;
 

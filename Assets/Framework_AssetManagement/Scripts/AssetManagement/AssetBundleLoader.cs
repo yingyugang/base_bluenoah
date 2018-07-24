@@ -25,7 +25,7 @@ public class AssetBundleLoader
         mDependenciesCount = dependencies.Length;
         for (int i = 0; i < dependencies.Length; i++)
         {
-            GetAssetBundle(dependencies[i], (AssetBundle assetBundle) =>
+            GetDependencies(dependencies[i], (AssetBundle assetBundle) =>
             {
                 mDependenciesCount--;
                 if (mDependenciesCount == 0)
@@ -36,7 +36,11 @@ public class AssetBundleLoader
         }
     }
 
-    public void GetAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
+    void GetDependencies(string assetBundleName, UnityAction<AssetBundle> onGet){
+        GetAssetBundle(assetBundleName,onGet);
+    }
+
+    void GetAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
     {
         if (AssetBundleLoadManager.Instance.assetBundleCacheManager.Contains(assetBundleName))
         {

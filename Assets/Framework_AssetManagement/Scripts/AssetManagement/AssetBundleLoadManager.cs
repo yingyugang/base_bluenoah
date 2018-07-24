@@ -6,12 +6,11 @@ namespace BlueNoah.Assets
 {
     public class AssetBundleLoadManager : SimpleSingleMonoBehaviour<AssetBundleLoadManager>
     {
-
-        public ManifestLoadManager manifestManager;
+        public ManifestLoadService manifestManager;
 
         public DownloadManager downloadManager;
 
-        public AssetBundleCacheManager assetBundleCacheManager;
+        public AssetBundleCacheService assetBundleCacheManager;
 
         protected override void Awake()
         {
@@ -25,10 +24,10 @@ namespace BlueNoah.Assets
 
         public void Init()
         {
-            manifestManager = new ManifestLoadManager();
+            manifestManager = new ManifestLoadService();
             manifestManager.LoadManifest();
             downloadManager = DownloadManager.Instance;
-            assetBundleCacheManager = new AssetBundleCacheManager();
+            assetBundleCacheManager = new AssetBundleCacheService();
         }
 
         public void Reload()
@@ -40,5 +39,28 @@ namespace BlueNoah.Assets
             AssetBundleLoader assetBundleLoader = new AssetBundleLoader(this);
             assetBundleLoader.LoadOrDownloadAssetbundle(assetBundleName,onGet);
         }
+
+        public void LoadAsset<T>(UnityAction<T> onLoaded, string assetName, string assetBundleName) where T : Object
+        {
+            LoadOrDownloadAssetbundle(assetBundleName, (AssetBundle assetBundle) =>
+            {
+                if (assetBundle != null)
+                {
+                    onLoaded(assetBundle.LoadAsset<T>(assetName));
+                }
+            });
+        }
+
+        public void LoadAssets<T>(UnityAction<T[]> onLoaded, string assetBundleName) where T : Object
+        {
+            LoadOrDownloadAssetbundle(assetBundleName, (AssetBundle assetBundle) =>
+            {
+                if (assetBundle != null)
+                {
+                    onLoaded(assetBundle.LoadAllAssets<T>());
+                }
+            });
+        }
+
     }
 }

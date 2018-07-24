@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class AssetBundleCacheManager
+public class AssetBundleCacheService
 {
 
     Dictionary<string, AssetBundle> mCachedAssetBundles;
 
-    public AssetBundleCacheManager()
+    public AssetBundleCacheService()
     {
         mCachedAssetBundles = new Dictionary<string, AssetBundle>();
     }
@@ -33,14 +33,17 @@ public class AssetBundleCacheManager
     public void Unload(string assetBundleName,bool isUnloadAll = false){
         if (mCachedAssetBundles.ContainsKey(assetBundleName)){
             AssetBundle assetBundle = mCachedAssetBundles[assetBundleName];
-            assetBundle.Unload(isUnloadAll);
+            if(assetBundle!=null)
+                assetBundle.Unload(isUnloadAll);
             mCachedAssetBundles.Remove(assetBundleName);
         }
     }
 
     public void UnloadAll(bool isUnloadAll = false){
         foreach(string assetBundleName in mCachedAssetBundles.Keys){
-            Unload(assetBundleName,isUnloadAll);
+            AssetBundle assetBundle = mCachedAssetBundles[assetBundleName];
+            if (assetBundle != null)
+                assetBundle.Unload(isUnloadAll);
         }
         mCachedAssetBundles.Clear();
     }

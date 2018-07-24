@@ -37,7 +37,7 @@ namespace BlueNoah.Download
         IEnumerator _DownloadRemoteConfigAndFilterDownloadItems(UnityAction<List<AssetConfigItem>> onComplet)
         {
             UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH_CONFIG);
-            yield return www.Send();
+            yield return www.SendWebRequest();
             if (www.isDone && string.IsNullOrEmpty(www.error))
             {
                 Debug.Log(www.url);
