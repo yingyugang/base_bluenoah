@@ -27,7 +27,7 @@ namespace BlueNoah.Download
         {
             List<AssetConfigItem> items = new List<AssetConfigItem>();
             for (int i = 0;i < remoteAssetConfig.items.Count;i++){
-                if(FileManager.GetFileHash(DownloadConstant.DOWNLOAD_ASSET_PATH(remoteAssetConfig.items[i].assetName)) != remoteAssetConfig.items[i].hashCode){
+                if(FileManager.GetFileHash(DownloadConstant.GetDownloadAssetBundlePath(remoteAssetConfig.items[i].assetName)) != remoteAssetConfig.items[i].hashCode){
                     items.Add(remoteAssetConfig.items[i]);
                 }
             }

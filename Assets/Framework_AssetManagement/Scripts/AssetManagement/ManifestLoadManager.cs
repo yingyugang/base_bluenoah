@@ -5,7 +5,7 @@ using BlueNoah.Download;
 
 namespace BlueNoah.Assets
 {
-	public class ManifestManager
+	public class ManifestLoadManager
 	{
 		AssetBundleManifest mManifest;
 
@@ -15,5 +15,10 @@ namespace BlueNoah.Assets
 			AssetBundle assetBundle = AssetBundle.LoadFromFile (DownloadConstant.DOWNLOAD_ASSET_PATH_MANIFEST);
 			mManifest = assetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 		}
+
+        public string[] GetAllDependencies(string assetBundleName){
+           return mManifest.GetAllDependencies(assetBundleName);
+        }
+
 	}
 }

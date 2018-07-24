@@ -43,6 +43,14 @@ namespace BlueNoah.Download
 			mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
 		}
 
+        public void DownloadAssetBundle(string assetBundleName,UnityAction onDownloadComplete){
+            List<AssetConfigItem> items = new List<AssetConfigItem>();
+            AssetConfigItem item = new AssetConfigItem();
+            item.assetName = assetBundleName;
+            items.Add(item);
+            Download(items,onDownloadComplete);
+        }
+
 		public void Download(List<AssetConfigItem> items,UnityAction onDownloadComplete){
 			this.onDownloadComplete = onDownloadComplete;
 			mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);

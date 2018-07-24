@@ -102,7 +102,7 @@ namespace BlueNoah.Download
 			}
 		}
 
-		public static string DOWNLOAD_ASSET_PATH (string path)
+		public static string GetDownloadAssetBundlePath (string path)
 		{
 			return DOWNLOAD_ASSET_PATH_BASE + path;
 		}
@@ -133,7 +133,7 @@ namespace BlueNoah.Download
 					return "iOS";
 				case UnityEditor.BuildTarget.WebGL:
 					return "WebGL";
-				case UnityEditor.BuildTarget.StandaloneOSXUniversal:
+				case UnityEditor.BuildTarget.StandaloneOSX:
 					return "StandardOSX";
 				case UnityEditor.BuildTarget.StandaloneWindows:
 					return "StandardWindows";

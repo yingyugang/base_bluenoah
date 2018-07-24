@@ -90,7 +90,7 @@ namespace BlueNoah.Download
 
         void OnDownloadDone(AssetConfigItem item, UnityWebRequest www)
         {
-            FileManager.WriteAllBytes(DownloadConstant.DOWNLOAD_ASSET_PATH(item.assetName), www.downloadHandler.data);
+            FileManager.WriteAllBytes(DownloadConstant.GetDownloadAssetBundlePath(item.assetName), www.downloadHandler.data);
         }
 
     }

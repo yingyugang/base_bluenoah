@@ -10,7 +10,7 @@ namespace BlueNoah.Download
 		{
 			DownloadManager.Instance.StartDownload(()=>{
 				Debug.Log("Download Done");
-				gameObject.GetOrAddComponent<AssetBundleManager>().Reload();
+				gameObject.GetOrAddComponent<AssetBundleLoadManager>().Reload();
 			});
 		}
 
