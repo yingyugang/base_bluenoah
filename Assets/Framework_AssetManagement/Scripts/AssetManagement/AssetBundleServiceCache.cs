@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class AssetBundleCacheService
+public class AssetBundleServiceCache
 {
 
     Dictionary<string, AssetBundle> mCachedAssetBundles;
 
-    public AssetBundleCacheService()
+    public AssetBundleServiceCache()
     {
         mCachedAssetBundles = new Dictionary<string, AssetBundle>();
     }

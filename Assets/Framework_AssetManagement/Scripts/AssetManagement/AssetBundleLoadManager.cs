@@ -6,11 +6,9 @@ namespace BlueNoah.Assets
 {
     public class AssetBundleLoadManager : SimpleSingleMonoBehaviour<AssetBundleLoadManager>
     {
-        public ManifestLoadService manifestManager;
+        public AssetBundleServiceManifest assetBundleServiceManifest;
 
-        public DownloadManager downloadManager;
-
-        public AssetBundleCacheService assetBundleCacheManager;
+        public AssetBundleServiceCache assetBundleServiceCache;
 
         protected override void Awake()
         {
@@ -24,10 +22,9 @@ namespace BlueNoah.Assets
 
         public void Init()
         {
-            manifestManager = new ManifestLoadService();
-            manifestManager.LoadManifest();
-            downloadManager = DownloadManager.Instance;
-            assetBundleCacheManager = new AssetBundleCacheService();
+            assetBundleServiceManifest = new AssetBundleServiceManifest();
+            assetBundleServiceManifest.LoadManifest();
+            assetBundleServiceCache = new AssetBundleServiceCache();
         }
 
         public void Reload()

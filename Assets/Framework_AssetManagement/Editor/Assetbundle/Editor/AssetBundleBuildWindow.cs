@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using BlueNoah.IO;
-using BlueNoah.Editor;
 using BlueNoah.Download;
 
 namespace BlueNoah.Editor.AssetBundle.Management
@@ -22,46 +19,18 @@ namespace BlueNoah.Editor.AssetBundle.Management
         [MenuItem(AssetBundleEditorConstant.ASSETBUNDLE_BUILD_WINDOW_MENUITEM + MenuItemShortcutKeyConstant.SHORTCUT_KEY_ASSETBUNDLE_BUILD)]
         static void Init()
         {
-            InitPath();
             mAssetBundleBuildWindow = GetWindow<AssetBundleBuildWindow>(true, "AB Build Manager", true);
             mAssetBundleBuildWindow.minSize = new Vector2(WINDOW_WIDTH, WINDOW_HEIGHT);
             mAssetBundleBuildWindow.Show();
             mAssetBundleBuildWindow.Focus();
         }
 
-        static GUIStyle styleRed;
-        long mTotalSize;
-        static string tempResourceAssetPath;
-        static string streamPath;
-        static string fullTmpVersionOutputPath;
-        static string configPath;
-        const string localABServerPath = "/Applications/XAMPP/xamppfiles/htdocs/mmorpg/";
-        const string serverCSV = "server_resource.csv";
-
-        static void InitPath()
-        {
-            tempResourceAssetPath = Application.dataPath + "/Assetbundles/temp/";
-            streamPath = Application.streamingAssetsPath + EditorUserBuildSettings.activeBuildTarget.ToString();
-            configPath = Application.dataPath + "/Assetbundles/" + serverCSV;
-        }
-
         protected override void OnEnable()
         {
             base.OnEnable();
-            Reload();
             InitContent("AssetBundleBuild", "Build and manage assetbundles.");
             AssetBundleWindowEvents assetBundleWindowEvents = InitAssetBundleWindowEvents();
             mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(assetBundleWindowEvents);
-        }
-
-        AssetBundleWindowEvents InitAssetBundleWindowEvents()
-        {
-            AssetBundleWindowEvents assetBundleWindowEvents = new AssetBundleWindowEvents();
-            assetBundleWindowEvents.onSelectAssets = SelectDependencies;
-            assetBundleWindowEvents.onBuildAll = BuildAllAssetBundlesWithDependencies;
-            assetBundleWindowEvents.onBuildSelected = BuildSelectAssetBundlesWithOutDependencies;
-            assetBundleWindowEvents.onSaveConfig = SaveConfig;
-            return assetBundleWindowEvents;
         }
 
         void OnGUI()
@@ -72,17 +41,20 @@ namespace BlueNoah.Editor.AssetBundle.Management
             {
                 AssetDatabase.RemoveUnusedAssetBundleNames();
             }
-            GUILayout.Label("Totle Size : " + FileLengthToStr(mTotalSize));
+            GUILayout.Label("Totle Size : " + FileLengthToStr(mTotalAssetBundleSize));
             EditorGUILayout.EndHorizontal();
             mAssetBundleWindowGUI.DrawBottomButtonsPattern();
             mAssetBundleWindowGUI.DrawHashCodeFile(serverHash);
         }
 
-        void Reload()
+        AssetBundleWindowEvents InitAssetBundleWindowEvents()
         {
-            InitPath();
-            //InitBuild();
-            InitStyle();
+            AssetBundleWindowEvents assetBundleWindowEvents = new AssetBundleWindowEvents();
+            assetBundleWindowEvents.onSelectAssets = SelectDependencies;
+            assetBundleWindowEvents.onBuildAll = BuildAllAssetBundlesWithDependencies;
+            assetBundleWindowEvents.onBuildSelected = BuildSelectAssetBundlesWithOutDependencies;
+            assetBundleWindowEvents.onSaveConfig = SaveConfig;
+            return assetBundleWindowEvents;
         }
 
         void SaveConfig()
@@ -112,19 +84,8 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return assetBundleConfigItem;
         }
 
-        void InitStyle()
-        {
-            styleRed = new GUIStyle();
-            styleRed.active.textColor = Color.red;
-        }
-
         static string serverHash = "";
         Vector2 srollPos;
-
-        void OnGetFileHashCode()
-        {
-            serverHash = FileManager.GetFileHash(configPath);
-        }
 
         void SelectAll(List<AssetBundleWindowItem> allAssetBundleEntitys)
         {
@@ -174,24 +135,6 @@ namespace BlueNoah.Editor.AssetBundle.Management
             AssetDatabase.Refresh();
         }
 
-        //TODO
-        void RemoveABNotInABList()
-        {
-            HashSet<string> setStrs = new HashSet<string>();
-            foreach (AssetBundleWindowItem entity in mAssetBundleItemList)
-            {
-                //if(entity.isSelected)
-                setStrs.Add(entity.assetBundleName);
-            }
-            string[] paths = Directory.GetFiles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
-            for (int i = 0; i < paths.Length; i++)
-            {
-                string fileName = paths[i].Substring(paths[i].LastIndexOf("/", System.StringComparison.CurrentCulture) + 1);
-                if (!setStrs.Contains(fileName) && fileName != serverCSV)
-                    FileManager.DeleteFile(paths[i]);
-            }
-        }
-
         List<AssetBundleBuild> GetSelectedEntities()
         {
             List<AssetBundleBuild> assetbundleList = new List<AssetBundleBuild>();
@@ -212,83 +155,6 @@ namespace BlueNoah.Editor.AssetBundle.Management
             abb.assetBundleVariant = entity.assetBundleName.Split('.')[1];
             abb.assetNames = AssetDatabase.GetAssetPathsFromAssetBundle(entity.assetBundleName);
             return abb;
-        }
-
-        void CopySelectToTemp()
-        {
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
-            {
-                if (mAssetBundleItemList[i].isSelected)
-                {
-                    if (FileManager.Exists(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName))
-                        FileManager.CopyFile(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, tempResourceAssetPath + mAssetBundleItemList[i].assetBundleName);
-                }
-            }
-            AssetDatabase.Refresh();
-            Debug.Log("Done");
-        }
-
-        void CopySelectToLocalServer()
-        {
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
-            {
-                if (mAssetBundleItemList[i].isSelected)
-                {
-                    if (FileManager.Exists(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName))
-                        FileManager.CopyFile(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, localABServerPath + AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH.Replace(Application.dataPath, "") + mAssetBundleItemList[i].assetBundleName);
-                }
-            }
-            AssetDatabase.Refresh();
-            Debug.Log("Done");
-        }
-
-        void CopyToStream()
-        {
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
-            {
-                if (mAssetBundleItemList[i].isSelected)
-                {
-                    FileManager.CopyFile(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + mAssetBundleItemList[i].assetBundleName, streamPath + mAssetBundleItemList[i].assetBundleName);
-                }
-            }
-            AssetDatabase.Refresh();
-        }
-
-        void CreateVersion()
-        {
-            Caching.ClearCache();
-            StringBuilder result = new StringBuilder();
-            string title = "FileName,FileSize,IsCSV,HashCode";
-            result.AppendLine(title);
-            foreach (AssetBundleWindowItem abEntity in mAssetBundleItemList)
-            {
-                //			if (abEntity.isSelected) {
-                if (abEntity.assetBundleHash != null && abEntity.assetBundleHash.Trim() != "")
-                {
-                    result.AppendLine(CreateLine(abEntity.assetBundleName, new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + abEntity.assetBundleName).Length, abEntity.assetBundleName == "csv.assetbundle" ? 1 : 0, abEntity.assetBundleHash).ToString());
-                }
-                //			}
-            }
-            //		result.Append (GetMovieHash ());
-            FileManager.WriteString(configPath, result.ToString());
-            serverHash = FileManager.GetFileHash(configPath);
-            AssetDatabase.Refresh();
-            Debug.Log("CreateVersion successfully");
-        }
-
-        const string comma = ",";
-
-        StringBuilder CreateLine(string name, long size, int isCsv, string hashCode)
-        {
-            StringBuilder line = new StringBuilder();
-            line.Append(name);
-            line.Append(comma);
-            line.Append(size);
-            line.Append(comma);
-            line.Append(isCsv);
-            line.Append(comma);
-            line.Append(hashCode);
-            return line;
         }
     }
 }

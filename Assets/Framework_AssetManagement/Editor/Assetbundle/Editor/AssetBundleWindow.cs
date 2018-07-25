@@ -12,9 +12,11 @@ namespace BlueNoah.Editor.AssetBundle.Management
         
         protected AssetConfig mAssetBundleConfig;
 
-        protected Dictionary<string, AssetBundleWindowItem> mAssetbundleItemDic;
+        protected Dictionary<string, AssetBundleWindowItem> mAssetBundleItemDic;
 
         protected List<AssetBundleWindowItem> mAssetBundleItemList;
+
+        protected long mTotalAssetBundleSize;
 
         protected virtual void OnEnable()
         {
@@ -32,9 +34,10 @@ namespace BlueNoah.Editor.AssetBundle.Management
         protected void LoadAssetBundleInfos()
         {
             mAssetBundleConfig = LoadAssetBundleConfig();
-            mAssetbundleItemDic = new Dictionary<string, AssetBundleWindowItem>();
+            mAssetBundleItemDic = new Dictionary<string, AssetBundleWindowItem>();
             mAssetBundleItemList = new List<AssetBundleWindowItem>();
             InitAssetBundleWindowItemsFromEditorABSetting();
+            mTotalAssetBundleSize = GetTotalAssetBundleSize();
         }
 
         void InitAssetBundleWindowItemsFromEditorABSetting()
@@ -61,6 +64,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
             AddAssetBundleItem(assetbundleName, assetBundleWindowItem);
         }
 
+        long GetTotalAssetBundleSize(){
+            long totalSize = 0;
+            for (int i = 0; i < mAssetBundleItemList.Count;i++){
+                totalSize += mAssetBundleItemList[i].assetBundleLength;
+            }
+            return totalSize;
+        }
+
         //TODO Get AssetBundle Main Folder.
         Object GetAssetBundleMainFolder(string assetBundleName)
         {
@@ -69,7 +80,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         void AddAssetBundleItem(string assetbundleName, AssetBundleWindowItem assetBundleWindowItem)
         {
-            mAssetbundleItemDic.Add(assetbundleName, assetBundleWindowItem);
+            mAssetBundleItemDic.Add(assetbundleName, assetBundleWindowItem);
             mAssetBundleItemList.Add(assetBundleWindowItem);
         }
 

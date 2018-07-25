@@ -21,7 +21,7 @@ public class AssetBundleLoader
 
     void GetAllDependencies(string assetBundleName, UnityAction<AssetBundle> onGet)
     {
-        string[] dependencies = mAssetBundleLoadManager.manifestManager.GetAllDependencies(assetBundleName);
+        string[] dependencies = mAssetBundleLoadManager.assetBundleServiceManifest.GetAllDependencies(assetBundleName);
         mDependenciesCount = dependencies.Length;
         for (int i = 0; i < dependencies.Length; i++)
         {
@@ -42,11 +42,11 @@ public class AssetBundleLoader
 
     void GetAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
     {
-        if (AssetBundleLoadManager.Instance.assetBundleCacheManager.Contains(assetBundleName))
+        if (AssetBundleLoadManager.Instance.assetBundleServiceCache.Contains(assetBundleName))
         {
             if (onGet != null)
             {
-                onGet(AssetBundleLoadManager.Instance.assetBundleCacheManager.GetCached(assetBundleName));
+                onGet(AssetBundleLoadManager.Instance.assetBundleServiceCache.GetCached(assetBundleName));
             }
         }
         else if (FileManager.Exists(DownloadConstant.GetDownloadAssetBundlePath(assetBundleName)))
@@ -78,7 +78,7 @@ public class AssetBundleLoader
 
     AssetBundle LoadAndCacheAssetBundle(string assetBundleName){
         AssetBundle assetBundle = AssetBundle.LoadFromFile(DownloadConstant.GetDownloadAssetBundlePath(assetBundleName));
-        mAssetBundleLoadManager.assetBundleCacheManager.Cache(assetBundleName, assetBundle);
+        mAssetBundleLoadManager.assetBundleServiceCache.Cache(assetBundleName, assetBundle);
         return assetBundle;
     }
 }
