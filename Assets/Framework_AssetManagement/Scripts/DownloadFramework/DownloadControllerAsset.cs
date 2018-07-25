@@ -68,19 +68,22 @@ namespace BlueNoah.Download
 #endif
         }
 
-        void StartDownload(AssetConfigItem item){
+        void StartDownload(AssetConfigItem item)
+        {
             DownloadAssetDownloader downloader = CreateAssetDownloader(item);
             mDownloadAssetDownloaderList.Add(downloader);
-            downloader.StartDownload(item,(AssetConfigItem assetConfigItem) =>{
+            downloader.StartDownload(item, (AssetConfigItem assetConfigItem) =>
+            {
                 mDownloadingAssets--;
                 mDownloadingList.Remove(assetConfigItem);
                 mDownloadAssetDownloaderList.Remove(downloader);
             });
         }
 
-        DownloadAssetDownloader CreateAssetDownloader(AssetConfigItem item){
-            GameObject gameObject = new GameObject(string.Format("Download : {0}",item.assetName));
-            return  gameObject.AddComponent<DownloadAssetDownloader>();
+        DownloadAssetDownloader CreateAssetDownloader(AssetConfigItem item)
+        {
+            GameObject gameObject = new GameObject(string.Format("Download : {0}", item.assetName));
+            return gameObject.AddComponent<DownloadAssetDownloader>();
         }
     }
 }
