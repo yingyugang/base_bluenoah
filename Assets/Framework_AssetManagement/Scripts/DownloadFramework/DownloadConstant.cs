@@ -63,11 +63,11 @@ namespace BlueNoah.Download
 			get {
 				return
 #if DEVELOP
-					"http://127.0.0.1/DownloadSample/AssetBundles/" + ASSET_PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
 #elif STG
-                    "http://127.0.0.1/DownloadSample/AssetBundles/" + ASSET_PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
 #elif PRODUCT
-                    "http://127.0.0.1/DownloadSample/AssetBundles/" + ASSET_PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
 #else
                     "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
 #endif
