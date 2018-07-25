@@ -7,13 +7,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
 {
     public class AssetBundleBuildWindowGUI : AssetBundleWindowGUI
     {
-        AssetBundleWindowEvents mAssetBundleWindowEvents;
+        
+        AssetBundleBuildWindow mAssetBundleBuildWindow;
 
         Vector2 mScrollPos;
 
-        public AssetBundleBuildWindowGUI(AssetBundleWindowEvents assetBundleWindowEvents)
+        public AssetBundleBuildWindowGUI(AssetBundleBuildWindow assetBundleBuildWindow)
         {
-            mAssetBundleWindowEvents = assetBundleWindowEvents;
+            mAssetBundleBuildWindow = assetBundleBuildWindow;
         }
 
         public void DrawAssetBundlePattern(List<AssetBundleWindowItem> allAssetBundleEntitys)
@@ -60,7 +61,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             if (GUILayout.Button("SelectDP", GUILayout.Width(60)))
             {
-                mAssetBundleWindowEvents.onSelectAssets(abBuildEntity.assetBundleName);
+                mAssetBundleBuildWindow.SelectDependencies(abBuildEntity.assetBundleName);
             }
         }
 
@@ -79,9 +80,9 @@ namespace BlueNoah.Editor.AssetBundle.Management
             GUILayout.Space(20);
             EditorGUILayout.BeginHorizontal();
             GUILayout.TextField(serverHash, GUILayout.Width(400));
-            if (GUILayout.Button("GetServerCSVHash", GUILayout.Width(150)))
+            if (GUILayout.Button("ConfigHash", GUILayout.Width(150)))
             {
-                this.mAssetBundleWindowEvents.onGetFileHash();
+                mAssetBundleBuildWindow.ReadConfigHash();
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -91,58 +92,35 @@ namespace BlueNoah.Editor.AssetBundle.Management
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("BuildAll", GUILayout.Width(100)))
             {
-                mAssetBundleWindowEvents.onBuildAll();
+                if (EditorUtility.DisplayDialog("BuildAll", "It will build all the assetbundles with dependencies.Go on ?", "OK"))
+                {
+                    mAssetBundleBuildWindow.BuildAllAssetBundlesWithDependencies();
+                }
             }
             if (GUILayout.Button("BuildSelect", GUILayout.Width(100)))
             {
-                mAssetBundleWindowEvents.onBuildAll();
+                if(EditorUtility.DisplayDialog("BuildSelect", "It will build single assetbundle with out dependencies.Go on ?", "OK")){
+                    mAssetBundleBuildWindow.BuildSelectAssetBundlesWithOutDependencies();
+                }
             }
-            if (GUILayout.Button("SaveConfig", GUILayout.Width(120)))
+            if (GUILayout.Button("CopyToServer", GUILayout.Width(120)))
             {
-                mAssetBundleWindowEvents.onSaveConfig();
-            }
-            if (GUILayout.Button("CopyToLocalServer", GUILayout.Width(120)))
-            {
-                mAssetBundleWindowEvents.onCopyToLocalServer();
-            }
-            if (GUILayout.Button("CopyToRemoveServer", GUILayout.Width(120)))
-            {
-                mAssetBundleWindowEvents.onCopyToRemoveServer();
+                mAssetBundleBuildWindow.CopySelectAssetBundleToServer();
             }
             if (GUILayout.Button("SelectAll", GUILayout.Width(120)))
             {
-                mAssetBundleWindowEvents.onSelectAll();
+                mAssetBundleBuildWindow.SelectAll();
             }
             if (GUILayout.Button("UnSelectAll", GUILayout.Width(120)))
             {
-                mAssetBundleWindowEvents.onUnSelectAll();
+                mAssetBundleBuildWindow.UnSelectAll();
+            }
+            if (GUILayout.Button("RemoveUnusedABName", GUILayout.Width(150)))
+            {
+                AssetDatabase.RemoveUnusedAssetBundleNames();
             }
             EditorGUILayout.EndHorizontal();
         }
     }
-
-    public class AssetBundleWindowEvents
-    {
-        public UnityAction onBuildAll;
-
-        public UnityAction onBuildSelected;
-
-        public UnityAction onCopyToTemp;
-
-        public UnityAction onCopyToLocalServer;
-
-        public UnityAction onCopyToRemoveServer;
-
-        public UnityAction onSelectAll;
-
-        public UnityAction onUnSelectAll;
-
-        public UnityAction onGetFileHash;
-
-        public UnityAction onSaveConfig;
-
-        public UnityAction<string> onSelectAssets;
-    }
-
 
 }

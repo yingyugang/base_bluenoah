@@ -1,5 +1,4 @@
-﻿using BlueNoah.Download;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace BlueNoah.Assets

@@ -29,32 +29,17 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             base.OnEnable();
             InitContent("AssetBundleBuild", "Build and manage assetbundles.");
-            AssetBundleWindowEvents assetBundleWindowEvents = InitAssetBundleWindowEvents();
-            mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(assetBundleWindowEvents);
+            mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(this);
         }
 
         void OnGUI()
         {
             mAssetBundleWindowGUI.DrawAssetBundlePattern(mAssetBundleItemList);
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("RemoveUnusedABName", GUILayout.Width(150)))
-            {
-                AssetDatabase.RemoveUnusedAssetBundleNames();
-            }
             GUILayout.Label("Totle Size : " + FileLengthToStr(mTotalAssetBundleSize));
             EditorGUILayout.EndHorizontal();
             mAssetBundleWindowGUI.DrawBottomButtonsPattern();
             mAssetBundleWindowGUI.DrawHashCodeFile(serverHash);
-        }
-
-        AssetBundleWindowEvents InitAssetBundleWindowEvents()
-        {
-            AssetBundleWindowEvents assetBundleWindowEvents = new AssetBundleWindowEvents();
-            assetBundleWindowEvents.onSelectAssets = SelectDependencies;
-            assetBundleWindowEvents.onBuildAll = BuildAllAssetBundlesWithDependencies;
-            assetBundleWindowEvents.onBuildSelected = BuildSelectAssetBundlesWithOutDependencies;
-            assetBundleWindowEvents.onSaveConfig = SaveConfig;
-            return assetBundleWindowEvents;
         }
 
         void SaveConfig()
@@ -87,23 +72,23 @@ namespace BlueNoah.Editor.AssetBundle.Management
         static string serverHash = "";
         Vector2 srollPos;
 
-        void SelectAll(List<AssetBundleWindowItem> allAssetBundleEntitys)
+        public void SelectAll()
         {
-            for (int i = 0; i < allAssetBundleEntitys.Count; i++)
+            for (int i = 0; i < mAssetBundleItemList.Count; i++)
             {
-                allAssetBundleEntitys[i].isSelected = true;
+                mAssetBundleItemList[i].isSelected = true;
             }
         }
 
-        void UnSelectAll(List<AssetBundleWindowItem> allAssetBundleEntitys)
+        public void UnSelectAll()
         {
-            for (int i = 0; i < allAssetBundleEntitys.Count; i++)
+            for (int i = 0; i < mAssetBundleItemList.Count; i++)
             {
-                allAssetBundleEntitys[i].isSelected = false;
+                mAssetBundleItemList[i].isSelected = false;
             }
         }
 
-        void SelectDependencies(string abName)
+        public void SelectDependencies(string abName)
         {
             List<Object> objs = new List<Object>();
             string[] paths = AssetDatabase.GetAssetPathsFromAssetBundle(abName);
@@ -114,16 +99,27 @@ namespace BlueNoah.Editor.AssetBundle.Management
             Selection.objects = objs.ToArray();
         }
 
-        void BuildAllAssetBundlesWithDependencies()
+        //TODO
+        public void CopySelectAssetBundleToServer(){
+            throw new UnassignedReferenceException();
+        }
+
+        //TODO
+        public void ReadConfigHash(){
+            throw new UnassignedReferenceException();
+        }
+
+        public void BuildAllAssetBundlesWithDependencies()
         {
             Debug.Log("BuildAllAssetBundlesWithDependencies!");
             AssetDatabase.RemoveUnusedAssetBundleNames();
             FileManager.CreateDirectoryIfNotExisting(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
             BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+            SaveConfig();
             AssetDatabase.Refresh();
         }
 
-        void BuildSelectAssetBundlesWithOutDependencies()
+        public void BuildSelectAssetBundlesWithOutDependencies()
         {
             Debug.Log("BuildSelectAssetBundlesWithOutDependencies");
             AssetDatabase.RemoveUnusedAssetBundleNames();

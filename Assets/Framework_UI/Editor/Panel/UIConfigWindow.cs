@@ -123,7 +123,7 @@ namespace BlueNoah.Editor.UI
         {
             if (CheckCreateable(dialogName, mCurrentTemplate))
             {
-                if (EditorUtility.DisplayDialog("Create", string.Format("Is create {0} ?", dialogName), "OK", "Canel"))
+                if (EditorUtility.DisplayDialog("Create", string.Format("Is create {0} ?", dialogName), "OK", "Cancel"))
                 {
                     OnCreate(dialogName);
                 }
@@ -134,7 +134,7 @@ namespace BlueNoah.Editor.UI
 
         protected void Remove(UIConfigWindowItem item)
         {
-            if (EditorUtility.DisplayDialog("Remove", "Is remove this ?", "OK", "Canel"))
+            if (EditorUtility.DisplayDialog("Remove", "Is remove this ?", "OK", "Cancel"))
             {
                 OnRemoveConfirm(item);
             }

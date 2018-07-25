@@ -52,7 +52,7 @@ namespace BlueNoah.Download
         void OnDownloadAssetDone(string downloadText, UnityAction<List<AssetConfigItem>> onComplet)
         {
             mRemoteAssetConfig = JsonUtility.FromJson<AssetConfig>(downloadText);
-            List<AssetConfigItem> items = CheckDownloadList( mRemoteAssetConfig);
+            List<AssetConfigItem> items = CheckDownloadList(mRemoteAssetConfig);
             if (onComplet != null)
             {
                 onComplet(items);
