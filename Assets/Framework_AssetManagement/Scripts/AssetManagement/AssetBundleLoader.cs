@@ -14,27 +14,35 @@ namespace BlueNoah.Assets
             mAssetBundleLoadManager = assetBundleLoadManager;
         }
 
-        public void LoadOrDownloadAssetbundle(string assetBundleName, UnityAction<AssetBundle> onGet)
+        public void LoadOrDownloadAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
         {
             GetAllDependencies(assetBundleName, onGet);
         }
 
         int mDependenciesCount;
 
+        //TODO Add new download when downloading .
         void GetAllDependencies(string assetBundleName, UnityAction<AssetBundle> onGet)
         {
             string[] dependencies = mAssetBundleLoadManager.assetBundleServiceManifest.GetAllDependencies(assetBundleName);
-            mDependenciesCount = dependencies.Length;
-            for (int i = 0; i < dependencies.Length; i++)
-            {
-                GetDependencies(dependencies[i], (AssetBundle assetBundle) =>
+            if(dependencies.Length==0){
+                if (mDependenciesCount == 0)
                 {
-                    mDependenciesCount--;
-                    if (mDependenciesCount == 0)
+                    GetAssetBundle(assetBundleName, onGet);
+                }
+            }else{
+                mDependenciesCount = dependencies.Length;
+                for (int i = 0; i < dependencies.Length; i++)
+                {
+                    GetDependencies(dependencies[i], (AssetBundle assetBundle) =>
                     {
-                        GetAssetBundle(assetBundleName, onGet);
-                    }
-                });
+                        mDependenciesCount--;
+                        if (mDependenciesCount == 0)
+                        {
+                            GetAssetBundle(assetBundleName, onGet);
+                        }
+                    });
+                }
             }
         }
 

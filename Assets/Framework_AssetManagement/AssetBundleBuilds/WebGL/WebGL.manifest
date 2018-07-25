@@ -1,18 +1,18 @@
 ManifestFileVersion: 0
-CRC: 3864946690
+CRC: 296142909
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: framework_assetmanagement/assetbundleresources/images/units.ab
+      Name: images/units.ab
       Dependencies: {}
     Info_1:
-      Name: framework_assetmanagement/assetbundleresources/materials/units.ab
+      Name: materials/units.ab
       Dependencies:
-        Dependency_0: framework_assetmanagement/assetbundleresources/images/units.ab
+        Dependency_0: images/units.ab
     Info_2:
-      Name: framework_assetmanagement/assetbundleresources/prefabs/units.ab
+      Name: prefabs/units.ab
       Dependencies:
-        Dependency_0: framework_assetmanagement/assetbundleresources/materials/units.ab
+        Dependency_0: materials/units.ab
     Info_3:
-      Name: framework_assetmanagement/assetbundleresources/sounds/bgms.ab
+      Name: sounds/bgms.ab
       Dependencies: {}

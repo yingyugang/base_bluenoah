@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using BlueNoah.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,7 +18,6 @@ namespace BlueNoah.Download
             StartCoroutine(_DownloadAsset(item, onComplete));
         }
 
-        //Move it to asset download.
         IEnumerator _DownloadAsset(AssetConfigItem item,UnityAction<AssetConfigItem> onComplete)
         {
             Debug.Log(string.Format("Start download : {0}", item.assetName));
@@ -36,6 +34,7 @@ namespace BlueNoah.Download
                 yield return new WaitForSeconds(0.1f);
                 StartCoroutine(_DownloadAsset(item,onComplete));
             }
+            Destroy(gameObject);
         }
 
         void OnDownloadDone(AssetConfigItem item, UnityWebRequest www)

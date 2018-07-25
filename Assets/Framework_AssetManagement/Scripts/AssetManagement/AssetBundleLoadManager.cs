@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace BlueNoah.Assets
 {
+    //TODO Restart when Manifest and json not existing.
     public class AssetBundleLoadManager : SimpleSingleMonoBehaviour<AssetBundleLoadManager>
     {
         public AssetBundleServiceManifest assetBundleServiceManifest;
@@ -12,6 +13,7 @@ namespace BlueNoah.Assets
         protected override void Awake()
         {
             base.Awake();
+            Init();
         }
 
         void OnDestroy()
@@ -31,14 +33,14 @@ namespace BlueNoah.Assets
             Init();
         }
 
-        public void LoadOrDownloadAssetbundle(string assetBundleName, UnityAction<AssetBundle> onGet){
+        public void LoadOrDownloadAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet){
             AssetBundleLoader assetBundleLoader = new AssetBundleLoader(this);
-            assetBundleLoader.LoadOrDownloadAssetbundle(assetBundleName,onGet);
+            assetBundleLoader.LoadOrDownloadAssetBundle(assetBundleName,onGet);
         }
 
         public void LoadAsset<T>(UnityAction<T> onLoaded, string assetName, string assetBundleName) where T : Object
         {
-            LoadOrDownloadAssetbundle(assetBundleName, (AssetBundle assetBundle) =>
+            LoadOrDownloadAssetBundle(assetBundleName, (AssetBundle assetBundle) =>
             {
                 if (assetBundle != null)
                 {
@@ -49,7 +51,7 @@ namespace BlueNoah.Assets
 
         public void LoadAssets<T>(UnityAction<T[]> onLoaded, string assetBundleName) where T : Object
         {
-            LoadOrDownloadAssetbundle(assetBundleName, (AssetBundle assetBundle) =>
+            LoadOrDownloadAssetBundle(assetBundleName, (AssetBundle assetBundle) =>
             {
                 if (assetBundle != null)
                 {

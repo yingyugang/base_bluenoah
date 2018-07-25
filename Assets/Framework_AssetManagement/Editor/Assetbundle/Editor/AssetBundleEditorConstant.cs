@@ -6,6 +6,7 @@ public static class AssetBundleEditorConstant
     public const string ASSETBUNDLE_BUILD_WINDOW_MENUITEM = "Tools/AssetBundle/AB Build Manager";
     public const string ASSETBUNDLE_SETTING_WINDOW_MENUITEM = "Tools/AssetBundle/AB Settings";
     public const string ASSETBUNDLE_PATH = "/Framework_AssetManagement/AssetBundleBuilds/";
+    public const string ASSETBUNDLE_RESOURCES_PATH = "/Framework_AssetManagement/AssetBundleResources/";
 
     public static string ASSETBUNDLE_PLATFORM_PATH
     {
@@ -30,4 +31,22 @@ public static class AssetBundleEditorConstant
             return ASSETBUNDLE_PLATFORM_PATH + DownloadConstant.CONFIG_FILE;
         }
     }
+
+
+    public static string SYSTEM_ASSETBUNDLE_RESOURCES_PATH
+    {
+        get
+        {
+            return Application.dataPath + ASSETBUNDLE_RESOURCES_PATH ;
+        }
+    }
+
+    public static string ASSETDATABASE_ASSETBUNDLE_RESOURCES_PATH
+    {
+        get
+        {
+            return "Assets" + ASSETBUNDLE_RESOURCES_PATH;
+        }
+    }
+
 }

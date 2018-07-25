@@ -6,26 +6,25 @@ namespace BlueNoah.Download
 {
     public class DownloadSample : MonoBehaviour
     {
-		private void Start()
+		void Start()
 		{
+            gameObject.GetOrAddComponent<AssetBundleLoadManager>();
 			DownloadManager.Instance.StartDownload(()=>{
 				Debug.Log("Download Done");
 				gameObject.GetOrAddComponent<AssetBundleLoadManager>().Reload();
 			});
 		}
 
-        public void OnDownloadComplete(){
-            Debug.Log("OnDownloadComplete");
-        }
+		void Update()
+		{
+            if(Input.GetKeyDown(KeyCode.X)){
+                Debug.Log("KeyCode.X");
+                GetComponent<AssetBundleLoadManager>().LoadOrDownloadAssetBundle("images/units.ab",(AssetBundle assetBundle) =>{
+                    Debug.Log(assetBundle);
+                });
+            }
+		}
 
-        public void OnDownloadProgress(float progress){
-            Debug.Log("OnDownloadProgress");
-        }
-
-        public void OnDownloadError(string key ,string value)
-        {
-            Debug.Log("OnDownloadError:" + key + "||" + value);
-        }
 
 	}
 }

@@ -12,9 +12,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         static AssetBundleBuildWindow mAssetBundleBuildWindow;
         AssetBundleBuildWindowGUI mAssetBundleWindowGUI;
-
         AssetBundleBuildServiceSetting mAssetBundleBuildServiceSetting;
-
 
         const int WINDOW_WIDTH = 800;
         const int WINDOW_HEIGHT = 600;
@@ -33,11 +31,16 @@ namespace BlueNoah.Editor.AssetBundle.Management
             base.OnEnable();
             InitContent("AssetBundleBuild", "Build and manage assetbundles.");
             mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(this);
-            mAssetBundleBuildServiceSetting = new AssetBundleBuildServiceSetting(this);
+            mAssetBundleBuildServiceSetting = new AssetBundleBuildServiceSetting();
         }
 
         void OnGUI()
         {
+            if (Application.isPlaying)
+            {
+                GUILayout.Label("It will can't be display when playing.");
+                return;
+            }
             mAssetBundleWindowGUI.DrawAssetBundlePattern(mAssetBundleItemList);
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Totle Size : " + FileLengthToStr(mTotalAssetBundleSize));
@@ -51,11 +54,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
             Debug.Log("SaveConfig");
             LoadAssetBundleInfos();
             AssetConfig assetBundleConfig = ConvertAssetBundleWindowItemsToAssetBundleConfig();
-            string assetBundleConfigStr = JsonUtility.ToJson(assetBundleConfig,true);
-            FileManager.WriteString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE,assetBundleConfigStr);
+            string assetBundleConfigStr = JsonUtility.ToJson(assetBundleConfig, true);
+            FileManager.WriteString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE, assetBundleConfigStr);
         }
 
-        AssetConfig ConvertAssetBundleWindowItemsToAssetBundleConfig(){
+        AssetConfig ConvertAssetBundleWindowItemsToAssetBundleConfig()
+        {
             AssetConfig assetBundleConfig = new AssetConfig();
             assetBundleConfig.items = new List<AssetConfigItem>();
             for (int i = 0; i < mAssetBundleItemList.Count; i++)
@@ -65,7 +69,8 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return assetBundleConfig;
         }
 
-        AssetConfigItem ConvertAssetBundleWindowItemToAssetBundleConfigItem(AssetBundleWindowItem assetBundleWindowItem){
+        AssetConfigItem ConvertAssetBundleWindowItemToAssetBundleConfigItem(AssetBundleWindowItem assetBundleWindowItem)
+        {
             AssetConfigItem assetBundleConfigItem = new AssetConfigItem();
             assetBundleConfigItem.assetName = assetBundleWindowItem.assetBundleName;
             assetBundleConfigItem.hashCode = assetBundleWindowItem.assetBundleHash;
@@ -76,7 +81,8 @@ namespace BlueNoah.Editor.AssetBundle.Management
         static string serverHash = "";
         Vector2 srollPos;
 
-        public void SetAssetBundleNames(){
+        public void SetAssetBundleNames()
+        {
             mAssetBundleBuildServiceSetting.SetAssetBundleNames();
         }
 
@@ -108,12 +114,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
         }
 
         //TODO
-        public void CopySelectAssetBundleToServer(){
+        public void CopySelectAssetBundleToServer()
+        {
             throw new UnassignedReferenceException();
         }
 
         //TODO
-        public void ReadConfigHash(){
+        public void ReadConfigHash()
+        {
             throw new UnassignedReferenceException();
         }
 
@@ -137,6 +145,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, assetbundleList.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
             }
             AssetDatabase.Refresh();
+        }
+
+        public void RemoveUnusedABName()
+        {
+            AssetDatabase.RemoveUnusedAssetBundleNames();
+            this.LoadAssetBundleInfos();
         }
 
         List<AssetBundleBuild> GetSelectedEntities()

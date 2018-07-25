@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine.Events;
-using UnityEngine;
 
 namespace BlueNoah.Download
 {
     public class DownloadManager : SimpleSingleMonoBehaviour<DownloadManager>
     {
+
+        const string DOWNLOADING_MANAGER = "DownloadingManager";
 
         DownloadControllerConfig mConfigDownloadManager;
 
@@ -15,14 +16,16 @@ namespace BlueNoah.Download
 
         UnityAction onDownloadComplete;
 
+        ulong mTotalSize;
+
+        ulong mDownloadedSize;
+
         protected override void Awake()
         {
             mConfigDownloadManager = new DownloadControllerConfig(this);
             mAssetDownloadManager = new DownloadControllerAsset(this);
 			mDownloadControllerManifest = new DownloadControllerManifest (this);
         }
-
-        const string DOWNLOADING_MANAGER = "DownloadingManager";
 
 		public void StartDownload(UnityAction onDownloadComplete){
 			this.onDownloadComplete = onDownloadComplete;
@@ -60,6 +63,21 @@ namespace BlueNoah.Download
         {
             if (onDownloadComplete != null)
                 onDownloadComplete();
+        }
+
+        //TODO
+        public ulong GetTotalSize(){
+            return 0;
+        }
+
+        //TODO
+        public ulong GetRemainSize(){
+            return 0;
+        }
+
+        //TODO
+        public float GetProgress(){
+            return (float)GetRemainSize() / GetTotalSize();
         }
 
     }

@@ -1,0 +1,32 @@
+{
+    "items": [
+        {
+            "index": 0,
+            "assetName": "images/units.ab",
+            "assetType": 0,
+            "size": 3889,
+            "hashCode": "2e5df0d4fc2ae8ba7d408a2b5ae4efcc3d63a1b0"
+        },
+        {
+            "index": 0,
+            "assetName": "materials/units.ab",
+            "assetType": 0,
+            "size": 7562,
+            "hashCode": "2d68fcd41fa4a5768e620fcd6532aa5a15e735fd"
+        },
+        {
+            "index": 0,
+            "assetName": "prefabs/units.ab",
+            "assetType": 0,
+            "size": 2149,
+            "hashCode": "61955b54ae33469cbf249e52ba3a6ec3b7826d68"
+        },
+        {
+            "index": 0,
+            "assetName": "sounds/bgms.ab",
+            "assetType": 0,
+            "size": 154346,
+            "hashCode": "a53d794189021210be55b49b137b9e9eb67d2d34"
+        }
+    ]
+}

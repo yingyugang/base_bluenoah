@@ -6,13 +6,11 @@ namespace BlueNoah.Download
 	public static class DownloadConstant
 	{
 
-		public const string SERVER_ASSET_URL = "127.0.0.1/BlueNoah/Assets";
-
 		public const string CONFIG_FILE = "assetbundle_config.json";
 
 		public static string MANIFEST_FILE{
 			get{
-				return PLATFORM + "";
+				return PLATFORM;
 			}
 		}
 
@@ -25,22 +23,6 @@ namespace BlueNoah.Download
 #endif
 			}
 		}
-
-		public const string CLIENT_SOUNDS_PATH = "";
-
-		public const string SERVER_SOUNDS_PATH = "";
-
-		public const string CLIENT_IMAGES_PATH = "";
-
-		public const string INFORMATION_IMAGE_PATH = "";
-
-		public const string SERVER_VERSION_PATH = "";
-
-		public const string SERVER_ASSETBUNDLES_PATH = "";
-
-		public const string CLIENT_VERSION_PATH = "";
-
-		public const string CLIENT_ASSETBUNDLES_PATH = "";
 
 		public static string REMOTE_ASSET_PATH_MANIFEST {
 			get {
@@ -90,12 +72,6 @@ namespace BlueNoah.Download
 			}
 		}
 
-		public static string DOWNLOAD_ASSET_PATH_CONFIG {
-			get {
-				return DOWNLOAD_ASSET_PATH_BASE + CONFIG_FILE;
-			}
-		}
-
 		public static string DOWNLOAD_ASSET_PATH_MANIFEST {
 			get {
 				return DOWNLOAD_ASSET_PATH_BASE + MANIFEST_FILE;
@@ -106,11 +82,6 @@ namespace BlueNoah.Download
 		{
 			return DOWNLOAD_ASSET_PATH_BASE + path;
 		}
-
-		public const string CLIENT_SERVER_RESOURCE_VERSION_CSV = "";
-
-		public const string CLIENT_CLIENT_RESOURCE_VERSION_CSV = "";
-
 
 		public static string PLATFORM {
 			get {

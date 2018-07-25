@@ -117,7 +117,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             }
             if (GUILayout.Button("RemoveUnusedABName", GUILayout.Width(150)))
             {
-                AssetDatabase.RemoveUnusedAssetBundleNames();
+                mAssetBundleBuildWindow.RemoveUnusedABName();
             }
             if (GUILayout.Button("SetAssetBundleNames", GUILayout.Width(150)))
             {

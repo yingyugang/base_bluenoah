@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 2655942347
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a3333355ad467146b683f0d5e73e19fc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3f7d0c5e0986ec71841622bcb2f9be1c
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+Assets:
+- Assets/Framework_AssetManagement/AssetBundleResources/sounds/bgms/BGM03.wav
+- Assets/Framework_AssetManagement/AssetBundleResources/sounds/bgms/BGM01.wav
+- Assets/Framework_AssetManagement/AssetBundleResources/sounds/bgms/BGM02.wav
+Dependencies: []

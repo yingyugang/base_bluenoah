@@ -1,12 +1,9 @@
-using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 
 namespace BlueNoah.Download
 {
     public abstract class DownloadControllerBase
     {
-        
         protected DownloadManager mDownloadManager;
 
         public static UnityWebRequest CreateUnityWebRequest(string path)

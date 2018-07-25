@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using UnityEditor;
 using BlueNoah.IO;
 using System.IO;
@@ -8,30 +7,6 @@ namespace BlueNoah.Editor.AssetBundle.Management
 {
     public class AssetBundleBuildServiceSetting
     {
-        const string ASSETBUNDLE_RESOURCES_PATH = "/Framework_AssetManagement/AssetBundleResources/";
-        AssetBundleBuildWindow mAssetBundleBuildWindow;
-
-        public AssetBundleBuildServiceSetting(AssetBundleBuildWindow assetBundleBuildWindow)
-        {
-            mAssetBundleBuildWindow = assetBundleBuildWindow;
-        }
-
-        protected static string SYSTEM_ASSETBUNDLE_RESOURCES_PATH
-        {
-            get
-            {
-                return Application.dataPath + ASSETBUNDLE_RESOURCES_PATH + "/";
-            }
-        }
-
-        protected static string ASSETDATABASE_ASSETBUNDLE_RESOURCES_PATH
-        {
-            get
-            {
-                return "Assets/" + ASSETBUNDLE_RESOURCES_PATH + "/";
-            }
-        }
-
         public void SetAssetBundleNames()
         {
             string[] assetBundleTypeFolderPaths = GetAssetBundleTypeFolderPaths();
@@ -55,11 +30,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
             string abName = GetABNameByPath(path);
             AssetImporter assetImporter = GetAssetImporter(path);
             assetImporter.SetAssetBundleNameAndVariant(abName, "ab");
+            Debug.Log(abName);
         }
 
         string GetABNameByPath(string path)
         {
-            return path.Substring(path.IndexOf(ASSETBUNDLE_RESOURCES_PATH, System.StringComparison.CurrentCulture) + 1);
+            return path.Substring(path.IndexOf(AssetBundleEditorConstant.ASSETBUNDLE_RESOURCES_PATH, System.StringComparison.CurrentCulture) + AssetBundleEditorConstant.ASSETBUNDLE_RESOURCES_PATH.Length);
         }
 
         string GetAssetBundleSubFolder(string path)
@@ -69,7 +45,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         string[] GetAssetBundleTypeFolderPaths()
         {
-            return FileManager.GetDirectories(SYSTEM_ASSETBUNDLE_RESOURCES_PATH, "*", SearchOption.TopDirectoryOnly);
+            return FileManager.GetDirectories(AssetBundleEditorConstant.SYSTEM_ASSETBUNDLE_RESOURCES_PATH, "*", SearchOption.TopDirectoryOnly);
         }
 
         string[] GetAssetBundleFolderPaths(string path)
