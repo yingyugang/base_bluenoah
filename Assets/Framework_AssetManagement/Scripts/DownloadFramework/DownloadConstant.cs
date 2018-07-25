@@ -63,13 +63,13 @@ namespace BlueNoah.Download
 			get {
 				return
 #if DEVELOP
-					"http://127.0.0.1/DownloadSampe/AssetBundles/" + ASSET_PLATFORM + "/";
+					"http://127.0.0.1/DownloadSample/AssetBundles/" + ASSET_PLATFORM + "/";
 #elif STG
-					"http://127.0.0.1/DownloadSampe/AssetBundles/" + ASSET_PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/AssetBundles/" + ASSET_PLATFORM + "/";
 #elif PRODUCT
-					"http://127.0.0.1/DownloadSampe/AssetBundles/" + ASSET_PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/AssetBundles/" + ASSET_PLATFORM + "/";
 #else
-					"http://127.0.0.1/DownloadSampe/AssetBundles/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
 #endif
 			}
 		}
@@ -162,7 +162,5 @@ namespace BlueNoah.Download
 				}
 			}
 		}
-
-
 	}
 }

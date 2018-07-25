@@ -1,51 +1,59 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class AssetBundleServiceCache
+namespace BlueNoah.Assets
 {
-
-    Dictionary<string, AssetBundle> mCachedAssetBundles;
-
-    public AssetBundleServiceCache()
+    public class AssetBundleServiceCache
     {
-        mCachedAssetBundles = new Dictionary<string, AssetBundle>();
-    }
+        Dictionary<string, AssetBundle> mCachedAssetBundles;
 
-    public bool Contains(string assetBundleName){
-        return mCachedAssetBundles.ContainsKey(assetBundleName);
-    }
-
-    public AssetBundle GetCached(string assetBundleName){
-        if (mCachedAssetBundles.ContainsKey(assetBundleName))
+        public AssetBundleServiceCache()
         {
-            return mCachedAssetBundles[assetBundleName];
+            mCachedAssetBundles = new Dictionary<string, AssetBundle>();
         }
-        return null;
-    }
 
-    public void Cache(string assetBundleName,AssetBundle assetBundle){
-        if (!mCachedAssetBundles.ContainsKey(assetBundleName))
+        public bool Contains(string assetBundleName)
         {
-            mCachedAssetBundles.Add(assetBundleName,assetBundle);
+            return mCachedAssetBundles.ContainsKey(assetBundleName);
+        }
+
+        public AssetBundle GetCached(string assetBundleName)
+        {
+            if (mCachedAssetBundles.ContainsKey(assetBundleName))
+            {
+                return mCachedAssetBundles[assetBundleName];
+            }
+            return null;
+        }
+
+        public void Cache(string assetBundleName, AssetBundle assetBundle)
+        {
+            if (!mCachedAssetBundles.ContainsKey(assetBundleName))
+            {
+                mCachedAssetBundles.Add(assetBundleName, assetBundle);
+            }
+        }
+
+        public void Unload(string assetBundleName, bool isUnloadAll = false)
+        {
+            if (mCachedAssetBundles.ContainsKey(assetBundleName))
+            {
+                AssetBundle assetBundle = mCachedAssetBundles[assetBundleName];
+                if (assetBundle != null)
+                    assetBundle.Unload(isUnloadAll);
+                mCachedAssetBundles.Remove(assetBundleName);
+            }
+        }
+
+        public void UnloadAll(bool isUnloadAll = false)
+        {
+            foreach (string assetBundleName in mCachedAssetBundles.Keys)
+            {
+                AssetBundle assetBundle = mCachedAssetBundles[assetBundleName];
+                if (assetBundle != null)
+                    assetBundle.Unload(isUnloadAll);
+            }
+            mCachedAssetBundles.Clear();
         }
     }
-
-    public void Unload(string assetBundleName,bool isUnloadAll = false){
-        if (mCachedAssetBundles.ContainsKey(assetBundleName)){
-            AssetBundle assetBundle = mCachedAssetBundles[assetBundleName];
-            if(assetBundle!=null)
-                assetBundle.Unload(isUnloadAll);
-            mCachedAssetBundles.Remove(assetBundleName);
-        }
-    }
-
-    public void UnloadAll(bool isUnloadAll = false){
-        foreach(string assetBundleName in mCachedAssetBundles.Keys){
-            AssetBundle assetBundle = mCachedAssetBundles[assetBundleName];
-            if (assetBundle != null)
-                assetBundle.Unload(isUnloadAll);
-        }
-        mCachedAssetBundles.Clear();
-    }
-
 }

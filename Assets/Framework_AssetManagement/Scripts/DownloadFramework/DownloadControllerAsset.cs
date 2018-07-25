@@ -22,6 +22,8 @@ namespace BlueNoah.Download
 
         UnityAction mOnDownloadComplete;
 
+        List<DownloadAssetDownloader> mDownloadAssetDownloaderList;
+
         public DownloadControllerAsset(DownloadManager downloadManager)
         {
             mDownloadManager = downloadManager;
@@ -37,6 +39,7 @@ namespace BlueNoah.Download
             {
                 mDownloadingList = new List<AssetConfigItem>();
             }
+            mDownloadAssetDownloaderList = new List<DownloadAssetDownloader>();
             mPreDownloadList.AddRange(items);
             mOnDownloadComplete = onDownloadComplete;
             mDownloadManager.StartCoroutine(_StartDownloads());
@@ -47,13 +50,13 @@ namespace BlueNoah.Download
             Debug.Log("_StartDownloads Begin");
             while (mDownloadingList.Count > 0 || mPreDownloadList.Count > 0)
             {
-                if (mDownloadingAssets < M_MAX_DOWNLOAD_COUNT)
+                if (mDownloadingAssets < M_MAX_DOWNLOAD_COUNT && mPreDownloadList.Count > 0)
                 {
                     AssetConfigItem item = mPreDownloadList[0];
                     mPreDownloadList.RemoveAt(0);
                     mDownloadingList.Add(item);
                     mDownloadingAssets++;
-                    mDownloadManager.StartCoroutine(_DownloadAsset(item));
+                    StartDownload(item);
                 }
                 yield return null;
             }
@@ -67,29 +70,19 @@ namespace BlueNoah.Download
 #endif
         }
 
-        IEnumerator _DownloadAsset(AssetConfigItem item)
-        {
-            UnityWebRequest www = CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH(item.assetName));
-            yield return www.SendWebRequest();
-            Debug.Log(www.url + " : complete.");
-            if (www.isDone && string.IsNullOrEmpty(www.error))
-            {
+        void StartDownload(AssetConfigItem item){
+            DownloadAssetDownloader downloader = CreateAssetDownloader(item);
+            mDownloadAssetDownloaderList.Add(downloader);
+            downloader.StartDownload(item,(AssetConfigItem assetConfigItem) =>{
                 mDownloadingAssets--;
-                OnDownloadDone(item, www);
-                mDownloadingList.Remove(item);
-            }
-            else
-            {
-                Debug.LogError("Remove asset failure. ReDownload. ");
-                yield return new WaitForSeconds(0.1f);
-                mDownloadManager.StartCoroutine(_DownloadAsset(item));
-            }
+                mDownloadingList.Remove(assetConfigItem);
+                mDownloadAssetDownloaderList.Remove(downloader);
+            });
         }
 
-        void OnDownloadDone(AssetConfigItem item, UnityWebRequest www)
-        {
-            FileManager.WriteAllBytes(DownloadConstant.GetDownloadAssetBundlePath(item.assetName), www.downloadHandler.data);
+        DownloadAssetDownloader CreateAssetDownloader(AssetConfigItem item){
+            GameObject gameObject = new GameObject(string.Format("Download : {0}",item.assetName));
+            return  gameObject.AddComponent<DownloadAssetDownloader>();
         }
-
     }
 }

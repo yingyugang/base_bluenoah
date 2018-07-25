@@ -13,6 +13,9 @@ namespace BlueNoah.Editor.AssetBundle.Management
         static AssetBundleBuildWindow mAssetBundleBuildWindow;
         AssetBundleBuildWindowGUI mAssetBundleWindowGUI;
 
+        AssetBundleBuildServiceSetting mAssetBundleBuildServiceSetting;
+
+
         const int WINDOW_WIDTH = 800;
         const int WINDOW_HEIGHT = 600;
 
@@ -30,6 +33,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             base.OnEnable();
             InitContent("AssetBundleBuild", "Build and manage assetbundles.");
             mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(this);
+            mAssetBundleBuildServiceSetting = new AssetBundleBuildServiceSetting(this);
         }
 
         void OnGUI()
@@ -71,6 +75,10 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         static string serverHash = "";
         Vector2 srollPos;
+
+        public void SetAssetBundleNames(){
+            mAssetBundleBuildServiceSetting.SetAssetBundleNames();
+        }
 
         public void SelectAll()
         {

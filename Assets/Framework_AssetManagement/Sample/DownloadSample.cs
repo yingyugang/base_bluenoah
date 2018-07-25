@@ -4,7 +4,7 @@ using BlueNoah.Utility;
 
 namespace BlueNoah.Download
 {
-    public class Download : MonoBehaviour
+    public class DownloadSample : MonoBehaviour
     {
 		private void Start()
 		{

@@ -62,12 +62,6 @@ namespace BlueNoah.Download
                 onDownloadComplete();
         }
 
-        public string GetUTCTime()
-        {
-            System.Int32 unixTimestamp = (System.Int32)(System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalSeconds;
-            return unixTimestamp.ToString();
-        }
-
     }
 
     [System.Serializable]

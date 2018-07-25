@@ -9,12 +9,18 @@ namespace BlueNoah.Download
         
         protected DownloadManager mDownloadManager;
 
-        protected UnityWebRequest CreateUnityWebRequest(string path)
+        public static UnityWebRequest CreateUnityWebRequest(string path)
         {
-            UnityWebRequest www = UnityWebRequest.Get(path + "?" + mDownloadManager.GetUTCTime());
+            UnityWebRequest www = UnityWebRequest.Get(path + "?" + GetUTCTime());
             www.SetRequestHeader("Cache-Control", "max-age=0, no-cache, no-store");
             www.SetRequestHeader("Pragma", "no-cache");
             return www;
+        }
+
+        static string GetUTCTime()
+        {
+            System.Int32 unixTimestamp = (System.Int32)(System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalSeconds;
+            return unixTimestamp.ToString();
         }
 
     }

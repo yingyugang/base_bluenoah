@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
-    public class AssetBundleBuildWindowGUI : AssetBundleWindowGUI
+    public class AssetBundleBuildWindowGUI
     {
         
         AssetBundleBuildWindow mAssetBundleBuildWindow;
@@ -92,14 +92,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("BuildAll", GUILayout.Width(100)))
             {
-                if (EditorUtility.DisplayDialog("BuildAll", "It will build all the assetbundles with dependencies.Go on ?", "OK"))
+                if (EditorUtility.DisplayDialog("BuildAll", "It will build all the assetbundles with dependencies.Go on ?", "OK","Cancel"))
                 {
                     mAssetBundleBuildWindow.BuildAllAssetBundlesWithDependencies();
                 }
             }
             if (GUILayout.Button("BuildSelect", GUILayout.Width(100)))
             {
-                if(EditorUtility.DisplayDialog("BuildSelect", "It will build single assetbundle with out dependencies.Go on ?", "OK")){
+                if(EditorUtility.DisplayDialog("BuildSelect", "It will build single assetbundle with out dependencies.Go on ?", "OK", "Cancel")){
                     mAssetBundleBuildWindow.BuildSelectAssetBundlesWithOutDependencies();
                 }
             }
@@ -118,6 +118,10 @@ namespace BlueNoah.Editor.AssetBundle.Management
             if (GUILayout.Button("RemoveUnusedABName", GUILayout.Width(150)))
             {
                 AssetDatabase.RemoveUnusedAssetBundleNames();
+            }
+            if (GUILayout.Button("SetAssetBundleNames", GUILayout.Width(150)))
+            {
+                mAssetBundleBuildWindow.SetAssetBundleNames();
             }
             EditorGUILayout.EndHorizontal();
         }
