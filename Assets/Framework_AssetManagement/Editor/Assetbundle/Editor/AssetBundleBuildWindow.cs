@@ -41,17 +41,15 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 GUILayout.Label("It will can't be display when playing.");
                 return;
             }
-            mAssetBundleWindowGUI.DrawAssetBundlePattern(mAssetBundleItemList);
+            mAssetBundleWindowGUI.DrawAssetBundlePattern(mAssetBundleWindowItemList);
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Totle Size : " + FileLengthToStr(mTotalAssetBundleSize));
             EditorGUILayout.EndHorizontal();
             mAssetBundleWindowGUI.DrawBottomButtonsPattern();
-            mAssetBundleWindowGUI.DrawHashCodeFile(serverHash);
         }
 
         void SaveConfig()
         {
-            Debug.Log("SaveConfig");
             LoadAssetBundleInfos();
             AssetConfig assetBundleConfig = ConvertAssetBundleWindowItemsToAssetBundleConfig();
             string assetBundleConfigStr = JsonUtility.ToJson(assetBundleConfig, true);
@@ -62,9 +60,9 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             AssetConfig assetBundleConfig = new AssetConfig();
             assetBundleConfig.items = new List<AssetConfigItem>();
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
+            for (int i = 0; i < mAssetBundleWindowItemList.Count; i++)
             {
-                assetBundleConfig.items.Add(ConvertAssetBundleWindowItemToAssetBundleConfigItem(mAssetBundleItemList[i]));
+                assetBundleConfig.items.Add(ConvertAssetBundleWindowItemToAssetBundleConfigItem(mAssetBundleWindowItemList[i]));
             }
             return assetBundleConfig;
         }
@@ -78,9 +76,6 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return assetBundleConfigItem;
         }
 
-        static string serverHash = "";
-        Vector2 srollPos;
-
         public void SetAssetBundleNames()
         {
             mAssetBundleBuildServiceSetting.SetAssetBundleNames();
@@ -88,17 +83,17 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         public void SelectAll()
         {
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
+            for (int i = 0; i < mAssetBundleWindowItemList.Count; i++)
             {
-                mAssetBundleItemList[i].isSelected = true;
+                mAssetBundleWindowItemList[i].isSelected = true;
             }
         }
 
         public void UnSelectAll()
         {
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
+            for (int i = 0; i < mAssetBundleWindowItemList.Count; i++)
             {
-                mAssetBundleItemList[i].isSelected = false;
+                mAssetBundleWindowItemList[i].isSelected = false;
             }
         }
 
@@ -113,16 +108,10 @@ namespace BlueNoah.Editor.AssetBundle.Management
             Selection.objects = objs.ToArray();
         }
 
-        //TODO
         public void CopySelectAssetBundleToServer()
         {
-            throw new UnassignedReferenceException();
-        }
-
-        //TODO
-        public void ReadConfigHash()
-        {
-            throw new UnassignedReferenceException();
+            FileManager.DirectoryCopy(AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH,true);
+            Debug.Log(string.Format("{0} <color=green>==></color> {1}", AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH));
         }
 
         public void BuildAllAssetBundlesWithDependencies()
@@ -156,11 +145,11 @@ namespace BlueNoah.Editor.AssetBundle.Management
         List<AssetBundleBuild> GetSelectedEntities()
         {
             List<AssetBundleBuild> assetbundleList = new List<AssetBundleBuild>();
-            for (int i = 0; i < mAssetBundleItemList.Count; i++)
+            for (int i = 0; i < mAssetBundleWindowItemList.Count; i++)
             {
-                if (mAssetBundleItemList[i].isSelected)
+                if (mAssetBundleWindowItemList[i].isSelected)
                 {
-                    assetbundleList.Add(CreateAssetBundleBuild(mAssetBundleItemList[i]));
+                    assetbundleList.Add(CreateAssetBundleBuild(mAssetBundleWindowItemList[i]));
                 }
             }
             return assetbundleList;

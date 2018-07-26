@@ -45,13 +45,13 @@ namespace BlueNoah.Download
 			get {
 				return
 #if DEVELOP
-                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
 #elif STG
-                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
 #elif PRODUCT
-                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
 #else
-                    "http://127.0.0.1/DownloadSample/AssetBundles/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
 #endif
 			}
 		}
@@ -104,7 +104,11 @@ namespace BlueNoah.Download
 					return "iOS";
 				case UnityEditor.BuildTarget.WebGL:
 					return "WebGL";
-				case UnityEditor.BuildTarget.StandaloneOSX:
+            #if UNITY_2018_1_OR_NEWER
+                case UnityEditor.BuildTarget.StandaloneOSX:
+            #else
+                case UnityEditor.BuildTarget.StandaloneOSXUniversal:
+            #endif
 					return "StandardOSX";
 				case UnityEditor.BuildTarget.StandaloneWindows:
 					return "StandardWindows";

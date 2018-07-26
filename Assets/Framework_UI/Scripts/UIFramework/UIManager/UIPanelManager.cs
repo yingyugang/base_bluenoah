@@ -123,6 +123,14 @@ namespace BlueNoah.UI
             }
         }
 
+        public void OpenPanelImmediate<T>(Hashtable param = null, UnityAction<GameObject> onShow = null) where T : BasePanelCtrl
+        {
+            if (CheckOpenable(typeof(T)))
+            {
+                ShowPanel(typeof(T), param, onShow);
+            }
+        }
+
         public T GetCurrentCtrl<T>() where T : BasePanelCtrl
         {
             return mCurrentPanel.GetComponent<T>();

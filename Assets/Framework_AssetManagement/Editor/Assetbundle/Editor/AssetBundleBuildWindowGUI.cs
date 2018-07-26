@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
@@ -73,18 +72,6 @@ namespace BlueNoah.Editor.AssetBundle.Management
         Color CheckMiddleColor(long fileLength)
         {
             return fileLength > 1024 ? Color.yellow : Color.white;
-        }
-
-        public void DrawHashCodeFile(string serverHash)
-        {
-            GUILayout.Space(20);
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.TextField(serverHash, GUILayout.Width(400));
-            if (GUILayout.Button("ConfigHash", GUILayout.Width(150)))
-            {
-                mAssetBundleBuildWindow.ReadConfigHash();
-            }
-            EditorGUILayout.EndHorizontal();
         }
 
         public void DrawBottomButtonsPattern()

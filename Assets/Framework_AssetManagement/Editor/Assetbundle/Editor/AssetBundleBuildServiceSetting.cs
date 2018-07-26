@@ -9,10 +9,19 @@ namespace BlueNoah.Editor.AssetBundle.Management
     {
         public void SetAssetBundleNames()
         {
-            string[] assetBundleTypeFolderPaths = GetAssetBundleTypeFolderPaths();
-            for (int i = 0; i < assetBundleTypeFolderPaths.Length; i++)
+            if (EditorUtility.DisplayDialog("Auto Set AssetBundle Name", "It will remove all the assetBundle settings even if have been used , and reset it by framework's rule. Go on?", "OK", "Cancel"))
             {
-                SetABNameWithFolderNames(assetBundleTypeFolderPaths[i]);
+                string[] assetBundleNames = AssetDatabase.GetAllAssetBundleNames();
+                for (int i = 0; i < assetBundleNames.Length; i++)
+                {
+                    AssetDatabase.RemoveAssetBundleName(assetBundleNames[i], true);
+                    Debug.Log(string.Format("Remove old assetBundle name : {0}", assetBundleNames[i]));
+                }
+                string[] assetBundleTypeFolderPaths = GetAssetBundleTypeFolderPaths();
+                for (int i = 0; i < assetBundleTypeFolderPaths.Length; i++)
+                {
+                    SetABNameWithFolderNames(assetBundleTypeFolderPaths[i]);
+                }
             }
         }
 
@@ -25,12 +34,13 @@ namespace BlueNoah.Editor.AssetBundle.Management
             }
         }
 
+        //TODO Need to explain.
         void SetABNameWithFolderName(string path)
         {
             string abName = GetABNameByPath(path);
             AssetImporter assetImporter = GetAssetImporter(path);
             assetImporter.SetAssetBundleNameAndVariant(abName, "ab");
-            Debug.Log(abName);
+            Debug.Log(string.Format("Set assetBundle folder : <color='#3EFF00FF'>{0}</color> , name <color='#FFDF29FF'>{1}</color>",path,abName));
         }
 
         string GetABNameByPath(string path)

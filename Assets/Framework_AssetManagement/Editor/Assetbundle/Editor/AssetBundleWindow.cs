@@ -12,9 +12,9 @@ namespace BlueNoah.Editor.AssetBundle.Management
         
         protected AssetConfig mAssetBundleConfig;
 
-        protected Dictionary<string, AssetBundleWindowItem> mAssetBundleItemDic;
+        protected Dictionary<string, AssetBundleWindowItem> mAssetBundleWindowItemDic;
 
-        protected List<AssetBundleWindowItem> mAssetBundleItemList;
+        protected List<AssetBundleWindowItem> mAssetBundleWindowItemList;
 
         protected long mTotalAssetBundleSize;
 
@@ -34,22 +34,22 @@ namespace BlueNoah.Editor.AssetBundle.Management
         protected void LoadAssetBundleInfos()
         {
             mAssetBundleConfig = LoadAssetBundleConfig();
-            mAssetBundleItemDic = new Dictionary<string, AssetBundleWindowItem>();
-            mAssetBundleItemList = new List<AssetBundleWindowItem>();
-            InitAssetBundleWindowItemsFromEditorABSetting();
+            mAssetBundleWindowItemDic = new Dictionary<string, AssetBundleWindowItem>();
+            mAssetBundleWindowItemList = new List<AssetBundleWindowItem>();
+            InitAssetBundleWindowItemsFromAssetBundleSetting();
             mTotalAssetBundleSize = GetTotalAssetBundleSize();
         }
 
-        void InitAssetBundleWindowItemsFromEditorABSetting()
+        void InitAssetBundleWindowItemsFromAssetBundleSetting()
         {
             string[] assetbundleNames = AssetDatabase.GetAllAssetBundleNames();
             for (int i = 0; i < assetbundleNames.Length; i++)
             {
-                InitAssetBundleWindowItemFromEditorABSetting(assetbundleNames[i]);
+                InitAssetBundleWindowItemFromAssetBundleSetting(assetbundleNames[i]);
             }
         }
 
-        void InitAssetBundleWindowItemFromEditorABSetting(string assetbundleName)
+        void InitAssetBundleWindowItemFromAssetBundleSetting(string assetbundleName)
         {
             AssetBundleWindowItem assetBundleWindowItem = new AssetBundleWindowItem();
             assetBundleWindowItem.assetBundleName = assetbundleName;
@@ -61,13 +61,13 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 assetBundleWindowItem.assetBundleLength = new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length;
             }
             assetBundleWindowItem.displayLength = FileLengthToStr(assetBundleWindowItem.assetBundleLength);
-            AddAssetBundleItem(assetbundleName, assetBundleWindowItem);
+            AddAssetBundleWindowItem(assetbundleName, assetBundleWindowItem);
         }
 
         long GetTotalAssetBundleSize(){
             long totalSize = 0;
-            for (int i = 0; i < mAssetBundleItemList.Count;i++){
-                totalSize += mAssetBundleItemList[i].assetBundleLength;
+            for (int i = 0; i < mAssetBundleWindowItemList.Count;i++){
+                totalSize += mAssetBundleWindowItemList[i].assetBundleLength;
             }
             return totalSize;
         }
@@ -78,10 +78,10 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return null;
         }
 
-        void AddAssetBundleItem(string assetbundleName, AssetBundleWindowItem assetBundleWindowItem)
+        void AddAssetBundleWindowItem(string assetbundleName, AssetBundleWindowItem assetBundleWindowItem)
         {
-            mAssetBundleItemDic.Add(assetbundleName, assetBundleWindowItem);
-            mAssetBundleItemList.Add(assetBundleWindowItem);
+            mAssetBundleWindowItemDic.Add(assetbundleName, assetBundleWindowItem);
+            mAssetBundleWindowItemList.Add(assetBundleWindowItem);
         }
 
         Object LoadAssetBunleObject(string assetbundleName)
