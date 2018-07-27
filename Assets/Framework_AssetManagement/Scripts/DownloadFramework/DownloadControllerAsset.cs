@@ -14,7 +14,9 @@ namespace BlueNoah.Download
 
         List<AssetConfigItem> mDownloadingList;
 
-        UnityAction mOnDownloadComplete;
+        UnityAction onDownloadComplete;
+
+        UnityAction<float> onDownloading;
 
         List<DownloadAssetDownloader> mDownloadAssetDownloaderList;
 
@@ -22,12 +24,14 @@ namespace BlueNoah.Download
 
         ulong mTotalDownloadDoneFileSize;
 
+        bool mIsDownloading;
+
         public DownloadControllerAsset(DownloadManager downloadManager)
         {
             mDownloadManager = downloadManager;
         }
 
-        public void StartDownloads(List<AssetConfigItem> items, UnityAction onDownloadComplete)
+        public void StartDownloads(List<AssetConfigItem> items, UnityAction onDownloadComplete,UnityAction<float> onDownloading)
         {
             if (mPreDownloadList == null)
             {
@@ -39,7 +43,8 @@ namespace BlueNoah.Download
             }
             mDownloadAssetDownloaderList = new List<DownloadAssetDownloader>();
             mPreDownloadList.AddRange(items);
-            mOnDownloadComplete = onDownloadComplete;
+            this.onDownloadComplete = onDownloadComplete;
+            this.onDownloading = onDownloading;
             mTotalDownloadFileSize = CalculateTotalDownloadSize(items);
             mTotalDownloadDoneFileSize = 0;
             mDownloadManager.StartCoroutine(_StartDownloads());
@@ -48,6 +53,7 @@ namespace BlueNoah.Download
         IEnumerator _StartDownloads()
         {
             Debug.Log("_StartDownloads Begin");
+            mIsDownloading = true;
             while (mDownloadingList.Count > 0 || mPreDownloadList.Count > 0)
             {
                 if (mDownloadingAssets < DownloadConstant.MAX_DOWNLOAD_COUNT && mPreDownloadList.Count > 0)
@@ -58,13 +64,18 @@ namespace BlueNoah.Download
                     mDownloadingAssets++;
                     StartDownload(item);
                 }
+                if (onDownloading != null)
+                    onDownloading(GetProgress());
                 yield return null;
             }
-            if (mOnDownloadComplete != null)
+            if (onDownloadComplete != null)
             {
-                mOnDownloadComplete();
+                if (onDownloading != null)
+                    onDownloading(GetProgress());
+                onDownloadComplete();
             }
             Debug.Log("_StartDownloads End");
+            mIsDownloading = false;
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.Refresh();
 #endif
@@ -119,7 +130,10 @@ namespace BlueNoah.Download
 
         public float GetProgress()
         {
-            return (GetRunningDownloadedSize() + mTotalDownloadDoneFileSize) / mTotalDownloadFileSize;
+            if (mIsDownloading)
+                return (GetRunningDownloadedSize() + mTotalDownloadDoneFileSize) / (float)mTotalDownloadFileSize;
+            else
+                return 0;
         }
 
     }

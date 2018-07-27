@@ -4,8 +4,8 @@
             "index": 0,
             "assetName": "images/units.ab",
             "assetType": 0,
-            "size": 6247,
-            "hashCode": "cd838cae37660bfdded2b9a2673713e3df82d8ed"
+            "size": 16336282,
+            "hashCode": "1f009e9d2b0eb2fd29247e8b49ac0ed7644de12a"
         },
         {
             "index": 0,
@@ -32,8 +32,8 @@
             "index": 0,
             "assetName": "sounds/bgms.ab",
             "assetType": 0,
-            "size": 104260,
-            "hashCode": "92a82270fc5e816691115b0f65419c00efefa707"
+            "size": 806776,
+            "hashCode": "4b59e7b7ec3fa6acbd7ee595d0aab8fbcafcf41f"
         }
     ]
 }

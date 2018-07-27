@@ -16,6 +16,8 @@ namespace BlueNoah.Download
 
         UnityAction onDownloadComplete;
 
+        UnityAction<float> onDownloading;
+
         protected override void Awake()
         {
             mConfigDownloadManager = new DownloadControllerConfig(this);
@@ -23,8 +25,9 @@ namespace BlueNoah.Download
             mAssetDownloadManager = new DownloadControllerAsset(this);
         }
 
-		public void StartDownload(UnityAction onDownloadComplete){
+        public void StartDownload(UnityAction onDownloadComplete,UnityAction<float> onDownloading){
 			this.onDownloadComplete = onDownloadComplete;
+            this.onDownloading = onDownloading;
 			DownloadManifest ();
 		}
 
@@ -39,7 +42,7 @@ namespace BlueNoah.Download
 
 		void DownloadAssets(List<AssetConfigItem> items)
 		{
-			mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
+            mAssetDownloadManager.StartDownloads(items, onDownloadComplete,onDownloading);
 		}
 
         public void DownloadAssetBundle(string assetBundleName,UnityAction onDownloadComplete){
@@ -52,14 +55,8 @@ namespace BlueNoah.Download
 
 		public void Download(List<AssetConfigItem> items,UnityAction onDownloadComplete){
 			this.onDownloadComplete = onDownloadComplete;
-			mAssetDownloadManager.StartDownloads(items, OnDownloadComplete);
+            mAssetDownloadManager.StartDownloads(items, onDownloadComplete, onDownloading);
 		}
-
-        void OnDownloadComplete()
-        {
-            if (onDownloadComplete != null)
-                onDownloadComplete();
-        }
 
         public float GetProgress(){
             return mAssetDownloadManager.GetProgress();

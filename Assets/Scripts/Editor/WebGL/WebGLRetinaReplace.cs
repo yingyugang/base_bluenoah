@@ -6,17 +6,16 @@
 /// </summary>
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using GameEngine.IO;
 using UnityEditor.Build;
-using System.Xml;
 using System.Xml.Linq;
+using BlueNoah.IO;
+using UnityEditor.Build.Reporting;
 
-public class WebGLRetinaReplace : EditorWindow, IPreprocessBuild
+public class WebGLRetinaReplace : EditorWindow, IPreprocessBuildWithReport
 {
     public static string RootPath = "";
     public static string FolderName = "";
@@ -32,7 +31,7 @@ public class WebGLRetinaReplace : EditorWindow, IPreprocessBuild
 	public static int WIDTH = 0;
 	public static int HEIGHT = 0;
 
-	[MenuItem("GameEngine/WebGL/WebGL-Retina")]
+	[MenuItem("Tools/BlueNoah/WebGL/WebGL-Retina")]
 	static void Open ()
 	{
 		EditorWindow.GetWindow<WebGLRetinaReplace> ("WebGL-Retina");
@@ -78,7 +77,7 @@ public class WebGLRetinaReplace : EditorWindow, IPreprocessBuild
 		}
 	}
 
-	private static bool SetPaths (string path)
+	static bool SetPaths (string path)
 	{
 		List<string> paths = path.Split ('/').ToList ();
 		if (paths.Count < 2) {
@@ -93,7 +92,7 @@ public class WebGLRetinaReplace : EditorWindow, IPreprocessBuild
 		return true;
 	}
 
-	private static void SetDefaultScreenSize ()
+	static void SetDefaultScreenSize ()
 	{
 		if (WIDTH < 1 || HEIGHT < 1) {
 			WIDTH = UnityEditor.PlayerSettings.defaultWebScreenWidth;
@@ -102,11 +101,6 @@ public class WebGLRetinaReplace : EditorWindow, IPreprocessBuild
 	}
 
 	public int callbackOrder { get { return 0; } }
-
-	public void OnPreprocessBuild (BuildTarget target, string path)
-	{
-		PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
-	}
 
 	[PostProcessBuild (100)]
 	public static void OnPostProcessBuild (BuildTarget target, string path)
@@ -188,6 +182,13 @@ public class WebGLRetinaReplace : EditorWindow, IPreprocessBuild
 		Debug.Log (indexFile.ToString());
 	}
 
+    public void OnPreprocessBuild(BuildReport report)
+    {
+        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+    }
 
-
+    public void OnPreprocessBuild(BuildTarget target, string path)
+    {
+        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+    }
 }

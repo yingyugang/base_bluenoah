@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2833658350
+CRC: 2232249582
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f3d71c9d2b5ffa7342845ef0008018a3
+    Hash: f7884851482bac9949f4f8c531bf583c
   TypeTreeHash:
     serializedVersion: 2
     Hash: b474380d27eb4bc856799e9c585c4864
@@ -14,7 +14,24 @@ ClassTypes:
 - Class: 213
   Script: {instanceID: 0}
 Assets:
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC13.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC10.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC6.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC9.jpg"
 - Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase02.png
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC8.jpg"
 - Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase03.png
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC2.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC5.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC7.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC3.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC12.jpg"
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q.jpg
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC4.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC11.jpg"
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC.jpg"
 - Assets/Framework_AssetManagement/AssetBundleResources/images/units/base_gift_textbase01.png
+- Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q
+  2.jpg
+- "Assets/Framework_AssetManagement/AssetBundleResources/images/units/violet-vector-leaves-circles-backgrounds-for-powerpoint_PdfkI4q\u306E\u30B3\u30D2\u309A\u30FC14.jpg"
 Dependencies: []

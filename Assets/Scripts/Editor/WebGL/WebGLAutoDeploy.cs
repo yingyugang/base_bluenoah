@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Callbacks;
 using UnityEditor;
-using GameEngine.IO;
+using BlueNoah.IO;
 
 //Local Auto deploy.
 public class WebGLAutoDeploy  {
@@ -20,11 +19,11 @@ public class WebGLAutoDeploy  {
 			return;
 		Debug.Log ("BuildPath : " + path);
 		if(isAutoDeploy){
-			string fileName = FileManager.GetFileInfo (path).Name;
-			if (FileManager.DirectoryExists (LOCAL_DEPLOY_PATH)) {
+            string fileName = FileManager.GetFileInfo (path).Name;
+            if (FileManager.DirectoryExisting (LOCAL_DEPLOY_PATH)) {
 				string targetDirectory = LOCAL_DEPLOY_PATH + fileName;
-				FileManager.DeleteDirectory (targetDirectory);
-				FileManager.CopyDirectory (path,targetDirectory,true);
+                FileManager.DeleteFolder (targetDirectory);
+                FileManager.DirectoryCopy (path,targetDirectory,true);
 			}
 		}
 	}

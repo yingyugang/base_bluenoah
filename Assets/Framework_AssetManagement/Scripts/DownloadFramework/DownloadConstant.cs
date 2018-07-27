@@ -55,7 +55,9 @@ namespace BlueNoah.Download
 #elif PRODUCT
                     "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
 #else
-                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
+
+                    "http://ultrasoul.ifkzgph84v.ap-northeast-1.elasticbeanstalk.com/AssetBundleBuilds/" + PLATFORM + "/";
+                    //"http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
 #endif
 			}
 		}

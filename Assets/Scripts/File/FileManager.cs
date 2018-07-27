@@ -177,6 +177,10 @@ namespace BlueNoah.IO
             return buffer;
         }
 
+        public static FileInfo GetFileInfo(string filePath){
+            return new FileInfo(filePath);
+        }
+
         public static string GetFileHash(string filePath)
         {
             string hashcode = "";
