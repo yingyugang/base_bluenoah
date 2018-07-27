@@ -19,7 +19,6 @@ namespace BlueNoah.Download
 
         public void DownloadRemoteConfig(UnityAction<List<AssetConfigItem>> onComplete)
         {
-			Debug.Log ("Download Config.");
             mDownloadManager.StartCoroutine(_DownloadRemoteConfigAndFilterDownloadItems(onComplete));
         }
 

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1135428810
+CRC: 2963397514
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ae41df6f11223ac60b54ce2ab1d76593
+    Hash: 45d494355a610c768f0aedd5c64a2ef4
   TypeTreeHash:
     serializedVersion: 2
-    Hash: abb9b9167ab0d9f4af2beeb617361f49
+    Hash: fe397485c3cec1106b49e9ff95e8f8a2
 HashAppended: 0
 ClassTypes:
 - Class: 21
@@ -20,4 +20,4 @@ Assets:
 - Assets/Framework_AssetManagement/AssetBundleResources/materials/units/unit3.mat
 - Assets/Framework_AssetManagement/AssetBundleResources/materials/units/unit2.mat
 Dependencies:
-- /Users/yingyugang/Base/Assets/Framework_AssetManagement/AssetBundleBuilds/WebGL/images/units.ab
+- /Users/yingyugang/BlueNoahBase/Assets/Framework_AssetManagement/AssetBundleBuilds/WebGL/images/units.ab

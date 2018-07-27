@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2292586064
+CRC: 874795973
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 998e02ba74f7364082ce4014f0bd317d
+    Hash: db35e4cf08bf69f5cf2223a72d780f9a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 53722e4b463365a6659fd0b3f07eaef0
+    Hash: 8f40dda791caeb85ec68635dfd3a9593
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -28,4 +28,4 @@ Assets:
 - Assets/Framework_AssetManagement/AssetBundleResources/prefabs/units1/unit3.prefab
 - Assets/Framework_AssetManagement/AssetBundleResources/prefabs/units1/unit1.prefab
 Dependencies:
-- /Users/yingyugang/Base/Assets/Framework_AssetManagement/AssetBundleBuilds/WebGL/materials/units.ab
+- /Users/yingyugang/BlueNoahBase/Assets/Framework_AssetManagement/AssetBundleBuilds/WebGL/materials/units.ab

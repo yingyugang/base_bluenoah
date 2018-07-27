@@ -14,11 +14,17 @@ namespace BlueNoah.Download
 
         List<AssetConfigItem> mDownloadingList;
 
+        List<DownloadAssetDownloader> mDownloaders;
+
+        List<DownloadAssetDownloader> mPrepareDownloaders;
+
+        List<DownloadAssetDownloader> mRunningDownloaders;
+
         UnityAction onDownloadComplete;
 
         UnityAction<float> onDownloading;
 
-        List<DownloadAssetDownloader> mDownloadAssetDownloaderList;
+        UnityAction<List<DownloadProgress>> onDownloadProgressDetail;
 
         ulong mTotalDownloadFileSize;
 
@@ -31,7 +37,7 @@ namespace BlueNoah.Download
             mDownloadManager = downloadManager;
         }
 
-        public void StartDownloads(List<AssetConfigItem> items, UnityAction onDownloadComplete,UnityAction<float> onDownloading)
+        public void StartDownloads(List<AssetConfigItem> items, UnityAction onDownloadComplete, UnityAction<float> onDownloading, UnityAction<List<DownloadProgress>> onDownloadProgressDetail)
         {
             if (mPreDownloadList == null)
             {
@@ -41,10 +47,18 @@ namespace BlueNoah.Download
             {
                 mDownloadingList = new List<AssetConfigItem>();
             }
-            mDownloadAssetDownloaderList = new List<DownloadAssetDownloader>();
+            mDownloaders = new List<DownloadAssetDownloader>();
+            for (int i = 0; i < DownloadConstant.MAX_DOWNLOAD_COUNT; i++)
+            {
+                mDownloaders.Add(CreateAssetDownloader());
+            }
+            mPrepareDownloaders = new List<DownloadAssetDownloader>();
+            mPrepareDownloaders.AddRange(mDownloaders);
+            mRunningDownloaders = new List<DownloadAssetDownloader>();
             mPreDownloadList.AddRange(items);
             this.onDownloadComplete = onDownloadComplete;
             this.onDownloading = onDownloading;
+            this.onDownloadProgressDetail = onDownloadProgressDetail;
             mTotalDownloadFileSize = CalculateTotalDownloadSize(items);
             mTotalDownloadDoneFileSize = 0;
             mDownloadManager.StartCoroutine(_StartDownloads());
@@ -66,6 +80,8 @@ namespace BlueNoah.Download
                 }
                 if (onDownloading != null)
                     onDownloading(GetProgress());
+                if (onDownloadProgressDetail != null)
+                    onDownloadProgressDetail(GetDetailProgress());
                 yield return null;
             }
             if (onDownloadComplete != null)
@@ -83,22 +99,38 @@ namespace BlueNoah.Download
 
         void StartDownload(AssetConfigItem item)
         {
-            DownloadAssetDownloader downloader = CreateAssetDownloader(item);
-            mDownloadAssetDownloaderList.Add(downloader);
-            downloader.StartDownload(item,OnPerDownloadDone);
+            DownloadAssetDownloader downloader = mPrepareDownloaders[0];
+            mPrepareDownloaders.RemoveAt(0);
+            mRunningDownloaders.Add(downloader);
+            downloader.StartDownload(item, OnPerDownloadDone);
         }
 
-        void OnPerDownloadDone(DownloadAssetDownloader downloader,AssetConfigItem assetConfigItem){
+        void OnPerDownloadDone(DownloadAssetDownloader downloader, AssetConfigItem assetConfigItem)
+        {
             mDownloadingAssets--;
             mDownloadingList.Remove(assetConfigItem);
-            mDownloadAssetDownloaderList.Remove(downloader);
+            downloader.gameObject.name = "AssetDownloader";
+            mPrepareDownloaders.Add(downloader);
+            mRunningDownloaders.Remove(downloader);
+            if (onDownloadProgressDetail != null)
+                onDownloadProgressDetail(GetDetailProgress());
             mTotalDownloadDoneFileSize += (ulong)assetConfigItem.size;
         }
 
-        DownloadAssetDownloader CreateAssetDownloader(AssetConfigItem item)
+        DownloadAssetDownloader CreateAssetDownloader()
         {
-            GameObject gameObject = new GameObject(string.Format("Download : {0}", item.assetName));
+            GameObject gameObject = new GameObject("AssetDownloader");
             return gameObject.AddComponent<DownloadAssetDownloader>();
+        }
+
+        List<DownloadProgress> GetDetailProgress()
+        {
+            List<DownloadProgress> downloading = new List<DownloadProgress>();
+            for (int i = 0; i < mDownloaders.Count; i++)
+            {
+                downloading.Add(new DownloadProgress(mDownloaders[i].GetDownloadAssetName(), mDownloaders[i].GetTotalSize(), mDownloaders[i].GetProgress()));
+            }
+            return downloading;
         }
 
         ulong CalculateTotalDownloadSize(List<AssetConfigItem> items)
@@ -116,9 +148,9 @@ namespace BlueNoah.Download
         ulong GetRunningDownloadedSize()
         {
             ulong downloadSize = 0;
-            for (int i = 0; i < mDownloadAssetDownloaderList.Count; i++)
+            for (int i = 0; i < mRunningDownloaders.Count; i++)
             {
-                downloadSize += mDownloadAssetDownloaderList[i].GetDownloadSize();
+                downloadSize += mRunningDownloaders[i].GetDownloadSize();
             }
             return downloadSize;
         }
@@ -128,7 +160,7 @@ namespace BlueNoah.Download
             return mTotalDownloadDoneFileSize;
         }
 
-        public float GetProgress()
+        float GetProgress()
         {
             if (mIsDownloading)
                 return (GetRunningDownloadedSize() + mTotalDownloadDoneFileSize) / (float)mTotalDownloadFileSize;
@@ -137,4 +169,20 @@ namespace BlueNoah.Download
         }
 
     }
+
+    public class DownloadProgress
+    {
+
+        public string name;
+        public ulong size;
+        public float progress;
+
+        public DownloadProgress(string name, ulong size, float progress)
+        {
+            this.name = name;
+            this.size = size;
+            this.progress = progress;
+        }
+    }
+
 }

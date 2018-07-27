@@ -18,7 +18,6 @@ namespace BlueNoah.Download
 
         public void DownloadManifest(UnityAction onComplete)
         {
-			Debug.Log ("Download Manifest.");
 			mDownloadManager.StartCoroutine(_DownloadManifest(onComplete));
         }
 

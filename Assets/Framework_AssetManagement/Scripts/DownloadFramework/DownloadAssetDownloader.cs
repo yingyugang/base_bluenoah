@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using BlueNoah.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,9 +14,19 @@ namespace BlueNoah.Download
 
         AssetConfigItem mItem;
 
+        bool mIsRunning;
+
+        public bool IsRunning{
+            get{
+                return mIsRunning;
+            }
+        }
+
         public void StartDownload(AssetConfigItem item, UnityAction<DownloadAssetDownloader,AssetConfigItem> onComplete){
-            mItem = item;
+            this.mItem = item;
+            gameObject.name = item.assetName;
             StartCoroutine(_DownloadAsset(item, onComplete));
+            mIsRunning = true;
         }
 
         IEnumerator _DownloadAsset(AssetConfigItem item,UnityAction<DownloadAssetDownloader,AssetConfigItem> onComplete)
@@ -39,7 +50,7 @@ namespace BlueNoah.Download
                 yield return new WaitForSeconds(0.1f);
                 StartCoroutine(_DownloadAsset(item,onComplete));
             }
-            Destroy(gameObject);
+            mIsRunning = false;
         }
 
         void OnDownloadDone(AssetConfigItem item, UnityWebRequest unityWebRequest)
@@ -52,5 +63,16 @@ namespace BlueNoah.Download
             return (ulong)(mItem.size * mUnityWebRequest.downloadProgress);
         }
 
+        public float GetProgress(){
+            return mUnityWebRequest == null ? 0 : mUnityWebRequest.downloadProgress;
+        }
+
+        public string GetDownloadAssetName(){
+            return mItem == null ? "" : mItem.assetName;
+        }
+
+        public ulong GetTotalSize(){
+            return mItem == null ? 0 : mItem.size;
+        }
     }
 }
