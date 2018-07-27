@@ -23,6 +23,13 @@
         },
         {
             "index": 0,
+            "assetName": "prefabs/units1.ab",
+            "assetType": 0,
+            "size": 3182,
+            "hashCode": "997fd2ae464a8ec250c6d5be6d2db5ddc67aa011"
+        },
+        {
+            "index": 0,
             "assetName": "sounds/bgms.ab",
             "assetType": 0,
             "size": 104260,

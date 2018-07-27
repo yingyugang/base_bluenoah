@@ -8,7 +8,7 @@ namespace BlueNoah.Editor
     {
         const string CONFIG_PATH_UI = "Assets/Export/Editor/ExportSettings_Framework_UI.asset";
 
-        [MenuItem("Tools/ExportPackage/Framework_UI")]
+        [MenuItem("Tools/BlueNoah/ExportPackage/Framework_UI")]
         public static void ExportUIFramework()
         {
             ExportSettings exportSettings = AssetDatabase.LoadAssetAtPath<ExportSettings>(CONFIG_PATH_UI);
@@ -29,7 +29,7 @@ namespace BlueNoah.Editor
 
         const string CONFIG_PATH_ASSETMANAGEMENT = "Assets/Export/Editor/ExportSettings_Framework_AssetManagement.asset";
 
-        [MenuItem("Tools/ExportPackage/Framework_AssetManagement")]
+        [MenuItem("Tools/BlueNoah/ExportPackage/Framework_AssetManagement")]
         public static void ExportAssetManagementFramework()
         {
             ExportSettings exportSettings = AssetDatabase.LoadAssetAtPath<ExportSettings>(CONFIG_PATH_ASSETMANAGEMENT);

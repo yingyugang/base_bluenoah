@@ -9,6 +9,8 @@ namespace BlueNoah.Assets
     {
         AssetBundleLoadManager mAssetBundleLoadManager;
 
+        int mDependenciesCount;
+
         public AssetBundleLoader(AssetBundleLoadManager assetBundleLoadManager)
         {
             mAssetBundleLoadManager = assetBundleLoadManager;
@@ -19,9 +21,6 @@ namespace BlueNoah.Assets
             GetAllDependencies(assetBundleName, onGet);
         }
 
-        int mDependenciesCount;
-
-        //TODO Add new download when downloading .
         void GetAllDependencies(string assetBundleName, UnityAction<AssetBundle> onGet)
         {
             string[] dependencies = mAssetBundleLoadManager.assetBundleServiceManifest.GetAllDependencies(assetBundleName);

@@ -25,7 +25,7 @@ namespace BlueNoah.Editor
         public static int WIDTH = 0;
         public static int HEIGHT = 0;
 
-        [MenuItem("Tools/WebGL-Retina")]
+        [MenuItem("Tools/BlueNoah/WebGL-Retina")]
         static void Open()
         {
             EditorWindow.GetWindow<WebGLRetinaReplace>("WebGL-Retina");

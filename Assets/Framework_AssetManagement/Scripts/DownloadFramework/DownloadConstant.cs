@@ -8,6 +8,10 @@ namespace BlueNoah.Download
 
 		public const string CONFIG_FILE = "assetbundle_config.json";
 
+        public const int MAX_DOWNLOAD_COUNT = 5;
+
+        public const int MAX_DOWNLOAD_SIZE = 10 * 1024 * 1024;
+
 		public static string MANIFEST_FILE{
 			get{
 				return PLATFORM;

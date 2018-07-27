@@ -10,9 +10,9 @@ namespace BlueNoah.UI
 
     public class UIManager : SimpleSingleMonoBehaviour<UIManager>
     {
-        public const int CANVAS_WIDTH = 1920;
+        public const int CANVAS_WIDTH = 2000;
 
-        public const int CANVAS_HEIGHT = 1080;
+        public const int CANVAS_HEIGHT = 1125;
 
         const string UI_SETTING = "Settings/UISettings";
 
@@ -133,6 +133,7 @@ namespace BlueNoah.UI
             rectLayer.transform.SetParent(transform);
             rectLayer.transform.ResetLocal();
             rect.sizeDelta = new Vector2(CANVAS_WIDTH, CANVAS_HEIGHT);
+            GetComponent<CanvasScaler>().referenceResolution = new Vector2(CANVAS_WIDTH,CANVAS_HEIGHT) ;
         }
 
         void ApendCanvasGroup(GameObject go, bool mouseEventable)

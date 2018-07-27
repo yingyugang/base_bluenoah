@@ -16,7 +16,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         protected List<AssetBundleWindowItem> mAssetBundleWindowItemList;
 
-        protected long mTotalAssetBundleSize;
+        protected ulong mTotalAssetBundleSize;
 
         protected virtual void OnEnable()
         {
@@ -58,14 +58,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
             {
                 assetBundleWindowItem.assetBundle = LoadAssetBunleObject(assetbundleName);
                 assetBundleWindowItem.assetBundleHash = FileManager.GetFileHash(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName);
-                assetBundleWindowItem.assetBundleLength = new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length;
+                assetBundleWindowItem.assetBundleLength = (ulong)(new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length);
             }
             assetBundleWindowItem.displayLength = FileLengthToStr(assetBundleWindowItem.assetBundleLength);
             AddAssetBundleWindowItem(assetbundleName, assetBundleWindowItem);
         }
 
-        long GetTotalAssetBundleSize(){
-            long totalSize = 0;
+        ulong GetTotalAssetBundleSize(){
+            ulong totalSize = 0;
             for (int i = 0; i < mAssetBundleWindowItemList.Count;i++){
                 totalSize += mAssetBundleWindowItemList[i].assetBundleLength;
             }
@@ -113,7 +113,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             return config;
         }
 
-        protected string FileLengthToStr(long length)
+        protected string FileLengthToStr(ulong length)
         {
             string key = " B";
             float f = length;
@@ -137,7 +137,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
     {
         public string assetBundleName;
         public string assetBundleHash;
-        public long assetBundleLength;
+        public ulong assetBundleLength;
         public Object assetBundle;
         public Object resourcesFolder;
         public string displayLength;

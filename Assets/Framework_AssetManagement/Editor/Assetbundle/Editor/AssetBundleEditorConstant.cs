@@ -3,8 +3,8 @@ using UnityEngine;
 
 public static class AssetBundleEditorConstant
 {
-    public const string ASSETBUNDLE_BUILD_WINDOW_MENUITEM = "Tools/AssetBundle/AB Build Manager";
-    public const string ASSETBUNDLE_SETTING_WINDOW_MENUITEM = "Tools/AssetBundle/AB Settings";
+    public const string ASSETBUNDLE_BUILD_WINDOW_MENUITEM = "Tools/BlueNoah/AssetBundle/AB Build Manager";
+    public const string ASSETBUNDLE_SETTING_WINDOW_MENUITEM = "Tools/BlueNoah/AssetBundle/AB Settings";
     public const string ASSETBUNDLE_PATH = "/Framework_AssetManagement/AssetBundleBuilds/";
     public const string ASSETBUNDLE_RESOURCES_PATH = "/Framework_AssetManagement/AssetBundleResources/";
     public const string ASSETBUNDLE_UPLOAD_PATH = "/Applications/XAMPP/xamppfiles/htdocs/DownloadSample/";

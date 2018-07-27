@@ -1,20 +1,14 @@
 ﻿<Properties StartupConfiguration="{3E8CD1B9-F3D9-5977-B930-E161D52454B0}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Framework_UI/Editor/Panel/UIConfigWindow.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Framework_AssetManagement/Editor/Assetbundle/Editor/AssetBundleBuildWindowGUI.cs">
     <Files>
-      <File FileName="Assets/Framework_UI/Scripts/UIFramework/UIManager/UIPanelManager.cs" Line="72" Column="32" />
-      <File FileName="Assets/Framework_UI/Scripts/UIFramework/UIManager/UIModelManager.cs" Line="7" Column="45" />
-      <File FileName="Assets/Framework_UI/Scripts/UIFramework/UIManager/UIManager.cs" Line="21" Column="31" />
-      <File FileName="Assets/Framework_UI/Scripts/UIFramework/UIManager/UIDialogManager.cs" Line="62" Column="34" />
-      <File FileName="Assets/Framework_UI/Scripts/UIFramework/Utility/UICommonWhiteOutInMask.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Extension/ComponentExtension.cs" Line="14" Column="10" />
-      <File FileName="Assets/Framework_UI/Scripts/UIFramework/UISettings/UISettings.cs" Line="10" Column="19" />
-      <File FileName="Assets/Framework_UI/Editor/Setting/UIEditorSettings.cs" Line="22" Column="45" />
-      <File FileName="Assets/Framework_UI/Editor/Panel/UIDialogConfigWindow.cs" Line="105" Column="7" />
-      <File FileName="Assets/Scripts/String/StringUtility.cs" Line="30" Column="47" />
-      <File FileName="Assets/Framework_UI/Editor/Panel/UIPanelConfigWindow.cs" Line="59" Column="28" />
-      <File FileName="Assets/Framework_UI/Editor/Panel/UIPanelConfigWindowGUI.cs" Line="112" Column="46" />
-      <File FileName="Assets/Framework_UI/Editor/Panel/UIConfigWindow.cs" Line="59" Column="10" />
+      <File FileName="Assets/Framework_AssetManagement/Editor/Assetbundle/Editor/AssetBundleBuildWindow.cs" Line="74" Column="81" />
+      <File FileName="Assets/Framework_UI/Scripts/UIFramework/UIManager/UIPanelManager.cs" Line="80" Column="27" />
+      <File FileName="Assets/Framework_AssetManagement/Scripts/DownloadFramework/DownloadAssetDownloader.cs" Line="6" Column="1" />
+      <File FileName="Assets/Framework_AssetManagement/Scripts/DownloadFramework/DownloadControllerAsset.cs" Line="120" Column="33" />
+      <File FileName="Assets/Framework_AssetManagement/Scripts/DownloadFramework/DownloadManager.cs" Line="64" Column="33" />
+      <File FileName="Assets/Framework_AssetManagement/Editor/Assetbundle/Editor/AssetBundleWindow.cs" Line="140" Column="17" />
+      <File FileName="Assets/Framework_AssetManagement/Editor/Assetbundle/Editor/AssetBundleBuildWindowGUI.cs" Line="67" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

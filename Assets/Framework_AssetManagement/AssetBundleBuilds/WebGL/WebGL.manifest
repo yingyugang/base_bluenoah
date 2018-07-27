@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 296142909
+CRC: 1925953774
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -14,5 +14,9 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: materials/units.ab
     Info_3:
+      Name: prefabs/units1.ab
+      Dependencies:
+        Dependency_0: materials/units.ab
+    Info_4:
       Name: sounds/bgms.ab
       Dependencies: {}

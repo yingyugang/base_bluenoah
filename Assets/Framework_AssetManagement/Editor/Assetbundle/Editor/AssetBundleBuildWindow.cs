@@ -6,7 +6,6 @@ using BlueNoah.Download;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
-    //Auto record the ABs what hashcode has been changed.
     public class AssetBundleBuildWindow : AssetBundleWindow
     {
 
@@ -79,6 +78,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
         public void SetAssetBundleNames()
         {
             mAssetBundleBuildServiceSetting.SetAssetBundleNames();
+            this.LoadAssetBundleInfos();
         }
 
         public void SelectAll()
@@ -120,13 +120,14 @@ namespace BlueNoah.Editor.AssetBundle.Management
             AssetDatabase.RemoveUnusedAssetBundleNames();
             FileManager.CreateDirectoryIfNotExisting(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
             BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+            this.LoadAssetBundleInfos();
             SaveConfig();
             AssetDatabase.Refresh();
         }
 
         public void BuildSelectAssetBundlesWithOutDependencies()
         {
-            Debug.Log("BuildSelectAssetBundlesWithOutDependencies");
+            Debug.Log("BuildSelectAssetBundlesWithOutDependencies!");
             AssetDatabase.RemoveUnusedAssetBundleNames();
             List<AssetBundleBuild> assetbundleList = GetSelectedEntities();
             if (assetbundleList.Count > 0)

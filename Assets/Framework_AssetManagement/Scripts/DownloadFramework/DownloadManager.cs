@@ -16,15 +16,11 @@ namespace BlueNoah.Download
 
         UnityAction onDownloadComplete;
 
-        ulong mTotalSize;
-
-        ulong mDownloadedSize;
-
         protected override void Awake()
         {
             mConfigDownloadManager = new DownloadControllerConfig(this);
-            mAssetDownloadManager = new DownloadControllerAsset(this);
 			mDownloadControllerManifest = new DownloadControllerManifest (this);
+            mAssetDownloadManager = new DownloadControllerAsset(this);
         }
 
 		public void StartDownload(UnityAction onDownloadComplete){
@@ -32,7 +28,7 @@ namespace BlueNoah.Download
 			DownloadManifest ();
 		}
 
-		public void DownloadManifest(){
+		void DownloadManifest(){
 			mDownloadControllerManifest.DownloadManifest (DownloadConfig);
 		}
 
@@ -65,21 +61,9 @@ namespace BlueNoah.Download
                 onDownloadComplete();
         }
 
-        //TODO
-        public ulong GetTotalSize(){
-            return 0;
-        }
-
-        //TODO
-        public ulong GetRemainSize(){
-            return 0;
-        }
-
-        //TODO
         public float GetProgress(){
-            return (float)GetRemainSize() / GetTotalSize();
+            return mAssetDownloadManager.GetProgress();
         }
-
     }
 
     [System.Serializable]
@@ -94,7 +78,7 @@ namespace BlueNoah.Download
         public int index;
         public string assetName;
         public int assetType;
-        public long size;
+        public ulong size;
         public string hashCode;
     }
 

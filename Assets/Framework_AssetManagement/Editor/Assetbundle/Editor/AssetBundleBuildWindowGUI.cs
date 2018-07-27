@@ -64,12 +64,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
             }
         }
 
-        Color CheckColor(long fileLength)
+        Color CheckColor(ulong fileLength)
         {
             return fileLength > 1024 * 1024 ? Color.red : CheckMiddleColor(fileLength);
         }
 
-        Color CheckMiddleColor(long fileLength)
+        Color CheckMiddleColor(ulong fileLength)
         {
             return fileLength > 1024 ? Color.yellow : Color.white;
         }

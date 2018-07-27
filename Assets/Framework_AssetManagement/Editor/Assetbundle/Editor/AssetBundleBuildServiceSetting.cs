@@ -20,30 +20,30 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 string[] assetBundleTypeFolderPaths = GetAssetBundleTypeFolderPaths();
                 for (int i = 0; i < assetBundleTypeFolderPaths.Length; i++)
                 {
-                    SetABNameWithFolderNames(assetBundleTypeFolderPaths[i]);
+                    SetAssetBundleNameWithFolderNames(assetBundleTypeFolderPaths[i]);
                 }
             }
         }
 
-        void SetABNameWithFolderNames(string path)
+        void SetAssetBundleNameWithFolderNames(string path)
         {
             string[] assetBundleFolders = GetAssetBundleFolderPaths(path);
             for (int i = 0; i < assetBundleFolders.Length; i++)
             {
-                SetABNameWithFolderName(assetBundleFolders[i]);
+                SetAssetBundleNameWithFolderName(assetBundleFolders[i]);
             }
         }
 
         //TODO Need to explain.
-        void SetABNameWithFolderName(string path)
+        void SetAssetBundleNameWithFolderName(string path)
         {
-            string abName = GetABNameByPath(path);
+            string abName = GetAssetBundleNameByPath(path);
             AssetImporter assetImporter = GetAssetImporter(path);
             assetImporter.SetAssetBundleNameAndVariant(abName, "ab");
             Debug.Log(string.Format("Set assetBundle folder : <color='#3EFF00FF'>{0}</color> , name <color='#FFDF29FF'>{1}</color>",path,abName));
         }
 
-        string GetABNameByPath(string path)
+        string GetAssetBundleNameByPath(string path)
         {
             return path.Substring(path.IndexOf(AssetBundleEditorConstant.ASSETBUNDLE_RESOURCES_PATH, System.StringComparison.CurrentCulture) + AssetBundleEditorConstant.ASSETBUNDLE_RESOURCES_PATH.Length);
         }

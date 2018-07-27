@@ -9,24 +9,27 @@ namespace BlueNoah.Download
     public class DownloadAssetDownloader : MonoBehaviour
     {
 
-        UnityWebRequest www;
+        UnityWebRequest mUnityWebRequest;
 
         AssetConfigItem mItem;
 
-        public void StartDownload(AssetConfigItem item, UnityAction<AssetConfigItem> onComplete){
+        public void StartDownload(AssetConfigItem item, UnityAction<DownloadAssetDownloader,AssetConfigItem> onComplete){
             mItem = item;
             StartCoroutine(_DownloadAsset(item, onComplete));
         }
 
-        IEnumerator _DownloadAsset(AssetConfigItem item,UnityAction<AssetConfigItem> onComplete)
+        IEnumerator _DownloadAsset(AssetConfigItem item,UnityAction<DownloadAssetDownloader,AssetConfigItem> onComplete)
         {
             Debug.Log(string.Format("Start download : {0}", item.assetName));
-            www = DownloadControllerBase.CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH(item.assetName));
-            yield return www.SendWebRequest();
-            if (www.isDone && string.IsNullOrEmpty(www.error))
+            mUnityWebRequest = DownloadControllerBase.CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH(item.assetName));
+            yield return mUnityWebRequest.SendWebRequest();
+            if (mUnityWebRequest.isDone && string.IsNullOrEmpty(mUnityWebRequest.error))
             {
-                OnDownloadDone(item, www);
                 Debug.Log(string.Format("End download : {0}", item.assetName));
+                OnDownloadDone(item, mUnityWebRequest);
+                if(onComplete!=null){
+                    onComplete(this,item);
+                }
             }
             else
             {
@@ -37,13 +40,13 @@ namespace BlueNoah.Download
             Destroy(gameObject);
         }
 
-        void OnDownloadDone(AssetConfigItem item, UnityWebRequest www)
+        void OnDownloadDone(AssetConfigItem item, UnityWebRequest unityWebRequest)
         {
-            FileManager.WriteAllBytes(DownloadConstant.GetDownloadAssetBundlePath(item.assetName), www.downloadHandler.data);
+            FileManager.WriteAllBytes(DownloadConstant.GetDownloadAssetBundlePath(item.assetName), unityWebRequest.downloadHandler.data);
         }
 
         public ulong GetDownloadSize(){
-            return (ulong)(mItem.size * www.downloadProgress);
+            return (ulong)(mItem.size * mUnityWebRequest.downloadProgress);
         }
 
     }

@@ -4,8 +4,8 @@ namespace BlueNoah.Editor.UI
 {
     public class UIEditorConstant
     {
-        public const string UI_PANEL_CONFIG_WINDOW_MENUITEM = "Tools/UI/PanelConfig";
-        public const string UI_DIALOG_CONFIG_WINDOW_MENUITEM = "Tools/UI/DialogConfig";
+        public const string UI_PANEL_CONFIG_WINDOW_MENUITEM = "Tools/BlueNoah/UI/PanelConfig";
+        public const string UI_DIALOG_CONFIG_WINDOW_MENUITEM = "Tools/BlueNoah/UI/DialogConfig";
 
         public static string GetClassPath(string subFolderName, string parentPath)
         {
