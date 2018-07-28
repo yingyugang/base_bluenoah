@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+CRC: 2969007544
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 45d494355a610c768f0aedd5c64a2ef4
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: fe397485c3cec1106b49e9ff95e8f8a2
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Framework_AssetBundle/AssetBundleResources/materials/units/unit1.mat
+- Assets/Framework_AssetBundle/AssetBundleResources/materials/units/unit3.mat
+- Assets/Framework_AssetBundle/AssetBundleResources/materials/units/unit2.mat
+Dependencies:
+- /Users/yingyugang/BlueNoahBase/Assets/Framework_AssetBundle/AssetBundleBuilds/WebGL/images/units.ab

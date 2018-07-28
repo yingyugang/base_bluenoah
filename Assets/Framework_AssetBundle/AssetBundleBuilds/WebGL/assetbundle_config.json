@@ -1,0 +1,53 @@
+{
+    "items": [
+        {
+            "index": 0,
+            "assetName": "images/units.ab",
+            "assetType": 0,
+            "size": 16336446,
+            "hashCode": "6397036456cef97a097c2c089e3ccc2e9dcffcc6"
+        },
+        {
+            "index": 0,
+            "assetName": "images/units1.ab",
+            "assetType": 0,
+            "size": 16336419,
+            "hashCode": "b77314f69392a6ac6490e4a827e9b9bbda21e222"
+        },
+        {
+            "index": 0,
+            "assetName": "images/units2.ab",
+            "assetType": 0,
+            "size": 16336414,
+            "hashCode": "457a183fa17be78c72174c7665694b7e26415f4f"
+        },
+        {
+            "index": 0,
+            "assetName": "materials/units.ab",
+            "assetType": 0,
+            "size": 14940,
+            "hashCode": "572d954fb71929cba9f97517873b5fed96ed3f2e"
+        },
+        {
+            "index": 0,
+            "assetName": "prefabs/units.ab",
+            "assetType": 0,
+            "size": 3169,
+            "hashCode": "5c64542afb73b6b18d4166a568cf385eabe3022f"
+        },
+        {
+            "index": 0,
+            "assetName": "prefabs/units1.ab",
+            "assetType": 0,
+            "size": 3173,
+            "hashCode": "3f0d41cd02ca79ba53aaa4a22c420b4471e57891"
+        },
+        {
+            "index": 0,
+            "assetName": "sounds/bgms.ab",
+            "assetType": 0,
+            "size": 806710,
+            "hashCode": "a073a4f15c653d7e6a4836ad2cdda9117e5f33bd"
+        }
+    ]
+}
