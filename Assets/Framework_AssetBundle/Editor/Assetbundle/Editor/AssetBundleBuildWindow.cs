@@ -2,15 +2,28 @@
 using UnityEditor;
 using System.Collections.Generic;
 using BlueNoah.IO;
+using System.IO;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
-    public class AssetBundleBuildWindow : AssetBundleWindow
+    public class AssetBundleBuildWindow : EditorWindow
     {
 
         static AssetBundleBuildWindow mAssetBundleBuildWindow;
+
         AssetBundleBuildWindowGUI mAssetBundleWindowGUI;
-        AssetBundleBuildServiceSetting mAssetBundleBuildServiceSetting;
+
+        AssetBundleSettingService mAssetBundleSettingService;
+
+        AssetBundleBuildService mAssetBundleBuildService;
+
+        protected AssetConfig mAssetBundleConfig;
+
+        protected Dictionary<string, AssetBundleWindowItem> mAssetBundleWindowItemDic;
+
+        protected List<AssetBundleWindowItem> mAssetBundleWindowItemList;
+
+        protected ulong mTotalAssetBundleSize;
 
         const int WINDOW_WIDTH = 800;
         const int WINDOW_HEIGHT = 600;
@@ -24,12 +37,29 @@ namespace BlueNoah.Editor.AssetBundle.Management
             mAssetBundleBuildWindow.Focus();
         }
 
-        protected override void OnEnable()
+        void OnEnable()
         {
-            base.OnEnable();
+            LoadAssetBundleInfos();
             InitContent("AssetBundleBuild", "Build and manage assetbundles.");
             mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(this);
-            mAssetBundleBuildServiceSetting = new AssetBundleBuildServiceSetting();
+            mAssetBundleSettingService = new AssetBundleSettingService();
+            mAssetBundleBuildService = new AssetBundleBuildService();
+        }
+
+        protected void InitContent(string title, string tooltip)
+        {
+            GUIContent guiContent = new GUIContent();
+            guiContent.text = title;
+            guiContent.tooltip = tooltip;
+            titleContent = guiContent;
+        }
+
+        void LoadAssetBundleInfos()
+        {
+            mAssetBundleConfig = mAssetBundleBuildService.LoadAssetBundleConfig();
+            mAssetBundleWindowItemList = mAssetBundleBuildService.InitAssetBundleWindowItemsFromAssetBundleSetting();
+            mAssetBundleWindowItemDic = mAssetBundleBuildService.GetAssetBundleWindowItemDic(mAssetBundleWindowItemList);
+            mTotalAssetBundleSize = mAssetBundleBuildService.GetTotalAssetBundleSize(mAssetBundleWindowItemList);
         }
 
         void OnGUI()
@@ -41,7 +71,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             }
             mAssetBundleWindowGUI.DrawAssetBundlePattern(mAssetBundleWindowItemList);
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Totle Size : " + FileLengthToStr(mTotalAssetBundleSize));
+            GUILayout.Label("Totle Size : " + mAssetBundleBuildService.FileLengthToStr(mTotalAssetBundleSize));
             EditorGUILayout.EndHorizontal();
             mAssetBundleWindowGUI.DrawBottomButtonsPattern();
         }
@@ -76,7 +106,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         public void SetAssetBundleNames()
         {
-            mAssetBundleBuildServiceSetting.SetAssetBundleNames();
+            mAssetBundleSettingService.SetAssetBundleNames();
             this.LoadAssetBundleInfos();
         }
 
@@ -109,7 +139,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         public void CopySelectAssetBundleToServer()
         {
-            FileManager.DirectoryCopy(AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH,true);
+            FileManager.DirectoryCopy(AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH, true);
             Debug.Log(string.Format("{0} <color=green>==></color> {1}", AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH));
         }
 
@@ -119,7 +149,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             AssetDatabase.RemoveUnusedAssetBundleNames();
             FileManager.CreateDirectoryIfNotExisting(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
             BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
-            this.LoadAssetBundleInfos();
+            LoadAssetBundleInfos();
             SaveConfig();
             AssetDatabase.Refresh();
         }
@@ -139,7 +169,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
         public void RemoveUnusedABName()
         {
             AssetDatabase.RemoveUnusedAssetBundleNames();
-            this.LoadAssetBundleInfos();
+            LoadAssetBundleInfos();
         }
 
         List<AssetBundleBuild> GetSelectedEntities()
@@ -163,6 +193,36 @@ namespace BlueNoah.Editor.AssetBundle.Management
             abb.assetNames = AssetDatabase.GetAssetPathsFromAssetBundle(entity.assetBundleName);
             return abb;
         }
+    }
+
+
+
+    public class AssetBundleWindowItem
+    {
+        public string assetBundleName;
+        public string assetBundleHash;
+        public ulong assetBundleLength;
+        public Object assetBundle;
+        public Object resourcesFolder;
+        public string displayLength;
+        public bool isSelected;
+    }
+
+
+    [System.Serializable]
+    public class AssetConfig
+    {
+        public List<AssetConfigItem> items;
+    }
+
+    [System.Serializable]
+    public class AssetConfigItem
+    {
+        public int index;
+        public string assetName;
+        public int assetType;
+        public ulong size;
+        public string hashCode;
     }
 }
 

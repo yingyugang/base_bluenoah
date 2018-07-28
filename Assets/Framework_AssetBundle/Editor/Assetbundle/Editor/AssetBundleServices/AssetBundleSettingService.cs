@@ -5,7 +5,7 @@ using System.IO;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
-    public class AssetBundleBuildServiceSetting
+    public class AssetBundleSettingService
     {
         public void SetAssetBundleNames()
         {
