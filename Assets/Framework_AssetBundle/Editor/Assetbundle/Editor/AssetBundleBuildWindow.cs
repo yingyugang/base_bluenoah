@@ -2,7 +2,6 @@
 using UnityEditor;
 using System.Collections.Generic;
 using BlueNoah.IO;
-using System.IO;
 
 namespace BlueNoah.Editor.AssetBundle.Management
 {
@@ -39,11 +38,11 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         void OnEnable()
         {
-            LoadAssetBundleInfos();
             InitContent("AssetBundleBuild", "Build and manage assetbundles.");
             mAssetBundleWindowGUI = new AssetBundleBuildWindowGUI(this);
             mAssetBundleSettingService = new AssetBundleSettingService();
             mAssetBundleBuildService = new AssetBundleBuildService();
+            LoadAssetBundleInfos();
         }
 
         protected void InitContent(string title, string tooltip)
