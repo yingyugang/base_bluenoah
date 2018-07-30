@@ -55,6 +55,14 @@ namespace BlueNoah.Editor
             ExportPackage(CONFIG_PATH_UI, "Assets/Framework_UI.unitypackage");
         }
 
+        const string CONFIG_PATH_ASSETLOAD = "Assets/Export/Editor/ExportSettings_AssetLoad.asset";
+
+        [MenuItem("Tools/BlueNoah/ExportPackage/Framework_AssetLoad")]
+        public static void ExportFrameworkAssetLoad()
+        {
+            ExportPackage(CONFIG_PATH_ASSETLOAD, "Assets/Framework_AssetLoad.unitypackage");
+        }
+
         public static void ExportPackage(string configPath , string packagePath){
             ExportSettings exportSettings = AssetDatabase.LoadAssetAtPath<ExportSettings>(configPath);
             List<string> configStr = new List<string>();

@@ -9,8 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dca88b063694482a826c15ab66121bf, type: 3}
-  m_Name: ExportSettings_Download
+  m_Name: ExportSettings_AssetLoad
   m_EditorClassIdentifier: 
   includeObjects:
-  - {fileID: 102900000, guid: 56583d80750e8439d99e528348c6c07f, type: 3}
+  - {fileID: 102900000, guid: d0ac1ba451f364bd3a496dae0a506a06, type: 3}
   - {fileID: 102900000, guid: c7c97b5a5584e4db1bbe37ab57dede2b, type: 3}
+  - {fileID: 102900000, guid: 56583d80750e8439d99e528348c6c07f, type: 3}
