@@ -13,7 +13,7 @@ namespace BlueNoah.Download
 
         DownloadControllerAsset mAssetDownloadManager;
 
-		DownloadControllerManifest mDownloadControllerManifest;
+        DownloadControllerManifest mDownloadControllerManifest;
 
         UnityAction onStartAssetDownload;
 
@@ -26,23 +26,43 @@ namespace BlueNoah.Download
         protected override void Awake()
         {
             mConfigDownloadManager = new DownloadControllerConfig(this);
-			mDownloadControllerManifest = new DownloadControllerManifest (this);
+            mDownloadControllerManifest = new DownloadControllerManifest(this);
             mAssetDownloadManager = new DownloadControllerAsset(this);
         }
 
         //check the assets hash and download the assets what hash is different.
-        public void StartAutoDownload(UnityAction onStartAssetDownload,UnityAction onDownloadComplete,UnityAction<float> onDownloadProgress,UnityAction<List<DownloadProgress>> onDownloadProgressDetail = null){
+        public void StartAutoDownload(UnityAction onStartAssetDownload, UnityAction onDownloadComplete, UnityAction<float> onDownloadProgress, UnityAction<List<DownloadProgress>> onDownloadProgressDetail = null)
+        {
             this.onStartAssetDownload = onStartAssetDownload;
-			this.onDownloadComplete = onDownloadComplete;
+            this.onDownloadComplete = onDownloadComplete;
             this.onDownloadProgress = onDownloadProgress;
             this.onDownloadProgressDetail = onDownloadProgressDetail;
-			DownloadManifest ();
-		}
+            DownloadManifest();
+        }
 
-		void DownloadManifest(){
+        public void CheckDownload(UnityAction<bool> onCheckDown)
+        {
+            if (onCheckDown != null)
+            {
+                mConfigDownloadManager.DownloadRemoteConfig((List<AssetConfigItem> items) =>
+                {
+                    if (items != null && items.Count > 0)
+                    {
+                        onCheckDown(true);
+                    }
+                    else
+                    {
+                        onCheckDown(false);
+                    }
+                });
+            }
+        }
+
+        void DownloadManifest()
+        {
             Debug.Log("<color=yellow>1.DownloadManifest</color>");
-			mDownloadControllerManifest.DownloadManifest (DownloadConfig);
-		}
+            mDownloadControllerManifest.DownloadManifest(DownloadConfig);
+        }
 
         void DownloadConfig()
         {
@@ -50,33 +70,37 @@ namespace BlueNoah.Download
             mConfigDownloadManager.DownloadRemoteConfig(DownloadAssets);
         }
 
-		void DownloadAssets(List<AssetConfigItem> items)
-		{
+        void DownloadAssets(List<AssetConfigItem> items)
+        {
             Debug.Log("<color=yellow>3.DownloadAssets</color>");
-            if (items.Count > 0){
+            if (items.Count > 0)
+            {
                 if (onStartAssetDownload != null)
                     onStartAssetDownload();
-                mAssetDownloadManager.StartDownloads(items, onDownloadComplete, onDownloadProgress,onDownloadProgressDetail);
+                mAssetDownloadManager.StartDownloads(items, onDownloadComplete, onDownloadProgress, onDownloadProgressDetail);
             }
-            else{
+            else
+            {
                 Debug.Log("There is no item need to download.");
                 if (onDownloadComplete != null)
                     onDownloadComplete();
             }
-		}
+        }
 
-        public void DownloadAssetBundle(string assetBundleName,UnityAction onDownloadComplete){
+        public void DownloadAssetBundle(string assetBundleName, UnityAction onDownloadComplete)
+        {
             List<AssetConfigItem> items = new List<AssetConfigItem>();
             AssetConfigItem item = new AssetConfigItem();
             item.assetName = assetBundleName;
             items.Add(item);
-            Download(items,onDownloadComplete);
+            Download(items, onDownloadComplete);
         }
 
-		public void Download(List<AssetConfigItem> items,UnityAction onDownloadComplete){
-			this.onDownloadComplete = onDownloadComplete;
-            mAssetDownloadManager.StartDownloads(items, onDownloadComplete, onDownloadProgress,onDownloadProgressDetail);
-		}
+        public void Download(List<AssetConfigItem> items, UnityAction onDownloadComplete)
+        {
+            this.onDownloadComplete = onDownloadComplete;
+            mAssetDownloadManager.StartDownloads(items, onDownloadComplete, onDownloadProgress, onDownloadProgressDetail);
+        }
     }
 
     [System.Serializable]

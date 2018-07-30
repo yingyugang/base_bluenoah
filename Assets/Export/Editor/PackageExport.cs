@@ -63,7 +63,7 @@ namespace BlueNoah.Editor
             ExportPackage(CONFIG_PATH_ASSETLOAD, "Assets/Framework_AssetLoad.unitypackage");
         }
 
-        public static void ExportPackage(string configPath , string packagePath){
+        static void ExportPackage(string configPath , string packagePath){
             ExportSettings exportSettings = AssetDatabase.LoadAssetAtPath<ExportSettings>(configPath);
             List<string> configStr = new List<string>();
             for (int i = 0; i < exportSettings.includeObjects.Count; i++)

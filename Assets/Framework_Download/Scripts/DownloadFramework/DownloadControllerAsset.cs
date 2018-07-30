@@ -84,12 +84,12 @@ namespace BlueNoah.Download
                 OnDetailProgress();
                 yield return null;
             }
-            OnDownloadComplete();
             mIsDownloading = false;
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.Refresh();
 #endif
             ClearDownload();
+            OnDownloadComplete();
             Debug.Log("_StartDownloads End");
         }
 

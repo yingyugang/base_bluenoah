@@ -3,7 +3,6 @@ using UnityEngine.Events;
 
 namespace BlueNoah.Assets
 {
-    //TODO Restart when Manifest and json not existing.
     public class AssetBundleLoadManager : SimpleSingleMonoBehaviour<AssetBundleLoadManager>
     {
         public AssetBundleServiceManifest assetBundleServiceManifest;
