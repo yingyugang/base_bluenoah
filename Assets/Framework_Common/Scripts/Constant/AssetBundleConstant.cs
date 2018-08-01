@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class AssetBundleEditorConstant
+public static class AssetBundleConstant
 {
     public const string ASSETBUNDLE_BUILD_WINDOW_MENUITEM = "Tools/BlueNoah/AssetBundle/AB Build Manager";
     public const string ASSETBUNDLE_SETTING_WINDOW_MENUITEM = "Tools/BlueNoah/AssetBundle/AB Settings";

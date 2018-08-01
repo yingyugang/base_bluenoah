@@ -85,9 +85,9 @@ namespace BlueNoah.Download
                 yield return null;
             }
             mIsDownloading = false;
-#if UNITY_EDITOR
-            UnityEditor.AssetDatabase.Refresh();
-#endif
+//#if UNITY_EDITOR
+//            UnityEditor.AssetDatabase.Refresh();
+//#endif
             ClearDownload();
             OnDownloadComplete();
             Debug.Log("_StartDownloads End");
@@ -211,7 +211,7 @@ namespace BlueNoah.Download
             if (mIsDownloading)
                 return (GetRunningDownloadedSize() + mTotalDownloadDoneFileSize) / (float)mTotalDownloadFileSize;
             else
-                return 0;
+                return 1;
         }
 
     }

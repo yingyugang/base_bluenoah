@@ -15,20 +15,23 @@ namespace BlueNoah.Download
 
         bool mIsRunning;
 
-        public bool IsRunning{
-            get{
+        public bool IsRunning
+        {
+            get
+            {
                 return mIsRunning;
             }
         }
 
-        public void StartDownload(AssetConfigItem item, UnityAction<DownloadAssetDownloader,AssetConfigItem> onComplete){
+        public void StartDownload(AssetConfigItem item, UnityAction<DownloadAssetDownloader, AssetConfigItem> onComplete)
+        {
             this.mItem = item;
             gameObject.name = item.assetName;
             StartCoroutine(_DownloadAsset(item, onComplete));
             mIsRunning = true;
         }
 
-        IEnumerator _DownloadAsset(AssetConfigItem item,UnityAction<DownloadAssetDownloader,AssetConfigItem> onComplete)
+        IEnumerator _DownloadAsset(AssetConfigItem item, UnityAction<DownloadAssetDownloader, AssetConfigItem> onComplete)
         {
             Debug.Log(string.Format("Start download : {0}", item.assetName));
             mUnityWebRequest = DownloadControllerBase.CreateUnityWebRequest(DownloadConstant.REMOTE_ASSET_PATH(item.assetName));
@@ -37,21 +40,23 @@ namespace BlueNoah.Download
             {
                 Debug.Log(string.Format("End download : {0}", item.assetName));
                 OnDownloadDone(item, mUnityWebRequest);
-                if(onComplete!=null){
-                    onComplete(this,item);
+                if (onComplete != null)
+                {
+                    onComplete(this, item);
                 }
             }
             else
             {
                 Debug.LogError(string.Format("Failure to download {0} ReDownload.", item.assetName));
                 yield return new WaitForSeconds(0.1f);
-                StartCoroutine(_DownloadAsset(item,onComplete));
+                StartCoroutine(_DownloadAsset(item, onComplete));
             }
 
             mIsRunning = false;
         }
 
-        public void Dispose(){
+        public void Dispose()
+        {
             if (mUnityWebRequest != null)
                 mUnityWebRequest.Dispose();
             Destroy(gameObject);
@@ -62,20 +67,24 @@ namespace BlueNoah.Download
             FileManager.WriteAllBytes(DownloadConstant.GetDownloadAssetBundlePath(item.assetName), unityWebRequest.downloadHandler.data);
         }
 
-        public ulong GetDownloadSize(){
+        public ulong GetDownloadSize()
+        {
             //Debug.Log(string.Format("<color=green>{0}</color>",mUnityWebRequest.downloadProgress));
             return (ulong)(mItem.size * mUnityWebRequest.downloadProgress);
         }
 
-        public float GetProgress(){
+        public float GetProgress()
+        {
             return mUnityWebRequest == null ? 0 : mUnityWebRequest.downloadProgress;
         }
 
-        public string GetDownloadAssetName(){
+        public string GetDownloadAssetName()
+        {
             return mItem == null ? "" : mItem.assetName;
         }
 
-        public ulong GetTotalSize(){
+        public ulong GetTotalSize()
+        {
             return mItem == null ? 0 : mItem.size;
         }
     }

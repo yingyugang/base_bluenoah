@@ -27,7 +27,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
         const int WINDOW_WIDTH = 800;
         const int WINDOW_HEIGHT = 600;
 
-        [MenuItem(AssetBundleEditorConstant.ASSETBUNDLE_BUILD_WINDOW_MENUITEM + MenuItemShortcutKeyConstant.SHORTCUT_KEY_ASSETBUNDLE_BUILD)]
+        [MenuItem(AssetBundleConstant.ASSETBUNDLE_BUILD_WINDOW_MENUITEM + MenuItemShortcutKeyConstant.SHORTCUT_KEY_ASSETBUNDLE_BUILD)]
         static void Init()
         {
             mAssetBundleBuildWindow = GetWindow<AssetBundleBuildWindow>(true, "AB Build Manager", true);
@@ -80,7 +80,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             LoadAssetBundleInfos();
             AssetConfig assetBundleConfig = ConvertAssetBundleWindowItemsToAssetBundleConfig();
             string assetBundleConfigStr = JsonUtility.ToJson(assetBundleConfig, true);
-            FileManager.WriteString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE, assetBundleConfigStr);
+            FileManager.WriteString(AssetBundleConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE, assetBundleConfigStr);
         }
 
         AssetConfig ConvertAssetBundleWindowItemsToAssetBundleConfig()
@@ -138,16 +138,16 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         public void CopySelectAssetBundleToServer()
         {
-            FileManager.DirectoryCopy(AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH, true);
-            Debug.Log(string.Format("{0} <color=green>==></color> {1}", AssetBundleEditorConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleEditorConstant.ASSETBUNDLE_UPLOAD_PATH));
+            FileManager.DirectoryCopy(AssetBundleConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleConstant.ASSETBUNDLE_UPLOAD_PATH, true);
+            Debug.Log(string.Format("{0} <color=green>==></color> {1}", AssetBundleConstant.ASSETBUNDLE_ROOT_PATH, AssetBundleConstant.ASSETBUNDLE_UPLOAD_PATH));
         }
 
         public void BuildAllAssetBundlesWithDependencies()
         {
             Debug.Log("BuildAllAssetBundlesWithDependencies!");
             AssetDatabase.RemoveUnusedAssetBundleNames();
-            FileManager.CreateDirectoryIfNotExisting(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH);
-            BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+            FileManager.CreateDirectoryIfNotExisting(AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH);
+            BuildPipeline.BuildAssetBundles(AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
             LoadAssetBundleInfos();
             SaveConfig();
             AssetDatabase.Refresh();
@@ -160,7 +160,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
             List<AssetBundleBuild> assetbundleList = GetSelectedEntities();
             if (assetbundleList.Count > 0)
             {
-                BuildPipeline.BuildAssetBundles(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH, assetbundleList.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+                BuildPipeline.BuildAssetBundles(AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH, assetbundleList.ToArray(), BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
             }
             AssetDatabase.Refresh();
         }

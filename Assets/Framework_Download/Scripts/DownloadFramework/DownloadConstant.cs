@@ -49,15 +49,15 @@ namespace BlueNoah.Download
 			get {
 				return
 #if DEVELOP
-                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + CommonConstant.PLATFORM + "/";
 #elif STG
-                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + CommonConstant.PLATFORM + "/";
 #elif PRODUCT
-                    "http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + CommonConstant.PLATFORM + "/";
 #else
 
-                    "http://ultrasoul.ifkzgph84v.ap-northeast-1.elasticbeanstalk.com/AssetBundleBuilds/" + CommonConstant.PLATFORM + "/";
-                    //"http://127.0.0.1/DownloadSample/" + PLATFORM + "/";
+                    //"http://ultrasoul.ifkzgph84v.ap-northeast-1.elasticbeanstalk.com/AssetBundleBuilds/" + CommonConstant.PLATFORM + "/";
+                    "http://127.0.0.1/DownloadSample/" + CommonConstant.PLATFORM + "/";
 #endif
 			}
 		}

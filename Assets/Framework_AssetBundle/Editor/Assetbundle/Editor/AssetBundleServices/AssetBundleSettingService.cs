@@ -45,7 +45,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         string GetAssetBundleNameByPath(string path)
         {
-            return path.Substring(path.IndexOf(AssetBundleEditorConstant.ASSETBUNDLE_RESOURCES_PATH, System.StringComparison.CurrentCulture) + AssetBundleEditorConstant.ASSETBUNDLE_RESOURCES_PATH.Length);
+            return path.Substring(path.IndexOf(AssetBundleConstant.ASSETBUNDLE_RESOURCES_PATH, System.StringComparison.CurrentCulture) + AssetBundleConstant.ASSETBUNDLE_RESOURCES_PATH.Length);
         }
 
         string GetAssetBundleSubFolder(string path)
@@ -55,7 +55,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         string[] GetAssetBundleTypeFolderPaths()
         {
-            return FileManager.GetDirectories(AssetBundleEditorConstant.SYSTEM_ASSETBUNDLE_RESOURCES_PATH, "*", SearchOption.TopDirectoryOnly);
+            return FileManager.GetDirectories(AssetBundleConstant.SYSTEM_ASSETBUNDLE_RESOURCES_PATH, "*", SearchOption.TopDirectoryOnly);
         }
 
         string[] GetAssetBundleFolderPaths(string path)

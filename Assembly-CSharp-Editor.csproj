@@ -61,21 +61,28 @@
   <ItemGroup>
     <Compile Include="Assets\Export\Editor\ExportSettings.cs" />
     <Compile Include="Assets\Export\Editor\PackageExport.cs" />
+    <Compile Include="Assets\Framework_API\Editor\API\APIEditorConstant.cs" />
+    <Compile Include="Assets\Framework_API\Editor\API\ApiLogicClassCreateWindow.cs" />
+    <Compile Include="Assets\Framework_AssetBundle\Editor\Assetbundle\Editor\AssetBundleBuildWindow.cs" />
+    <Compile Include="Assets\Framework_AssetBundle\Editor\Assetbundle\Editor\AssetBundleBuildWindowGUI.cs" />
+    <Compile Include="Assets\Framework_AssetBundle\Editor\Assetbundle\Editor\AssetBundleServices\AssetBundleBuildService.cs" />
+    <Compile Include="Assets\Framework_AssetBundle\Editor\Assetbundle\Editor\AssetBundleServices\AssetBundleSettingService.cs" />
+    <Compile Include="Assets\Framework_Common\Editor\File\EditorFileManager.cs" />
+    <Compile Include="Assets\Framework_Common\Editor\WebGL\WebGLAutoDeploy.cs" />
+    <Compile Include="Assets\Framework_Common\Editor\WebGL\WebGLRetinaReplace.cs" />
+    <Compile Include="Assets\Framework_UI\Editor\Panel\DefaultControls.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\LoopScrollRectInspector.cs" />
-    <Compile Include="Assets\Framework_UI\Editor\Panel\SGDefaultControls.cs" />
-    <Compile Include="Assets\Framework_UI\Editor\Panel\SGMenuOptions.cs" />
+    <Compile Include="Assets\Framework_UI\Editor\Panel\MenuOptions.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\UIConfigWindow.cs" />
+    <Compile Include="Assets\Framework_UI\Editor\Panel\UIConfigWindowGUI.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\UICreateUtility.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\UIDialogConfigWindow.cs" />
+    <Compile Include="Assets\Framework_UI\Editor\Panel\UIDialogConfigWindowGUI.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\UIEditorConstant.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\UIPanelConfigWindow.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Panel\UIPanelConfigWindowGUI.cs" />
     <Compile Include="Assets\Framework_UI\Editor\Setting\UIEditorSettings.cs" />
-    <Compile Include="Assets\Scripts\Editor\API\APIEditorConstant.cs" />
-    <Compile Include="Assets\Scripts\Editor\API\ApiLogicClassCreateWindow.cs" />
-    <Compile Include="Assets\Scripts\Editor\File\EditorFileManager.cs" />
-    <Compile Include="Assets\Scripts\Editor\WebGL\WebGLRetinaReplace.cs" />
-    <None Include="Assets\Scripts\Editor\API\ApiLogicTemplate.txt" />
+    <None Include="Assets\Framework_API\Editor\API\ApiLogicTemplate.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>/Users/yingyugang/Base/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
@@ -331,29 +338,29 @@
     <Reference Include="UnityEditor.OSXStandalone.Extensions">
       <HintPath>/Applications/Unity2018/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="CSV">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/CSV/CSV.dll</HintPath>
-    </Reference>
     <Reference Include="Debug">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/Debug/Debug.dll</HintPath>
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_Common/Plugins/Debug/Debug.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/DOTween_1_1_605/DOTween.dll</HintPath>
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_Common/Plugins/DOTween_1_1_605/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="DOTween43">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/DOTween_1_1_605/DOTween43.dll</HintPath>
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_Common/Plugins/DOTween_1_1_605/DOTween43.dll</HintPath>
     </Reference>
     <Reference Include="DOTween46">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/DOTween_1_1_605/DOTween46.dll</HintPath>
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_Common/Plugins/DOTween_1_1_605/DOTween46.dll</HintPath>
     </Reference>
     <Reference Include="DOTween50">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/DOTween_1_1_605/DOTween50.dll</HintPath>
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_Common/Plugins/DOTween_1_1_605/DOTween50.dll</HintPath>
     </Reference>
     <Reference Include="DOTweenEditor">
-      <HintPath>/Users/yingyugang/Base/Assets/Plugins/ThirdParty/DOTween_1_1_605/Editor/DOTweenEditor.dll</HintPath>
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_Common/Plugins/DOTween_1_1_605/Editor/DOTweenEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="CSV">
+      <HintPath>/Users/yingyugang/Base/Assets/Framework_CSV/Plugins/CSV/CSV.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.7/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
@@ -361,11 +368,8 @@
     <Reference Include="UnityEditor.Analytics">
       <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/Editor/UnityEditor.Analytics.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Purchasing">
-      <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.purchasing@2.0.1/UnityEngine.Purchasing.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.purchasing@2.0.1/Editor/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>/Users/yingyugang/Library/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>

@@ -35,12 +35,12 @@ namespace BlueNoah.Editor.AssetBundle.Management
         {
             AssetBundleWindowItem assetBundleWindowItem = new AssetBundleWindowItem();
             assetBundleWindowItem.assetBundleName = assetbundleName;
-            string path = AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName;
+            string path = AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName;
             if (FileManager.Exists(path))
             {
                 assetBundleWindowItem.assetBundle = LoadAssetBunleObject(assetbundleName);
-                assetBundleWindowItem.assetBundleHash = FileManager.GetFileHash(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName);
-                assetBundleWindowItem.assetBundleLength = (ulong)(new FileInfo(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length);
+                assetBundleWindowItem.assetBundleHash = FileManager.GetFileHash(AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName);
+                assetBundleWindowItem.assetBundleLength = (ulong)(new FileInfo(AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH + assetbundleName).Length);
             }
             assetBundleWindowItem.displayLength = FileLengthToStr(assetBundleWindowItem.assetBundleLength);
             return assetBundleWindowItem;
@@ -56,7 +56,7 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         Object LoadAssetBunleObject(string assetbundleName)
         {
-            string path = AssetBundleEditorConstant.ASSETDATABASE_PLATFORM_PATH + assetbundleName;
+            string path = AssetBundleConstant.ASSETDATABASE_PLATFORM_PATH + assetbundleName;
             return AssetDatabase.LoadAssetAtPath<Object>(path);
         }
 
@@ -82,17 +82,17 @@ namespace BlueNoah.Editor.AssetBundle.Management
 
         public AssetConfig LoadAssetBundleConfig()
         {
-            if (!FileManager.Exists(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE))
+            if (!FileManager.Exists(AssetBundleConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE))
             {
                 InitConfigFile();
             }
-            string configString = FileManager.ReadString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE);
+            string configString = FileManager.ReadString(AssetBundleConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE);
             return JsonUtility.FromJson<AssetConfig>(configString);
         }
 
         void InitConfigFile()
         {
-            FileManager.WriteString(AssetBundleEditorConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE, JsonUtility.ToJson(CreateAssetBundleConfig()));
+            FileManager.WriteString(AssetBundleConstant.ASSETBUNDLE_PLATFORM_CONFIG_FILE, JsonUtility.ToJson(CreateAssetBundleConfig()));
         }
 
         AssetConfig CreateAssetBundleConfig()

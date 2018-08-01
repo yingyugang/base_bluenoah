@@ -19,6 +19,9 @@ namespace BlueNoah.Assets
 		}
 
         public string[] GetAllDependencies(string assetBundleName){
+            if(mAssetBundleManifest==null){
+                LoadManifest();
+            }
            return mAssetBundleManifest.GetAllDependencies(assetBundleName);
         }
 

@@ -32,13 +32,21 @@ namespace BlueNoah.Assets
             Init();
         }
 
-        public void LoadOrDownloadAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet){
+        public void LoadOrDownloadAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
+        {
             AssetBundleLoader assetBundleLoader = new AssetBundleLoader(this);
-            assetBundleLoader.LoadOrDownloadAssetBundle(assetBundleName,onGet);
+            assetBundleLoader.LoadOrDownloadAssetBundle(assetBundleName, onGet);
         }
 
-        public void LoadAsset<T>(UnityAction<T> onLoaded, string assetName, string assetBundleName) where T : Object
+        public void LoadAsset<T>(string assetName, string assetBundleName, UnityAction<T> onLoaded) where T : Object
         {
+
+            //#if UNITY_EDITOR && LOCAL_RES
+            //string path = AssetBundleConstant.ASSETDATABASE_ASSETBUNDLE_RESOURCES_PATH + ;
+            //UnityEditor.AssetDatabase.FindAssets();
+            //#else
+
+            //#endif
             LoadOrDownloadAssetBundle(assetBundleName, (AssetBundle assetBundle) =>
             {
                 if (assetBundle != null)
@@ -47,6 +55,9 @@ namespace BlueNoah.Assets
                 }
             });
         }
+
+
+
 
         public void LoadAssets<T>(UnityAction<T[]> onLoaded, string assetBundleName) where T : Object
         {
