@@ -81,7 +81,7 @@ namespace BlueNoah.Download
             }
             else
             {
-                Debug.Log("There is no item need to download.");
+                Debug.Log("<color=green>There is no item need to download.</color>");
                 if (onDownloadComplete != null)
                     onDownloadComplete();
             }
