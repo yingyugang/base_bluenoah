@@ -24,16 +24,19 @@ namespace BlueNoah.Assets
         void GetAllDependencies(string assetBundleName, UnityAction<AssetBundle> onGet)
         {
             string[] dependencies = mAssetBundleLoadManager.assetBundleServiceManifest.GetAllDependencies(assetBundleName);
-            if(dependencies.Length==0){
+            if (dependencies.Length == 0)
+            {
                 if (mDependenciesCount == 0)
                 {
                     GetAssetBundle(assetBundleName, onGet);
                 }
-            }else{
+            }
+            else
+            {
                 mDependenciesCount = dependencies.Length;
                 for (int i = 0; i < dependencies.Length; i++)
                 {
-                    GetDependencies(dependencies[i], (AssetBundle assetBundle) =>
+                    GetDependenciesAssetBundle(dependencies[i], (AssetBundle assetBundle) =>
                     {
                         mDependenciesCount--;
                         if (mDependenciesCount == 0)
@@ -45,25 +48,43 @@ namespace BlueNoah.Assets
             }
         }
 
-        void GetDependencies(string assetBundleName, UnityAction<AssetBundle> onGet)
+        void GetDependenciesAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
         {
             GetAssetBundle(assetBundleName, onGet);
         }
 
-        void GetAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
+        public AssetBundle LoadAssetBundleFromLocal(string assetBundleName)
+        {
+            string[] dependencies = mAssetBundleLoadManager.assetBundleServiceManifest.GetAllDependencies(assetBundleName);
+            for (int i = 0; i < dependencies.Length; i++)
+            {
+                //Load the dependencies into memory.this is have to do.
+                GetAssetBundleFromLocal(dependencies[i]);
+            }
+            return GetAssetBundleFromLocal(assetBundleName);
+        }
+
+        AssetBundle GetAssetBundleFromLocal(string assetBundleName)
         {
             if (AssetBundleLoadManager.Instance.assetBundleServiceCache.Contains(assetBundleName))
+            {
+                return AssetBundleLoadManager.Instance.assetBundleServiceCache.GetCached(assetBundleName);
+            }
+            else if (FileManager.Exists(DownloadConstant.GetDownloadAssetBundlePath(assetBundleName)))
+            {
+                return LoadAndCacheAssetBundle(assetBundleName);
+            }
+            return null;
+        }
+
+        void GetAssetBundle(string assetBundleName, UnityAction<AssetBundle> onGet)
+        {
+            AssetBundle assetBundle = GetAssetBundleFromLocal(assetBundleName);
+            if (assetBundle != null)
             {
                 if (onGet != null)
                 {
                     onGet(AssetBundleLoadManager.Instance.assetBundleServiceCache.GetCached(assetBundleName));
-                }
-            }
-            else if (FileManager.Exists(DownloadConstant.GetDownloadAssetBundlePath(assetBundleName)))
-            {
-                if (onGet != null)
-                {
-                    onGet(LoadAndCacheAssetBundle(assetBundleName));
                 }
             }
             else

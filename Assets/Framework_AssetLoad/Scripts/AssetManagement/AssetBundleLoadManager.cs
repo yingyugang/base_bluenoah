@@ -45,7 +45,6 @@ namespace BlueNoah.Assets
             //string path = AssetBundleConstant.ASSETDATABASE_ASSETBUNDLE_RESOURCES_PATH + ;
             //UnityEditor.AssetDatabase.FindAssets();
             //#else
-
             //#endif
             LoadOrDownloadAssetBundle(assetBundleName, (AssetBundle assetBundle) =>
             {
@@ -56,8 +55,15 @@ namespace BlueNoah.Assets
             });
         }
 
+        public AssetBundle LoadAssetBundleFromLocal(string assetBundleName){
+            AssetBundleLoader assetBundleLoader = new AssetBundleLoader(this);
+            return assetBundleLoader.LoadAssetBundleFromLocal(assetBundleName);
+        }
 
-
+        public T LoadAssetFromLoad<T>(string assetBundleName , string assetName) where T : Object{
+            AssetBundle assetBundle = LoadAssetBundleFromLocal(assetBundleName);
+            return assetBundle.LoadAsset<T>(assetName);
+        }
 
         public void LoadAssets<T>(UnityAction<T[]> onLoaded, string assetBundleName) where T : Object
         {
