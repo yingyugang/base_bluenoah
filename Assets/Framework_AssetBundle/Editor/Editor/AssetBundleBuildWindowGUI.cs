@@ -111,6 +111,35 @@ namespace BlueNoah.Editor.AssetBundle.Management
                 mAssetBundleBuildWindow.SetAssetBundleNames();
             }
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            GUI.color = Color.yellow;
+            GUILayout.Label("Config File : ", GUILayout.Width(200));
+            GUI.color = Color.white;
+            GUILayout.Label("AssetBundleConstant.cs");
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            GUI.color = new Color(62f / 255f, 1, 50f / 255f, 1);
+            GUILayout.Label("AssetBundle Resources Path : " ,GUILayout.Width(200));
+            GUI.color = Color.white;
+            GUILayout.Label(AssetBundleConstant.SYSTEM_ASSETBUNDLE_RESOURCES_PATH);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            GUI.color = new Color(62f / 255f, 1, 50f / 255f, 1);
+            GUILayout.Label("AssetBundle Build Path : ", GUILayout.Width(200));
+            GUI.color = Color.white;
+            GUILayout.Label(AssetBundleConstant.ASSETBUNDLE_PLATFORM_PATH);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            GUI.color = new Color(62f / 255f, 1, 50f / 255f, 1);
+            GUILayout.Label("AssetBundle Upload Path : ", GUILayout.Width(200));
+            GUI.color = Color.white;
+            GUILayout.Label(AssetBundleConstant.ASSETBUNDLE_UPLOAD_PATH);
+            EditorGUILayout.EndHorizontal();
+
         }
     }
 

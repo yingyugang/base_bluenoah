@@ -41,6 +41,15 @@ namespace BlueNoah.Download
 
 		void Update()
 		{
+            for (int i = 0; i < mSliders.Length; i++)
+            {
+                if(mSliders[i].value <= 0.01f){
+                    mSliders[i].gameObject.SetActive(false);
+                }else{
+                    mSliders[i].gameObject.SetActive(true);
+                }
+            }
+
             if(Input.GetKeyDown(KeyCode.X)){
                 Debug.Log("KeyCode.X");
                 GetComponent<AssetBundleLoadManager>().LoadOrDownloadAssetBundle("images/units.ab",(AssetBundle assetBundle) =>{
