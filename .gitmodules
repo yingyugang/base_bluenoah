@@ -1,0 +1,4 @@
+[submodule "Assets"]
+	path = Assets
+	url = https://github.com/monstar-lab/game_unity_common
+	branch = BlueNoah
